@@ -1,0 +1,387 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+<meta name="format-detection"
+	content="telephone=no,email=no,date=no,address=no">
+<title> Recharger </title>
+<link rel="stylesheet" type="text/css"
+	href="${ctxStatic}/common/aui.css" />
+<style type="text/css">
+.aui-bar-btn.aui-bar-btn-full .aui-bar-btn-item:last-child {
+	border-right-width: 1px;
+}
+
+.aui-bar-btn-item.aui-active {
+	background-color: #FF9000
+}
+
+.aui-bar-btn-item {
+	border-color: #FF9000
+}
+
+.aui-content-padded {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+.aui-list .aui-list-item {
+	background-image: none;
+}
+
+.aui-list {
+	background-image: none;
+}
+
+.aui-grid [class*=aui-col-] {
+	padding: 0.3rem 0;
+}
+
+.aui-col-xs-4 .aui-btn {
+	width: 88%;
+	color: #fff
+}
+.aui-bar-btn.aui-bar-btn-full .aui-bar-btn-item:first-child{
+	border-left-width:1px;
+}
+
+.aui-info-item img{
+	width: 30px;
+	height: 30px;
+}
+	
+	.aui-card-list{
+		margin-bottom: 0rem;
+	}
+</style>
+</head>
+<body>
+
+	<header class="aui-bar aui-bar-nav" id="aui-header">
+		<a class="aui-btn aui-pull-left" tapmode="" onclick="closeWin()">
+			<span class="aui-iconfont aui-icon-left"></span>
+		</a>
+		<div class="aui-title">Recharger</div>
+		<a class="aui-btn aui-pull-right" tapmode="" onclick="history2()">
+			<span class="aui-iconfont  ">Commandes</span>
+		</a>
+	</header>
+	<section class="aui-content">
+		<div class="aui-card-list aui- -t  ">
+			<div class="aui-info aui-padded-l-15 aui-padded-r-15">
+				<div class="aui-info-item aui-font-size-12">
+					<span class="aui-margin-l-5">Sélectionné la Monnaie</span>
+				</div>
+			</div>
+		</div>
+
+	</section>
+	<section class="aui-content aui-content-padded">
+
+		<div class="aui-bar aui-bar-btn aui-bar-btn-full ">
+			<div class="aui-bar-btn-item aui-active" tapmode="" type="USD"    onclick="choose2(this)"
+				data-item-order="0">USD</div>
+			<div class="aui-bar-btn-item " tapmode="" data-item-order="1" type="CDF" onclick="choose2(this)" >CDF</div>
+
+		</div>
+	</section>
+	<ul class="aui-list aui-form-list" style="margin-top: 7px;">
+
+		<li class="aui-list-item">
+			<div class="aui-list-item-inner">
+
+				<div class="aui-list-item-input">
+				<input type="text" placeholder="Entrez le montant du dépôt" id="m" onchange="jisuan()" sty1le="background: #f3f6fa" autocomplete="off" style="
+    border-bottom: 1px solid  #cacaca;
+">
+				</div>
+			</div>
+		</li>
+
+
+
+	</ul>
+	<section class="aui-content">
+		<div class="aui-card-list aui- -t  ">
+			<div class="aui-info aui-padded-l-15 aui-padded-r-15">
+				<div class="aui-info-item aui-font-size-12">
+					<span class="aui-margin-l-5">Sélectionner un portefeuille rechargeable</span>
+				</div>
+			</div>
+		</div>
+
+	</section>
+	
+	
+	<script id="data-usd" type="text/template">
+									{{for(var i in it){}}
+
+        <div class="aui-info aui-margin-t-10 aui-padded-l-10 aui-padded-r-10">
+            <div class="aui-info-item">
+            <div class="aui-info-item"><input class="aui-radio" type="radio" name="radio" vtype="{{=it[i].tongdaoName}}" value="{{=it[i].tongdaoName}}" onclick="doSelect(this)"></div>&nbsp;&nbsp;
+                <img src="{{=getImg(it[i].tongdaoName)}}" sty1le="width:1.5rem" class=" "><span class="aui-margin-l-5">
+                      {{=it[i].tongdaoName}}
+                    </span>
+                </div>
+            
+        </div>
+        	{{}}}
+
+
+	</script> 
+	
+	 <ul class="aui-list aui-select-list" id="usd">
+            
+            
+        </ul>
+        
+         <ul class="aui-list aui-select-list" id="cdf" style="display: none">
+            
+            
+        </ul>
+        
+        
+	
+	
+<section class="aui-content-padded">
+        <div class="aui-card-list">
+            
+            <div class="aui-card-list-content-padded">
+1. Recharge minimale de 10 $= 20 500 CDF<br>
+2. Taux de change 2 050 CDF = 1 dollar des États - Unis<br>
+
+3. Sélectionner l'unit é monétaire<br>
+
+4. Entrez le montant de recharge<br>
+
+5. Sélectionnez le portefeuille de recharge<br>
+6. Cliquez pour recharger<br>
+
+<br>
+
+            </div>
+            
+        </div>
+    </section>
+	
+	<div class="aui-btn aui-btn-danger aui-btn-block" id="buttons" onclick="pay2()">Recharge</div>
+</body>
+
+<script type="text/javascript"
+	src="${ctxStatic}/jquery/jquery-1.12.4.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/common.js"></script>
+<script type="text/javascript"
+	src="${ctxStatic}/common/clipboard.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/qrcode.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/aui-actionsheet.js" ></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/doT.min.js"></script>
+
+<script type="text/javascript"
+	src="${ctxStatic}/layer/3.1/layer.js?V0.1-121102105"></script>
+
+<script type="text/javascript">
+	var  tt111111  =  window.localStorage.getItem("token") || "";
+
+	if(tt111111=="-11" || tt111111==""){
+	    location.href = "${ctxPath}/login";
+
+	}
+var actionsheet = new auiActionsheet();
+var payArray =   [];
+function xuanze(){
+    actionsheet.init({
+        frameBounces:true,//当前页面是否弹动，（主要针对安卓端）
+        title:"",
+        cancelTitle:'',
+        buttons:payArray
+    },function(ret){
+        if(ret){
+        		var  index= ret.buttonTitle;
+        		$("#td").val(index)
+         }
+    })
+}
+var  HUILV = 0 ;
+var  td1 = []; 
+var  td2 =  []; 
+
+function   getImg(v){
+	if(v =="M-pesa"){
+		return  "${ctxStatic}/common/w11.png";
+	}else if(v=="Airtel Money") {
+		return "${ctxStatic}/common/w21.png";
+	}else if(v=="Orange Money") {
+		return "${ctxStatic}/common/w3.png";
+	}
+	
+}
+
+$(document).ready(function(){
+
+	var url = "${ctxPath}/getHuiLvData";
+	doAjax(url, "POST", {},
+			function(data) {
+				var code = data.code;
+				if (code == 0) { 
+						var data=  data.data;
+						HUILV  =  data[0].cad;
+				} else {
+					location.href = "${ctxPath}/login";
+
+				}
+			})
+
+		var url = "${ctxPath}/listTongDao";
+		doAjax(url, "POST", {},
+				function(data) {
+					var code = data.code;
+						td1 = data.data2;
+						td2 = data.data2 ;
+						
+						var dataTpl = doT.template(document
+								.getElementById("data-usd").innerHTML);
+						// $api.html($api.byId("sider"), );
+						$("#usd").html(dataTpl(td1));
+						
+						$("#cdf").html(dataTpl(td2));
+
+						
+				})
+})
+			
+			function selec2(el){
+		var  text  =  $(el).text();
+		$(".aui-col-xs-4 .aui-btn-danger").removeClass("aui-btn-danger");
+		$(el).addClass("aui-btn-danger");
+		$("#m").val(text);
+		jisuan();
+	}
+	
+	
+	
+	
+	var zfPay = "USD";
+	function  choose2(el){
+		zfPay=   $(el).attr("type");
+		$(".aui-active").removeClass("aui-active");
+		$(el).addClass("aui-active");
+		jisuan();
+		 
+		 
+		
+	}
+	
+	function  jisuan(){
+		var   m =   $("#m").val() || 0 ;
+		if(zfPay=="USD"){
+			if(m > 0 ){
+			$("#buttons").html("USD " +  m )
+			}
+ 		}else {
+ 			var tt =  m /  HUILV; 
+ 			tt =    parseFloat(tt).toFixed(2);
+ 			if(m > 0 ){
+ 				$("#buttons").html("USD  " +  tt )
+ 				}
+		}
+	}
+	
+	var tdName= "";
+	var  click1= "1";
+	function  pay2(){
+		
+
+        if(click1== "1") {
+		var parame =  {
+				zfPay :  zfPay	
+		}
+		 
+			var  td = tdName;
+			if(td == ""){
+				layer.msg("Sélectionner un portefeuille rechargeable!")
+				return ; 
+			}
+			
+			parame.td =   td ; 
+		
+		var  m =     $("#m").val() || "";
+		
+		  if(m != parseInt(parseFloat(m).toFixed(2))) {
+          	
+          	layer.msg("Veuillez entrer le montant correct");
+              return ;
+
+          }
+		  if(zfPay=="CDF") {
+			  m1 =     $("#m").val() || "";
+			  m1 =m1/HUILV	;
+			  console.log(m1)
+			  if(m1 != parseInt(parseFloat(m1).toFixed(2))) {
+	          	
+	          	layer.msg("Mauvais montant");
+	              return ;
+
+	          }
+			}
+		  
+		if(m == ""){
+			layer.msg("Entrez le montant du dépôt!");
+			return ; 
+		}
+		parame.m =   m ; 
+		click1=2;
+	
+		var url = "${ctxPath}/rechangeData";
+		doAjax(url,"post",parame,function(data){
+			var code =  data.code ;
+			click1=1;
+			if(code== "0"){
+				var  data =  data.url ;
+				var dd = JSON.parse(data);
+				var u = dd.url ; 
+				location.href =  u ;
+
+			}else {
+				layer.msg(data.msg);
+			}
+		})
+        }
+
+		
+	}
+	
+	function history2(){
+		location.href = "${ctxPath}/rechargehistory";
+
+	}
+	
+	function  xuanze2(){
+	var payArray2= ["ERC20-USDT","TRC20-USDT"]
+	    actionsheet.init({
+	        frameBounces:true,//当前页面是否弹动，（主要针对安卓端）
+	        title:"",
+	        cancelTitle:'',
+	        buttons:payArray2
+	    },function(ret){
+	        if(ret){
+	        		var  index= ret.buttonTitle;
+	        		$("#btb").val(index)
+	         }
+	    })
+	}
+	
+	function  doSelect(el){
+		tdName = $(el).attr("value");
+		console.log(tdName);
+	}
+	
+	
+</script>
+</html>

@@ -1,0 +1,166 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+<meta name="format-detection"
+	content="telephone=no,email=no,date=no,address=no">
+<title>Membres de l'équipe</title>
+<link rel="stylesheet" type="text/css"
+	href="${ctxStatic}/common/aui.css" />
+</head>
+<style>
+body {
+	background-color: #f3f6fa;
+}
+
+img.aui-img-round {
+	border-radius: 50%;
+	height: 80px;
+	margin: 0 auto;
+}
+
+.aui-list .aui-list-item-media img {
+	height: 100px;
+	width: 100px;
+}
+
+.aui-list .aui-list-item-media {
+	width: 2.5rem
+}
+</style>
+<body>
+	<header class="aui-bar aui-bar-nav" id="aui-header">
+		<a class="aui-btn aui-pull-left" tapmode="" onclick="closeWin()">
+			<span class="aui-iconfont aui-icon-left"></span>
+		</a>
+		<div class="aui-title">Membres de l'équipe</div>
+		<a class="aui-btn aui-pull-right" tapmode="" onclick="history()">
+			<span class="aui-iconfont  "></span>
+		</a>
+	</header>
+	<br>
+	<section class="aui-content user-info aui-text-center aui-margin-b-15">
+		<img src="${ctxStatic}/common/usr.98e1e839.png"
+			class="avatar aui-img-round">
+	</section>
+
+	<section class="aui-grid" style="margin-top: -45px;">
+		<div class="aui-row">
+			<br>
+			<div class="aui-col-xs-6">
+				<div class="aui-grid-label" id="userLeval"></div>
+				<div class="aui-grid-label">Nombre d'invités</div>
+			</div>
+			<div class="aui-col-xs-6">
+				<div class="aui-grid-label" id="shouru"></div>
+				<div class="aui-grid-label">Commission totale de l'équipe.  </div>
+			</div>
+		</div>
+	</section>
+	<div class="aui-tab" id="tab">
+		<div index="1" onclick="ddoBar(this)" class="aui-tab-item aui-active">Agence niveau 1</div>
+		<div index="2" onclick="ddoBar(this)" class="aui-tab-item">
+			<div></div>
+Agence niveau 2		</div>
+		<div index="3" onclick="ddoBar(this)" class="aui-tab-item">Agence niveau 3</div>
+	</div>
+	<div class="aui-info aui-margin-t-10 aui-padded-l-10 aui-padded-r-10"
+		style="color: #214a7a">
+		<div class="aui-info-item">
+			<span class="aui-margin-l-5" id="Total">Total:</span>
+		</div>
+	</div>
+	
+<script id="data-list" type="text/template">
+				{{for(var i in it){}} 
+<li class="aui-list-item aui-list-item-middle">
+			<div class="aui-media-list-item-inner">
+				<div class="aui-list-item-media" st1yle="width: 3rem;">
+					<img style="height: auto;"
+						src="{{=it[i].imgsrc || 'https://images.caiyaoren.ltd/1509536318779494400.png'}}"
+						class="aui-img-round aui-list-img-sm">
+				</div>
+				<div class="aui-list-item-inner aui-list-item-arrow">
+					<div class="aui-list-item-text">
+						<div class="aui-list-item-title aui-font-size-14">{{=it[i].rowid}}</div>
+						<div class="aui-list-item-right aui-text-danger">VIP :{{=it[i].vip}}</div>
+					</div>
+					<div class="aui-list-item-text">{{=it[i].createtime}}</div>
+				</div>
+			</div>
+		</li>
+ 				{{}}}	
+			</script>
+	
+	
+	
+	<ul class="aui-list aui-media-list"  id="list">
+		 
+	</ul>
+
+
+	<script src="${ctxStatic}/common/jquery.min.js"></script>
+	<script type="text/javascript"
+		src="${ctxStatic}/layer/3.1/layer.js?V0.1-12102105"></script>
+	<script type=""
+		src="${ctxStatic}/common/common.js?m222?v=121222AD?v=121222A"></script>
+	<script type="" src="${ctxStatic}/common/doT.min.js"></script>
+
+	<script type="text/javascript">
+		var parame = {
+				type : "1"
+		}
+		var url = "${ctxPath}/getShouru2";
+		doAjax(url, "POST", parame, function(data) {
+			var shouru = data.shouru;
+			shouru  =  parseFloat(shouru).toFixed(4);
+			$("#shouru").html(shouru);
+
+		})
+
+		var url = "${ctxPath}/getTotalSubUsers";
+		doAjax(url, "POST", parame, function(data) {
+			var shouru = data.cc;
+			$("#userLeval").html(shouru);
+
+		})
+
+		var type = "1";
+		function initData() {
+			var parame = {
+				type : type
+			}
+			var url = "${ctxPath}/getSubUsers";
+			doAjax(url, "POST", parame, function(data) {
+				var code = data.code;
+				if (code == 0) {
+					var data = data.data;
+					var dataTpl = doT.template(document
+							.getElementById("data-list").innerHTML);
+					$("#list").html(dataTpl(data));
+					var ll = data.length;
+					$("#Total").html("Total:" + ll)
+
+				} else {
+
+				}
+			})
+		}
+
+		initData();
+		
+		 function  ddoBar(el){
+		 		type =  $(el).attr("index");
+		 		initData();
+		 		$(".aui-active").removeClass("aui-active");
+		 		$(el).addClass("aui-active")		
+		 }	
+
+	</script>
+
+
+	</script>
+</html>

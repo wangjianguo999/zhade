@@ -1,0 +1,108 @@
+<% layout('/layouts/default.html', {title: 'tab_user_data管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa icon-notebook"></i> ${text('用户下级明细')}
+			</div>
+			<div class="box-tools pull-right">
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${tabUserData}" action="${ctx}/tab/tabUserData/listData3" method="post" class="form-inline  hide  "
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('账号')}：</label>
+					<div class="control-inline">
+						<#form:input path="rowid" maxlength="45" class="form-control width-120"/>
+					</div>
+				</div>
+				  
+				 
+				<div class="form-group">
+					<button type="submit" id="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+	<% if(hasPermi('tab:tabUserData:edit')){ %>
+					<button type="button" onclick="gengxin()" id="subm2it1" class="btn btn-primary btn-sm">${text('设置体验客户')}</button>
+				<% } %> 					
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+    showCheckbox: true,    // 是否显示复选框
+
+    
+	columnModel: [
+		{header:'${text("用户手机号")}', name:'rowid', index:'a.rowid', width:150, align:"left"},
+
+		{header:'${text("密码")}', name:'password', index:'a.password', width:150,hidden:true, align:"left"},
+		{header:'${text("当前余额")}', name:'currentmoney', index:'a.currentmoney', width:100, align:"right", formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 0, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("总下级用户数")}', name:'sumMember', index:'a.sum_Member', width:150, align:"left"},
+		{header:'${text("用户层级")}', name:'userleval', index:'a.userleval', width:100, align:"left"},
+
+ 		{header:'${text("创建时间")}', name:'createtime', index:'a.createtime', width:200, align:"center"},
+		{header:'${text("用户层级")}', name:'userleval', index:'a.userleval', width:150, align:"left"},
+ 		
+ 		{header:'${text("佣金金额")}', name:'bzj', index:'a.bzj', width:100, align:"center"},
+
+		{header:'${text("详情")}', name:'username', index:'a.username', width:350, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			var  actions= [];
+			actions.push('<a  href="${ctx}/tab/tabUserData/form4?rowid='+row.rowid+'" class="btnList" data-title="${text("增加抢单次数")}">增加抢单次数</a>&nbsp;&nbsp;&nbsp;');
+
+		actions.push('<a href="${ctx}/tab/tabUserData/form3?rowid='+row.rowid+'" class="btnList" data-title="${text("查看详情")}">查看详情</a>&nbsp;&nbsp;&nbsp;')
+			actions.push('<a href="${ctx}/tab/tabUserData/list31?rowid='+row.rowid+'" class="btnList" data-title="${text("查看下级")}">查看下级</a>&nbsp;&nbsp;&nbsp;')
+
+			return    actions.join('');  ;		}},
+		
+		
+		
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+
+function gengxin(){
+
+
+		var  ll = $('#dataGrid').dataGrid('getSelectRows');
+		console.log(ll);
+		var  list =  [];
+
+		for(var i = 0 ; i < ll.length;i++ ){
+			list.push(ll[i])
+		}
+		if(list.length ==0){
+			js.showMessage("请选择订单!");
+			return ;
+		}
+	 	layer.confirm('确定设置体验吗 ？', {
+			  btn: ['确定', '取消'] //可以无限个按钮
+			  ,btn3: function(index, layero){
+			    //按钮【按钮三】的回调
+			  }
+			}, function(index, layero){ 
+				
+				var parame  = {
+					rowids: list.join(",")	
+				}
+				var url = "${ctx}/tab/tabUserData/gengxinTiYan";
+				doAjax(url,"post",parame,function(data){
+					$("#submit").click();
+				})
+			}, function(index){
+			  //按钮【按钮二】的回调
+			});
+}
+</script>

@@ -1,0 +1,384 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+    content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+<meta name="format-detection"
+    content="telephone=no,email=no,date=no,address=no">
+<title> Retrait	</title>
+<link rel="stylesheet" type="text/css"
+    href="${ctxStatic}/common/aui.css" />
+<style type="text/css">
+    .aui-list .aui-list-header{
+        background-color: #fff;
+    }     
+    .aui-info-item img{
+    	width: 20px;
+    	height: 20px;
+    }
+    .aui-card-list-content-padded{
+    	padding-top: 0.4rem;
+    	padding-bottom: 0.4rem;
+    }
+</style>
+
+</head>
+<body>
+<header class="aui-bar aui-bar-nav" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode="" onclick="closeWin()">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title"> Retrait	</div>
+         
+        <a class="aui-btn aui-pull-right" tapmode="" onclick="his22()">
+            <span class="aui-iconfont aui-icon-">Commandes</span>
+        </a>
+    </header> 
+    <div class="aui-info aui-margin-t-10 aui-padded-l-10 aui-padded-r-10">
+            <div class="aui-info-item">
+                <span class="aui-margin-l-5">Montant de retrait:</span>                <span class="aui-margin-l-5" id="money"> </span>
+                
+                </div>
+         </div>
+         
+         <ul class="aui-list aui-form-list">
+            
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    
+                    <div class="aui-list-item-input">
+                        <input type="text" placeholder="Entrez montant de retrait" id="m" style="
+    border-bottom: 1px solid  #cacaca;
+">
+                    </div>
+                </div>
+            </li>
+            
+            
+            
+            
+            
+        </ul>
+        
+        <div class="aui-info aui-margin-t-10 aui-padded-l-10 aui-padded-r-10" id="M-pesa">
+            <div class="aui-info-item">
+                <img src="${ctxStatic}/common/w11.png" sty1le="width:1.5rem" class=" "><span class="aui-margin-l-5">
+                       M-pesa
+                    </span>
+                </div>
+            <div class="aui-info-item"><input class="aui-radio" type="radio" name="radio" vtype="M-pesa" value="1" onclick="showData(this)"></div>
+            
+        </div>
+        	
+        
+        <ul class="aui-list aui-select-list" id="list1">
+        </ul>
+        
+        
+        <div class="aui-info aui-margin-t-10 aui-padded-l-10 aui-padded-r-10" id="AirtelMoney">
+            <div class="aui-info-item">
+                <img src="${ctxStatic}/common/w21.png" sty1le="width:1.5rem" class=" "><span class="aui-margin-l-5">
+Airtel Money
+                 </span>
+                </div>
+            <div class="aui-info-item"><input class="aui-radio"  vtype="Airtel Money" type="radio" name="radio"value="2" onclick="showData(this)" ></div>
+            
+        </div>
+        	
+        
+        <ul class="aui-list aui-select-list" id="list2">
+            
+            
+        </ul>
+        
+        
+        <div class="aui-info aui-margin-t-10 aui-padded-l-10 aui-padded-r-10" id="OrangeMoney">
+            <div class="aui-info-item">
+                <img src="${ctxStatic}/common/w3.png" sty1le="width:1.5rem" class=" "><span class="aui-margin-l-5">
+                       Orange Money
+
+
+                    </span>
+                </div>
+            <div class="aui-info-item"><input class="aui-radio" type="radio" vtype="Orange Money" name="radio" value="3" onclick="showData(this)" ></div>
+            
+        </div>
+        	
+        
+        <ul class="aui-list aui-select-list" id="list3">
+            
+        </ul>
+
+<section class="aui-content-padded">
+        <div class="aui-card-list">
+            
+            <div class="aui-card-list-content-padded">
+1. Retrait minimum de 3 $
+
+            </div>
+              <div class="aui-card-list-content-padded">
+2. Sélectionnez le bon numéro de compte de portefeuille de retrait pour le retrait
+
+            </div>
+              <div class="aui-card-list-content-padded">
+3. La taxe de retrait est de 8%
+
+            </div>
+              <div class="aui-card-list-content-padded">
+4. Veuillez remplir les renseignements appropriés pour éviter l'échec du retrait.
+
+            </div>
+              <div class="aui-card-list-content-padded">
+5. Dans les 48 heures suivant le retrait
+
+
+            </div>
+            
+        </div>
+    </section>
+
+
+    <script id="data-vips" type="text/template">
+                {{for(var i in it){}}
+                      
+            <li class="aui-list-item">
+                
+                <div class="aui-list-item-inner" style="margin-left: 3rem">
+                    {{=it[i].firstname}}/{{=it[i].lastname}}
+                </div>
+                <div class="aui-list-item-label">
+                    <input  rowid="{{=it[i].rowid}}"   onclick="chooseTongdao(this)"  class="aui-radio" type="radio" name="tongdao" value="{{=it[i].rowid}}"  >
+                </div>
+            </li>   
+                {{}}}       
+            </script>
+        
+        <div class="aui-btn aui-btn-danger aui-btn-block" id="buttons" onclick="pay2()"> Retrait	</div>
+<script type="text/javascript"
+    src="${ctxStatic}/jquery/jquery-1.12.4.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/common.js"></script>
+<script type="text/javascript"
+    src="${ctxStatic}/common/clipboard.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/qrcode.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/aui-actionsheet.js" ></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/doT.min.js"></script>
+
+<script type="text/javascript"
+    src="${ctxStatic}/layer/3.1/layer.js?V0.1-12101211205"></script>
+
+    <script type="text/javascript">
+    	$("#OrangeMoney").hide();
+    	$("#AirtelMoney").hide();
+    	$("#M-pesa").hide();
+    	
+    	
+    	var url = "${ctxPath}/listTongDao";
+		doAjax(url, "POST", {},
+				function(data) {
+					var code = data.code;
+					var  isPay =  data.isPay;
+					if(isPay=="1") {
+						layer.alert("Veuillez définir votre mot de passe de retrait",function(){
+				            location.href = "${ctxPath}/safemanage";
+
+						})
+					}
+					data = data.data;
+ 						
+						 for(var i = 0 ; i <  data.length;i++){
+							 	$("#"+ data[i].tongdaoName.replace(" ","")).show();
+						 }
+
+						
+				})
+    	
+        var  tt111111  =  window.localStorage.getItem("token") || "";
+
+        if(tt111111=="-11" || tt111111==""){
+            location.href = "${ctxPath}/login";
+
+        }
+            var  data1=  [];
+            var  data2=[];
+            var  data3=[];
+            var   type= "";
+            var  tongdao= "";
+
+            $(document).ready(function(){
+                initData();
+            })
+
+            function initData(){
+                //获取我的 卡号信息
+                var parame = {
+
+                }
+                var url = "${ctxPath}/getAllBack";
+                doAjax(url,"post",parame,function(data){
+                          data1=  data.data1;
+                          data2=  data.data2;
+                          data3=  data.data3
+                })
+            }
+            function showData(el){
+                type  =  $(el).attr("vtype"); 
+                tongdao= "";
+                    $("#list1").html("");
+                    $("#list2").html("");
+                    $("#list3").html("");
+                    
+                        var dataTpl = doT.template(document
+                                .getElementById("data-vips").innerHTML);
+                       var v = $(el).attr("value");
+                       if(v==1) {
+                    	   if(data1.length==0){
+                    		   layer.alert("Veuillez d'abord lier le portefeuille de retrait",function(){
+                      			   console.log(11)
+                                   location.href = "${ctxPath}/accountmng";
+
+                      		   })
+
+                    	   }
+                    $("#list" + v).html(dataTpl(data1));
+                }else       if(v==2) {
+                	 if(data2.length==0){
+              		   layer.alert("Veuillez d'abord lier le portefeuille de retrait",function(){
+              			   console.log(11)
+                           location.href = "${ctxPath}/accountmng";
+
+              		   })
+
+              	   }
+                    $("#list" + 2).html(dataTpl(data2));
+                }else        if(v==3) {
+                	 if(data3.length==0){
+                		 layer.alert("Veuillez d'abord lier le portefeuille de retrait",function(){
+                			   console.log(11)
+                             location.href = "${ctxPath}/accountmng";
+
+                		   })
+              	   }
+                    $("#list" + 3).html(dataTpl(data3));
+                }
+
+                        
+
+            }
+
+            $(document).ready(function(data){
+                var parame = {
+
+                }
+                var url= "${ctxPath}/getUserYe";    
+                doAjax(url,"post",parame,function(data){
+                    var money  =  data.money;
+                    money =   parseFloat(money).toFixed(4);
+                    $("#money").html(money);
+                })
+            })
+               var  click1= "1";
+
+            function pay2(){
+            		
+            	layer.prompt({
+                    formType: 1,
+                    placeholder: 'Veuillez saisir le mot de passe de retrait',
+                    title: 'Veuillez saisir le mot de passe de retrait',
+//                    area: ['800px', '350px'] //自定义文本域宽高
+                }, function(value, index, elem){
+
+                    if(click1== "1") {
+    click1= "2";
+                    var m =  $("#m").val() || "";
+                    
+                    
+                    if(parseInt(m) <=0) {
+                    	 layer.msg("Montant du retrait supérieur à 0");
+                         click1= "1";
+                         return ;
+                    }
+                    
+                    if(m == "") {
+                        layer.msg("Veuillez entrer le montant");
+                        click1= "1";
+                        return ;
+                    }
+                    
+                    if(m != parseInt(m)) {
+                    	
+                    	layer.msg("Le montant du retrait doit être un nombre entier");
+                        click1= "1";
+                        return ;
+
+                    }
+
+                    if(type==""){
+                        click1= "1";
+                        layer.msg("Veuillez sélectionner le type");
+                        return ; 
+                    }
+
+
+                    if(tongdao==""){
+                         click1= "1";
+                        layer.msg("Choisissez votre portefeuille de retrait");
+                        return ; 
+                    }
+
+                    var mm =  $("#money").html() ||"100";
+                       if(parseFloat(mm) <  parseFloat(m)){
+                            layer.msg("Solde est insuffisant!");
+                            click1="1";
+                            return ; 
+
+                       }
+
+
+    var  parame  = {
+            type:type,
+            cardType: tongdao, 
+            money : m,
+            txMm:  value
+        }
+        var url = "${ctxPath}/tixianPostData";
+        doAjax(url,"POST" ,parame,function(data){
+            var code=  data.code ;
+            click1 = "1";
+
+            if(code == 1){
+
+            } else {
+                var flag =  data.flag ; 
+                if(flag== "true"){
+                    layer.msg("Succès");
+                    history.back();
+                }else {
+                    layer.msg(data.msg)
+                }
+            }
+        })
+
+
+                     }
+//                    alert(value); //得到value
+                    layer.close(index);
+                });
+
+            }
+
+            function  chooseTongdao(el){
+                     tongdao = $(el).attr("rowid") ;
+
+            }
+            function his22(){
+                        location.href = "${ctxPath}/withdrawhistory";
+
+            }
+    </script>
+  </body>  
+</html>

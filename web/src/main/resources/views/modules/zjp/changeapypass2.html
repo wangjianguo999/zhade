@@ -1,0 +1,144 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>${title}</title>
+    <link rel="stylesheet" type="text/css" href="${ctxStatic}/common/aui.css" />
+    <style type="text/css">
+        .aui-list .aui-list-item-label, .aui-list .aui-list-item-label-icon {
+            width: 80%;
+        }
+    </style>
+</head>
+<body>
+
+<header class="aui-bar aui-bar-nav" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode="" onclick="closeWin()">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title">${title}</div>
+         
+        </a>
+    </header>
+    <div class="aui-content aui-margin-b-15">
+        <ul class="aui-list aui-form-list"  style="display: none">
+              
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">Entrez l'ancien mot de passe</div>
+                   
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-input">
+                        <input id="oldPassword" type="password" placeholder="Entrez l'ancien mot de passe">
+                    </div>
+                </div>
+            </li>
+            
+        </ul>
+        <ul class="aui-list aui-form-list">
+              
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        Entrer un nouveau mot de passe
+                    </div>
+                   
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-input">
+                        <input id="newPassword" type="password" placeholder="Entrer un nouveau mot de passe">
+                    </div>
+                </div>
+            </li>
+            
+        </ul>
+        <ul class="aui-list aui-form-list">
+              
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        Confirmer le nouveau mot de passe
+                    </div>
+                   
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-input">
+                        <input id="newPassword1" type="password" placeholder="Confirmer le nouveau mot de passe">
+                    </div>
+                </div>
+            </li>
+            
+        </ul>
+    </div>
+<div class="aui-btn aui-btn-danger aui-btn-block" onclick="saveData()">Confirmer le changement</div>
+</body>
+
+
+<script type="text/javascript"
+    src="${ctxStatic}/jquery/jquery-1.12.4.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/common.js"></script>
+<script type="text/javascript"
+    src="${ctxStatic}/common/clipboard.min.js"></script>
+<script type="text/javascript" src="${ctxStatic}/layer/3.1/layer.js "></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/qrcode.min.js"></script>
+
+
+<script type="text/javascript" src="${ctxStatic}/common/doT.min.js"></script>
+
+<script type="text/javascript">
+    var  tt111111  =  window.localStorage.getItem("token") || "";
+
+    if(tt111111=="-11" || tt111111==""){
+        location.href = "${ctxPath}/login";
+
+    }
+function  saveData(){
+        var  oldPassword =   $("#oldPassword").val() || "";
+        var newPassword =  $("#newPassword").val() || "";
+        var newPassword1 =  $("#newPassword1").val() || "";
+      
+
+        if(newPassword == ""){
+            layer.msg("new Password required");
+            return ;
+        }
+
+        if(newPassword1 == ""){
+            layer.msg("confirm  new Password required");
+            return ;
+        }
+        if(newPassword !=  newPassword1) {
+            layer.msg("Confirm that the password is not the same ");
+            return ;
+        }
+
+        var parame  = {
+            oldPassword: oldPassword ,
+            newPassword: newPassword
+        }
+        var  url = "${ctxPath}/changePasswordData2";
+
+        doAjax(url,"post",parame,function(data){
+                var flag=  data.flag;
+                if(flag=="false"){
+                    layer.msg(data.msg);    
+                }else {
+                    layer.msg("Succès");
+                   	history.go(-2)
+                }
+            })
+    }
+</script>
+</html>

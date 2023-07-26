@@ -1,0 +1,71 @@
+<% layout('/layouts/default.html', {title: 'tab_tongji_days管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa icon-notebook"></i> ${text('tab_tongji_days管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSetting" title="${text('设置')}"><i class="fa fa-navicon"></i></a>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${tabTongjiDays}" action="${ctxPath}/tabTongjiDaysListData" method="post" class="form-inline  "
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('用户编号')}：</label>
+					<div class="control-inline">
+						<#form:input path="userid" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('统计日期')}：</label>
+					<div class="control-inline">
+						<#form:input path="days_gte" readonly="true" maxlength="20" class="form-control laydate width-datetime"
+							dataFormat="datetime" data-type="datetime" data-format="yyyy-MM-dd HH:mm" data-done="days_lte.click()"/>
+						&nbsp;-&nbsp;
+						<#form:input path="days_lte" readonly="true" maxlength="20" class="form-control laydate width-datetime"
+							dataFormat="datetime" data-type="datetime" data-format="yyyy-MM-dd HH:mm"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text("生成日期")}', name:'days', index:'a.days', width:150, align:"center"},
+		{header:'${text("注册人数")}', name:'zcrs', index:'a.zcrs', width:150, align:"center"},
+		{header:'${text("做单人数")}', name:'zdrs', index:'a.zdrs', width:150, align:"center"},
+		{header:'${text("充值金额")}', name:'czje', index:'a.czje', width:150, align:"right", formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 0, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("充值人数")}', name:'czrs', index:'a.czrs', width:150, align:"center"},
+		{header:'${text("首冲金额")}', name:'scje', index:'a.scje', width:150, align:"right", formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 0, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("首冲人数")}', name:'scrs', index:'a.scrs', width:150, align:"center"},
+		{header:'${text("提现人数")}', name:'txrs', index:'a.txrs', width:150, align:"center"},
+		{header:'${text("提现金额")}', name:'txje', index:'a.txje', width:150, align:"right", formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 0, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("存取查")}', name:'cqc', index:'a.cqc', width:150, align:"right", formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 0, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>

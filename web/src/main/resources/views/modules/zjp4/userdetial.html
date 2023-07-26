@@ -1,0 +1,262 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+	name="viewport" />
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+<meta content="telephone=no" name="format-detection" />
+<meta content="false" id="twcClient" name="twcClient">
+<link rel="stylesheet" type="text/css"
+	href="${ctxStatic}/common/aui.css" />
+<link rel="stylesheet" type="text/css"
+	href="${ctxStatic}/common/aui-flex.css" />
+<style>
+.avatar-box {
+	width: 100%;
+	padding: 8px 0;
+	text-align: center;
+	font-size: 12px;
+	height: 170px;
+}
+
+.avatar-box p {
+	margin-bottom: 0;
+	font-size: 12px;
+}
+
+.avatar-box img {
+	width: 80px;
+	height: 80px;
+	border-radius: 50%;
+	text-align: center;
+}
+
+.text-golden {
+	color: goldenrod;
+}
+
+.txt-content {
+	color: #999999;
+}
+
+.aui-list .aui-list-item-label, .aui-list .aui-list-item-label-icon {
+	width: 74%;
+}
+</style>
+</head>
+<body style="background-color: white">
+
+	<header class="aui-bar aui-bar-nav" id="aui-header">
+		<a class="aui-btn aui-pull-left" tapmode="" onclick="closeWin()">
+			<span class="aui-iconfont aui-icon-left"></span>
+		</a>
+		<div class="aui-title">Centres personnels</div>
+	</header>
+	<div class="avatar-box">
+		<div style="width: 100%; text-align: center; float: left;">
+			<img id="img2"
+				src="https://images.caiyaoren.ltd/1509536318779494400.png"
+				id="avatarImg" tapmode onclick="getImg(this)"
+				style="margin: auto; pading: auto;" />
+		</div>
+		<div style="width: 100%; float: left; margin-top: 10px;">
+		</div>
+	</div>
+
+	<div class="aui-content">
+		<ul class="aui-list aui-form-list">
+			<li class="aui-list-item">
+				<div class="aui-list-item-inner">
+					<div class="aui-list-item-label">Numero de telephone</div>
+					<div class="aui-list-item-input" style="padding: 0;">
+						<div style="width: 100%; float: left;">
+							<input type="text" placeholder="numero de telephone" id="rowid"
+								style="color: #999999;" readonly="readonly">
+						</div>
+
+					</div>
+				</div>
+			</li>
+
+			<li class="aui-list-item">
+				<div class="aui-list-item-inner">
+					<div class="aui-list-item-label">Un surnom</div>
+					<div class="aui-list-item-input" style="padding: 0;">
+						<div style="width: 100%; float: left;">
+							<input type="text" placeholder="Un surnom" id="nickname"   maxlength="16"
+								style="color: #999999;">
+						</div>
+
+					</div>
+				</div>
+			</li>
+
+			<li class="aui-list-item">
+				<div class="aui-list-item-inner">
+					<div class="aui-list-item-label">Sexe</div>
+					<div class="aui-list-item-input">
+						<label style="color: #999999;"> <input class="aui-radio"
+							type="radio" name="sex" value="Madame"> Madame
+						</label> <label style="color: #999999;"> <input class="aui-radio"
+							type="radio" name="sex" value="Hommes"> Hommes
+						</label>
+					</div>
+				</div>
+			</li>
+			<li class="aui-list-item">
+				<div class="aui-list-item-inner">
+					<div class="aui-list-item-label">Date de naissance</div>
+					<div class="aui-list-item-input">
+						<input type="text" placeholder="Date de naissance"
+							style="color: #999999;" id="birthday" readonly=""
+							onclick="openPicker(this)">
+					</div>
+				</div>
+			</li>
+
+			<li class="aui-list-item">
+				<div class="aui-list-item-inner">
+					<div class="aui-list-item-label">Nationalité</div>
+					<div class="aui-list-item-input">
+						<input type="text" placeholder="Nationalité"
+							style="color: #999999;" id="nationality">
+					</div>
+				</div>
+			</li>
+
+		</ul>
+	</div>
+	<br>
+	<div class="aui-btn aui-btn-danger aui-btn-block" id="buttons"
+		onclick="saveData()">Présentation</div>
+
+
+</body>
+<div id="img22" style="display: none"></div>
+</html>
+
+
+<script src="${ctxStatic}/common/jquery.min.js"></script>
+<script type="text/javascript"
+	src="${ctxStatic}/layer/3.1/layer.js?V0.1-12102105"></script>
+<script type=""
+	src="${ctxStatic}/common/common.js?m222?v=121222AD?v=121222A"></script>
+<link rel="stylesheet" href="${ctxStatic}/common/popoPicker.css">
+
+<link rel="stylesheet" href="${ctxStatic}/common/upload/webuploader.css">
+<script src="${ctxStatic}/common/upload/webuploader.min.js"></script>
+<script src="${ctxStatic}/common/popoPicker.min.js"></script>
+<script src="${ctxStatic}/common/api.js"></script>
+
+<script type="text/javascript">
+	var PATH2 = "";
+	var dataRowid = "";
+	var url = "${ctxPath}/getUserDetail";
+	var parame = {};
+
+	doAjax(url, "post", parame, function(data) {
+		var data = data.data;
+		var imgsrc = data.imgsrc || "";
+		PATH2 = imgsrc;
+		var birthday = data.birthday || "none";
+		var sex = data.sex;
+        $api.attr($api.dom("input[name='sex'][value='" + sex + "']"), "checked", "checked");
+
+		if (imgsrc) {
+			$("#img2").attr("src", imgsrc);
+		}
+		var rowid = data.rowid;
+		$("#rowid").val(rowid);
+		var username = data.username;
+		$("#nickname").val(username);
+		console.log(birthday)
+
+		if (birthday == "0") {
+			birthday = "";
+		}
+		$("#birthday").val(birthday);
+
+		var nationality = data.nationality;
+		$("#nationality").val(nationality);
+
+	})
+
+	function init2() {
+		var uploader = WebUploader.create({
+
+			// 选完文件后，是否自动上传。
+			auto : true,
+
+			// swf文件路径
+			swf : "${ctxStatic}/common/" + '/upload/Uploader.swf',
+
+			// 文件接收服务端。
+			server : '${ctxPath}/uploadFile',
+
+			pick : {
+				id : '#img22',
+				label : '点击选择图片'
+			},
+
+			// 只允许选择图片文件。
+			accept : {
+				title : 'Images',
+				extensions : 'gif,jpg,jpeg,bmp,png',
+				mimeTypes : 'image/*'
+			}
+		});
+		uploader.refresh();
+
+		uploader.on('uploadSuccess', function(file, response) {
+			console.log(file);
+			console.log(response);
+			var data = response.data;
+			$("#img1").attr("style", "background-image: url('" + data + "')");
+			$("#img2").attr("src", data);
+			PATH2 = data;
+		});
+	}
+	function ll() {
+		$("input[type='file']").click()
+	}
+
+	new popoDateTime('#birthday', {
+		time : false,
+		background : 'light'
+	});
+
+	$(document).ready(function() {
+		init2();
+	})
+
+	function getImg() {
+		$("input[type='file']").click()
+	}
+
+	function saveData() {
+		var inputs = $("input");
+		var imgsrc = PATH2;
+		var birthday = $("#birthday").html();
+        var Sex = $api.val($api.dom("input[name='sex']:checked"));
+		var parame = {
+			imgsrc : imgsrc,
+			sex : Sex,
+		}
+		
+
+		for (var i = 0; i < inputs.length; i++) {
+			var id = $(inputs[i]).attr("id");
+			var v = $("#" + id).val();
+			parame[id] = v
+		}
+		var url = "${ctxPath}/saveUserDetail3";
+
+		doAjax(url, "post", parame, function(data) {
+			location.href = "${ctxPath}/mine";
+
+		})
+	}
+</script>

@@ -1,0 +1,316 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+    content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+<meta name="format-detection"
+    content="telephone=no,email=no,date=no,address=no">
+<title>convide amigos</title>
+<link rel="stylesheet" type="text/css"
+    href="${ctxStatic}/common/aui.css" />
+
+  <link rel="stylesheet" href="${ctxStatic}/common/swiper.min.css">
+</head>
+<style> 
+body{
+    background-color: #f3f6fa;
+}
+img.aui-img-round {
+    border-radius: 50%;
+    height: 20px;
+    margin: 0 auto;
+}
+.aui-list .aui-list-item-media img{
+    height: 100px;
+    width: 100px;
+}
+ .swiper-container {
+      width: 98%;
+      height: 100px;
+      padding:10px 0;
+      padding-left: 20px !important;
+      padding-right: 20px !important;
+    }
+    .swiper-slide {
+      text-align: center;
+      font-size: 18px;
+      background: #fff;
+      height: 100px;
+
+      /* Center slide text vertically */
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-box-pack: center;
+      -ms-flex-pack: center;
+      -webkit-justify-content: center;
+      justify-content: center;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      -webkit-align-items: center;
+      align-items: center;
+      transition-property:all;
+    }
+    #progressEffect{
+      position: absolute;
+      z-index: 10;
+      top: 20px;
+      left: 20px;
+    }
+    .swiper-wrapper{
+        width: 98%;
+    } 
+.aui-content .aui-btn {
+    width: 40%;
+    height: 40px;
+    line-height: 40px;
+    margin-top: 20px;
+}
+
+</style>
+<body>
+   <header class="aui-bar aui-bar-nav" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode="" onclick="closeWin()">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title">${tabVipConfig.name}</div>
+        <a class="aui-btn aui-pull-right" tapmode="" onclick="history()">
+            <span class="aui-iconfont  ">order history</span>
+        </a>
+    </header>
+     <section class="aui-content " style="margin-top:10px;background-color: #fff;" >
+        <div class="aui-info aui-margin-t-10 aui-padded-l-10 aui-padded-r-10">
+            <div class="aui-info-item">
+                <img src="https://z7nmix0e.oss-cn-hongkong.aliyuncs.com/f0b32808e05946238dfc4562589a4e03.png" st1yle="width:1.5rem" class="aui-img-round" /><span class="aui-margin-l-5">${tabVipConfig.name} Lv${tabVipConfig.vip}</span>
+                </div>
+        </div>
+    </section>
+    <section class="aui-content aui-margin-t-10 aui-padded-l-10 aui-padded-r-10">
+    <div class="swiper-container" style="background: #fff;">
+    <div class="swiper-wrapper"  id="sider">
+
+    </div>
+    
+    <div class="swiper-pagination"></div>
+  </div>
+  
+	<script id="data-sider" type="text/template">
+				{{for(var i in it){}}
+	        <div class="swiper-slide"><img src="{{=it[i].imgsrc}}"/> </div>
+
+{{}}}
+</script>
+</section>
+
+    <section class="aui-content aui-margin-t-10 aui-padded-l-10 aui-padded-r-10">
+<div class="aui-btn" style="margin-left:10%">STOP</div>
+<div class="aui-btn aui-btn-danger" onclick="postOrder()">AUTO</div>
+</section>
+
+<section class="aui-content-padded">
+        <div class="aui-card-list">
+            <div class="aui-info aui-margin-t-10 aui-padded-l-10 aui-padded-r-10">
+            <div class="aui-info-item">
+                 <span class="aui-margin-l-5" style="    font-size: 17px;
+    font-weight: 700;" >Data statistics</span>
+                </div>
+             
+        </div>
+        <div class="aui-info aui-margin-t-10 aui-padded-l-10 aui-padded-r-10">
+            <div class="aui-info-item">
+                 <span class="aui-margin-l-5">Available balance</span>
+                </div>
+            <div class="aui-info-item" id="money"> </div>
+        </div>
+        <div class="aui-info aui-margin-t-10 aui-padded-l-10 aui-padded-r-10">
+            <div class="aui-info-item">
+                 <span class="aui-margin-l-5">Order completed today</span>
+                </div>
+            <div class="aui-info-item" id="orderLength"> </div>
+        </div>
+        <div class="aui-info aui-margin-t-10 aui-padded-l-10 aui-padded-r-10">
+            <div class="aui-info-item">
+                 <span class="aui-margin-l-5">Today's profit</span>
+                </div>
+            <div class="aui-info-item" id="profit"></div>
+        </div>
+        </div>
+    </section>
+<section class="aui-content-padded" style="background:#f3f6fa">
+        <div class="aui-card-list" style="background:#f3f6fa;font-family: PingFang SC;
+    font-weight: 500;
+    color: #9daabc;">
+            
+            <div class="aui-card-list-content-padded">
+                According to the amount of your account, you can enter the corresponding member hall. Each member hall will pay different advertising promotion commissions according to the products you match. After successfully matching the order, you need to rate the products, select the evaluation, and then click Submit Order to complete order advertising promotion.Congratulations on your successful completion of the order advertising promotion and get advertising commission from our partner merchants.
+            </div>
+            
+        </div>
+    </section>
+
+  <script src="${ctxStatic}/common/swiper.min.js"></script>
+  <script type="text/javascript" src="${ctxStatic}/common/doT.min.js"></script>
+  
+<script type="text/javascript"
+	src="${ctxStatic}/jquery/jquery-1.12.4.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/common.js"></script>
+<script type="text/javascript"
+	src="${ctxStatic}/common/clipboard.min.js"></script>
+<script type="text/javascript" src="${ctxStatic}/layer/3.1/layer.js "></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/qrcode.min.js"></script>
+
+  
+  <script type="text/javascript">
+      effect = 3;
+      var  vip  = "${vip}";
+       
+      	var url = "${ctxPath}/getMyProductData";
+	var parame = {
+			vip:  vip
+	}
+	
+var open2 ; 
+var open1 ;
+	doAjax(url,"post",parame,function(data){
+		
+	var list =  data.data ;
+      //
+      //side
+      	var dataTpl = doT.template(document
+								.getElementById("data-sider").innerHTML);
+						// $api.html($api.byId("sider"), );
+						$("#sider").html(dataTpl((list)));
+
+					    var swiper = new Swiper('.swiper-container', {
+					      loop: true,
+					      speed: 2500,
+					      slidesPerView: 4,
+					      spaceBetween: 10,
+					      centeredSlides : true,
+					      watchSlidesProgress : true,
+					      autoplay: {
+					    delay: 2000,//1秒切换一次
+					  },
+					      on: {
+					        setTranslate: function(){
+					            slides = this.slides
+					            for(i=0; i< slides.length; i++){
+					                slide = slides.eq(i)
+					                progress = slides[i].progress
+					                //slide.html(progress.toFixed(2)); 看清楚progress是怎么变化的
+					                    slide.css({'opacity': '','background': ''});slide.transform('');//清除样式
+					                    
+					                    if(effect == 1){
+					                        slide.transform('scale('+(1 - Math.abs(progress)/8)+')');  
+					                    }else if(effect == 2){
+					                        slide.css('opacity',(1-Math.abs(progress)/6));
+					                        slide.transform('translate3d(0,'+ Math.abs(progress)*20+'px, 0)');  
+					                    }
+					                    else if(effect == 3){
+					                        slide.transform('rotate('+ progress*30+'deg)');  
+					                    }else if(effect == 4){
+					                        slide.css('background','rgba('+ (255 - Math.abs(progress)*20) +','+ (127 + progress*32) +',' + Math.abs(progress)*64 + ')');
+					                    }
+					                    
+					                }   
+					        },
+					        setTransition: function(transition) {
+					            for (var i = 0; i < this.slides.length; i++) {
+					                var slide = this.slides.eq(i)
+					                slide.transition(transition);
+					            }
+					        },
+					      },
+					      pagina1tion: {
+					        el: '.swiper-pagination',
+					        clickable: true,
+					      },
+					    });	
+	})
+	
+	function  jobAuto(){
+		layer.closeAll();
+		orderJieSuan();
+		postOrder();
+	}
+      
+	function postOrder(){
+		var parame = {
+				
+		}
+		
+      	var url = "${ctxPath}/piLiangOrder";
+      	doAjax(url,"post",parame,function(data){
+      		var flag =  data.flag ;
+      		if(flag=="false"){
+      			layer.msg(data.msg);
+    			  var  data =  data.data ; 
+					if(data.length >  0 ){
+						  var  rowid =  data[0].rowid ; 
+			      			orderDetail(rowid)
+					}
+      		}else {
+      			  var  data =  data.data ; 
+      			  var  rowid =  data[0].rowid ; 
+      			orderDetail(rowid)
+      		}
+      		
+      	})
+      	
+	}
+      
+	
+	function orderDetail(v){
+		open1= layer.open({	title : "",
+	 				  type: 2,
+	 				  area: ['80%', '72%'],
+	 				  fixed: false, //不固定
+	 				  content: "${ctxPath}/gouMaiDetail?rowid=" + v 
+	 				});	
+	}
+	function  pingjia(v){
+		orderJieSuan();
+		layer.closeAll()
+
+		open2 =layer.open({	title : "",
+	 				  type: 2,
+	 				  area: ['80%', '90%'],
+	 				  fixed: false, //不固定
+	 				  content: "${ctxPath}/pingjia?rowid=" +  v  
+	 				});	
+	}
+	orderJieSuan();
+	
+	function  orderJieSuan(){
+var parame = {
+				
+		}
+      	var url = "${ctxPath}/getOrderJisuan";
+      	doAjax(url,"post",parame,function(data){
+      		var  totalCount  =   data.totalCount;
+      		var  sumPre   =   parseFloat(data.sumPre).toFixed(2); 
+      		var m =  data.m ;
+      		m =   parseFloat(m).toFixed(2); 
+      		$("#money").html(m);
+      		$("#orderLength").html(totalCount)
+      		$("#profit").html(sumPre)
+
+      	})
+	}
+    function history(){
+    	var url = "${ctxPath}/oederhistory";
+    	location.href = url;
+
+    }
+    function closeWin(){
+    	var url = "${ctxPath}/home";
+    	location.href = url;
+    }
+  </script>
+
+ </html>

@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0, user-scalable=no">
+    <title>Connexion</title>
+    <link rel="stylesheet" href="${ctxStatic}/common/loginCss.css">
+    <style type="text/css">
+    	
+.login-bg {
+    background: url("${ctxStatic}/common/zhuce22.png") no-repeat fixed;
+    color: #ffffff;
+    background-size: 100% 100%;
+}
+    </style>
+    
+     <style type="text/css">
+    	.form-group .form-item input{
+    			margin-left:1px;
+    	}
+    </style>
+</head>
+<body class="login-bg">
+<div class="login-contain"  style="display: flex; flex-direction: column; margin: 0 auto; margin-top: 2rem;">
+    <div class="login-header">
+<p onclick="dl()" style="
+    text-align: right;
+    /* float: right; */
+    margin-top: -20px;
+    margin-bottom: 20px;
+    padding-left: 20px;
+    font-size: 20px;
+"> Connexion</p>    		
+        <p style="padding-bottom: 30px"><img alt="" src="https://images.caiyaoren.ltd/1509536318779494400.png"> </p>
+        
+                 
+        
+    </div>
+    <div class="form-group">
+        <div class="form-item">
+                      <span style="margin-left: -30px;color: #cacaca;">+243</span>
+           
+            <input id="phone" type="text" placeholder="Veuillez saisir le numéro de compte">
+             <label for="username">
+                <img src="${ctxStatic}/common/yhuming.png">
+            </label>
+        </div>
+        <div class="form-item">
+            <input style="margin-left: 15px"  id="PassWord" type="password" placeholder="Veuillez saisir le mot de passe">
+             <label for="password">
+                <img src="${ctxStatic}/common/mima2.png">
+            </label>
+        </div>
+         <div class="form-item">
+            <input  style="margin-left: 15px"  id="PassWord1" type="password" placeholder="Veuillez saisir le mot de passe de confirmation">
+             <label for="password">
+                <img src="${ctxStatic}/common/mima2.png">
+            </label>
+        </div>
+        <div class="form-item">
+            <input style="margin-left: 15px"  id="Code" type="text" placeholder="Veuillez entrer le Code d'invitation">
+             <label for="password">
+                <img src="${ctxStatic}/common/yaoqingma.png">
+            </label>
+        </div>
+    </div>
+    <div class="button-group">
+        <button class="login-btn" onclick="login2()" id="doLogin">Inscription</button>
+    </div>
+
+</div>
+
+
+<script src="${ctxStatic}/common/jquery.min.js"></script>
+<script src="${ctxStatic}/common/common.js"></script>
+<script src="${ctxStatic}/zjp/amazeui.min.js"></script>
+<script src="${ctxStatic}/zjp/app.js"></script>
+<script type="text/javascript"
+	src="${ctxStatic}/layer/3.1/layer.js?V0.1-12102105"></script>
+	
+	
+	<script>
+//    $(function(){
+//        $(window).resize();
+//    });
+//    //js设置居中
+//    $(window).resize(function(){
+//        $(".login-contain").css({
+//            position: "absolute",
+//            left: ($(window).width() - $(".login-contain").outerWidth())/2,
+//            top: 20
+//        });
+//    });
+    
+
+    var  ShareCode =   location.href  ;
+    ShareCode  =  ShareCode.split("=");
+    if(ShareCode.length  ==2) {
+    	ShareCode=  ShareCode[1];
+    	
+    	$("#Code").val(ShareCode)
+    }else {
+    	ShareCode= "";
+    }
+    
+
+	  function  login2(){ 
+		  var  phone=  $("#phone").val() || "";
+		  var PassWord =  $("#PassWord").val() || "";
+		  var Code =  $("#Code").val() || "";
+		  var PassWord1 =  $("#PassWord1").val() || "";
+		  if(phone== ""){
+			  layer.msg("Veuillez saisir le numéro de compte");
+			  return ;
+		  }
+		  if(PassWord== ""){
+			  layer.msg("Veuillez saisir le mot de passe");
+			  return ;
+		  }
+		  
+		  if(Code== ""){
+			  layer.msg("Veuillez entrer le Code d'invitation");
+			  return ;
+		  }
+		  
+		  if(PassWord1== ""){
+			  layer.msg("Veuillez saisir le mot de passe de confirmation");
+			  return ;
+		  }
+		  
+		  if(PassWord1 != PassWord) {
+			  layer.msg("Le mon de passe est différent.");
+			  return ;
+
+		  }
+		  
+		  
+		  var parame = {
+				  phone :  phone,
+				  PassWord: PassWord,
+				  Code : Code
+		  }
+		  console.log(parseInt(phone) !=  phone  ||  phone.length !=9)
+		  if(parseInt(phone) !=  phone  ||  phone.length !=9){
+			  layer.msg("Veuillez saisir 9 Chiffres ");
+
+			  return ;
+		  }
+		  
+		  var url = "${ctxPath}/registerPost";
+		  doAjax(url,"post",parame,function(data){
+			  	  var flag =  data.flag; 
+			  	  if(flag=="false"){
+			  		  layer.msg(data.msg);
+			  	  }else {
+			  		  var  data=  data.data;
+			  		  var accesstoken=  data.accesstoken; 
+						window.localStorage.setItem("token",accesstoken);
+						location.href="/home";
+
+			  	  }
+		  })
+		  
+		  
+		  
+	  }
+	  function  dl(){
+		  location.href="${ctxPath}/login";
+
+	  }
+</script>
+
+</body>
+</html>

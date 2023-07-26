@@ -1,0 +1,119 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+    content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+<meta name="format-detection"
+    content="telephone=no,email=no,date=no,address=no">
+<title>convide amigos</title>
+<link rel="stylesheet" type="text/css"
+    href="${ctxStatic}/common/aui.css" />
+<style type="text/css">
+     .aui-btn-block{
+     	font-size:0.8rem;
+     }
+</style>
+
+</head>
+<body>
+<header class="aui-bar aui-bar-nav" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode="" onclick="closeWin()">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title">${type}</div>
+         
+        </a>
+    </header>
+    <ul class="aui-list aui-media-list" id="list">
+              
+            
+    
+        </ul>
+
+
+        <br>
+        <br>
+    <script id="data-list" type="text/template">
+                {{for(var i in it){}}
+<li class="aui-list-item aui-list-item-middle"   rowid="{{=it[i].rowid}}" onclick="doDetail(this)">
+                <div class="aui-media-list-item-inner">
+                    
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        <div class="aui-list-item-text">
+                            <div class="aui-list-item-title aui-font-size-14">{{=it[i].firstname}}</div>
+                        </div>
+                        <div class="aui-list-item-text">
+                            {{=it[i].lastname}}
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+                {{}}}
+
+            </script>
+            <div onclick="add()" class="aui-btn aui-btn-danger aui-btn-block">+ Portefeuille de portefeuilles groupés</div>
+
+<script type="text/javascript"
+    src="${ctxStatic}/jquery/jquery-1.12.4.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/common.js"></script>
+<script type="text/javascript"
+    src="${ctxStatic}/common/clipboard.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/qrcode.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/aui-actionsheet.js" ></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/doT.min.js"></script>
+
+<script type="text/javascript"
+    src="${ctxStatic}/layer/3.1/layer.js?V0.1-12102105"></script>
+    <script type="text/javascript">
+	var  tt111111  =  window.localStorage.getItem("token") || "";
+
+if(tt111111==""){
+	location.href = "${ctxPath}/login";
+
+}
+</script>
+    <script type="text/javascript">
+            var  type =  "${type}";
+        $(document).ready(function(){
+               initData(); 
+        })
+
+        function initData(){
+            var parame = {
+                type :  type 
+            }
+            var url = "${ctxPath}/getUserBanks";
+            doAjax(url,"post",parame,function(data){
+                var data=  data.data; 
+
+                        var dataTpl = doT.template(document
+                                .getElementById("data-list").innerHTML);
+                        // $api.html($api.byId("sider"), );
+                        $("#list").html(dataTpl(data));    
+            })
+        }
+        function add(){
+           location.href = "${ctxPath}/mailaccountbind?type=" +  type;
+        }
+        function  doDetail(el){
+            var rowid = $(el).attr("rowid");
+            var url=  "${ctxPath}/mailaccountbind?rowid=" + rowid;
+             // location.href = url;
+        }
+
+        window.onpopstate=function(){
+           // 获得存储在该历史记录点的json对象
+           var  json=window.history.state;// 获得的json为null时则无需刷新
+           if(json){
+               window.location.reload();
+           }
+       };  
+    </script>
+  </body>  
+</html>

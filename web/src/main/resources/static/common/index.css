@@ -1,0 +1,262 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body,
+html {
+    background-color: #f3f6fb;
+}
+
+.content {
+    margin-bottom: 1rem;
+}
+
+.header {
+    position: relative;
+    height: 7.5rem;
+    background-image: url('top-bg.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+.header .bg-header {
+    position: absolute;
+    top: 1.5rem;
+    left: .5rem;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.header .bg-header img {
+    width: 100%;
+    height: 100%;
+}
+
+.header h2 {
+    padding-top: .9rem;
+    margin-left: 3.5rem;
+    color: #fff;
+    font-size: .6rem;
+}
+
+.header .name {
+    position: relative;
+    display: flex;
+    padding-top: .7rem;
+    padding-left: 2.8rem;
+    padding-right: .4rem;
+    color: #737273;
+    font-size: .3rem;
+}
+.header .vip {
+    width: 1.8rem;
+    height: .546666666666667rem;
+
+}
+.header .vip a {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    background: url('v1.png');
+    background-size: cover;
+}
+.header .user-id {
+    padding-left: 2.8rem;
+    color:  #737273;
+    font-size: .466666666666667rem;
+}
+.header .h-b {
+    margin-top: .2rem;
+    display: flex;
+    justify-content: space-around;
+    font-weight: bold;
+    text-align: center;
+}
+.header .h-b img {
+    width: .826666666666667rem;
+    height: .826666666666667rem;
+}
+.header .h-b div p:first-child {
+    font-size: .3rem;
+}
+.header .h-b div p:last-child {
+    margin-top: .1rem;
+}
+
+.header .h-b .h-b-left {
+    padding-left: .4rem;
+}
+
+.header .h-b .h-b-right {
+    margin-right: 0.5rem;
+}
+progress::-webkit-progress-bar {
+    background: #ededed;
+    border-radius: 8px;
+}
+
+progress::-webkit-progress-value {
+    background: #06c5d8;
+    border-radius: 8px;
+}
+.header .progress {
+    padding-left: 2.8rem;
+    font-size: 12px;
+    color: #737273;
+}
+
+.header .progress .progress-bar {
+    display: block;
+    width: 4.413333333333333rem;
+    height: .2rem;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    position: relative;
+}
+.header .progress .progress-bar .bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 70%;
+    height: 100%;
+    border-radius: 10px;
+}
+.header .progress .bar-1 {
+    background-color: #fde266;
+}
+.header .progress .bar-2 {
+    background-color: #ed6665;
+}
+
+
+.header p {
+    font-size: 12px;
+    color: #000;
+}
+
+.header .p1 {
+    padding-left: 3.5rem;
+}
+
+.header .p2 {
+    margin-top: 4px;
+    padding-left: 3.2rem;
+}
+
+.header .name span:first-child {
+    font-size: .55rem;
+}
+
+.header .name span:last-child {
+    font-size: .4rem
+}
+
+.box {
+    display: flex;
+    justify-content: space-between;
+    padding: .6rem .2rem;
+}
+
+.box>div {
+    padding-left: 2.2rem;
+    width: 50%;
+    height: 1.733333333333333rem;
+    color: #fff;
+    font-size: 16px;
+    line-height: 1.733333333333333rem;
+}
+
+.box .box1 {
+    margin-right: .5em;
+    background-image: url('mine11.png');
+    background-size: 100% 100%;
+}
+
+.box .box2 {
+    background-image: url('mine12.png');
+    background-size: 100% 100%;
+}
+
+.nav {
+    padding: .866666666666667rem .8rem 0 .8rem;
+    background-color: #fff;
+}
+
+.nav li img {
+    width: 33px;
+    height: 30px;
+}
+
+.nav ul {
+    display: flex;
+    font-size: 12px;
+    padding-bottom: 1rem;
+}
+
+.nav li {
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.nav li span {
+    margin-top: .16rem;
+    text-align: center;
+}
+
+.cus-s {
+    margin-top: .773333333333333rem;
+    text-align: center;
+    font-size: 12px;
+    vertical-align: middle;
+}
+
+.cus-s img {
+    vertical-align: middle;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    height: 1.4rem;
+    background-image: url('tab-bg.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    justify-content: space-around;
+    color: #fff;
+    font-size: .3rem;
+}
+
+.footer .tab {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.tab-home img {
+    width: .826666666666667rem;
+    height: .626666666666667rem;
+}
+
+.tab-service img {
+    width: .546666666666667rem;
+    height: .626666666666667rem;
+}
+
+.tab-team img {
+    width: .826666666666667rem;
+    height: .626666666666667rem;
+}
+
+.tab-mine img {
+    width: .773333333333333rem;
+    height: .76rem;
+}

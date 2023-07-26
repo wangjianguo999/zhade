@@ -1,0 +1,618 @@
+<% layout('/layouts/default.html', {title: 'tab_rechange_log管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa icon-notebook"></i> ${text('充值记录管理')}
+			</div>
+			<div class="box-tools pull-right">
+ 				<a href="#" class="btn btn-default" id="btnSetting" title="${text('设置')}"><i class="fa fa-navicon"></i></a>
+			</div>
+		</div>
+		<div class="box-body">
+			<img alt="" src="" id="imgs">
+			<#form:form id="searchForm" model="${tabRechangeLog}" action="${ctxPath}/tabRechangeLogListData" method="post" class="form-inline  "
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+					<div class="form-group">
+					<label class="control-label">${text('用户账号')}：</label>
+					<div class="control-inline">
+						<#form:input path="userid" maxlength="451" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('充值订单号')}：</label>
+					<div class="control-inline">
+						<#form:input path="orderid" maxlength="451" class="form-control width-120"/>
+					</div>
+				</div>
+			<div class="form-group">
+				<label class="control-label">${text('批准编号')}：</label>
+				<div class="control-inline">
+					<#form:input path="pingzheng" maxlength="451" class="form-control width-120"/>
+				</div>
+			</div>
+				<div class="form-group">
+					<label class="control-label">${text('充值状态')}：</label>
+					<div class="control-inline width-120" >
+ 					 <#form:select path="status1" dictType="czzt" blankOption="true" class="form-control width-120"/>
+						
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('创建时间')}：</label>
+					<div class="control-inline">
+						<#form:input path="createtime_gte" readonly="true" maxlength="20" class="form-control laydate width-datetime"
+							dataFormat="datetime" data-type="datetime" data-format="yyyy-MM-dd HH:mm" data-done="createtime_lte.click()"/>
+						&nbsp;-&nbsp;
+						<#form:input path="createtime_lte" readonly="true" maxlength="20" class="form-control laydate width-datetime"
+							dataFormat="datetime" data-type="datetime" data-format="yyyy-MM-dd HH:mm"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('充值类型')}：</label>
+					<div class="control-inline width-120">
+ 						<#form:select path="paytype" dictType="cztype" blankOption="true" class="form-control width-120"/>
+						
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="control-label">${text('充值通道')}：</label>
+					<div class="control-inline width-120">
+ 						<#form:select path="type" items="${tongdaos}" blankOption="true" itemLabel="tongdaoName" itemValue="tongdaoName" class="form-control required" />
+ 						
+						
+					</div>
+				</div>
+				 
+				 
+				 <div class="form-group">
+					<label class="control-label">${text('更新时间')}：</label>
+					<div class="control-inline">
+						<#form:input path="updatetime_gte" readonly="true" maxlength="20" class="form-control laydate width-date"
+							dataFormat="date" data-type="date" data-format="yyyy-MM-dd" data-d1one="updatetime_lte.click()"/>
+						&nbsp;-&nbsp;
+						<#form:input path="updatetime_lte" readonly="true" maxlength="20" class="form-control laydate width-date"
+							dataFormat="date" data-type="date" data-format="yyyy-MM-dd"/>
+					</div>
+				</div>
+				
+				
+				 <div class="form-group">
+					<label class="control-label" id="jisuan"> </label>
+				</div>
+				<div class="form-group">
+				
+				<button type="button"   class="btn btn-primary btn-sm" onclick="jinri()" >今日</button>
+										<button type="button"   class="btn btn-primary btn-sm" onclick="zuori()" >昨日</button>
+					
+					<button type="button"   class="btn btn-primary btn-sm" onclick="benzhou()" >本周</button>
+										<button type="button"   class="btn btn-primary btn-sm" onclick="shangZhou()" >上周</button>
+										<button type="button"   class="btn btn-primary btn-sm" onclick="benyue()" >本月</button>
+										<button type="button"   class="btn btn-primary btn-sm" onclick="shangyue()" >上月</button>
+										
+					<button type="submit" id="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+					<button type="button" onclick="gengxin()" class="btn btn-primary btn-sm hide I">${text('设置支付成功')}</button>
+					<button type="button" onclick="showPop()" class="btn  btn-success  btn-sm hide  F2">${text('提交批准代码')}</button>
+					<button type="button" onclick="showRechange()" class="btn  btn-success  btn-sm hide J1">${text('创建充值订单')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<div class="row col-sm-12" style="display:none;padding-left: 20px;" id="show_div">
+	<div class="form-group" >
+		<!--<label class="col-sm-12 control-label" style="margin-top: 20px;padding-bottom: 10px;">交易id：</label>-->
+		<div class="col-sm-12">
+			<input id="jiaoyi" name="jiaoyiid" placeholder="请填写批准代码" type="text" class="form-control" required="" aria-required="true">
+		</div>
+	</div>
+
+	<!-- <div class="form-group" style="margin-top: 30px;margin-bottom: 30px;">
+        <div class="col-sm-4 col-sm-offset-3">
+            <button onclick="commitJYID" class="btn btn-primary" >提交</button>
+        </div>
+    </div> -->
+</div>
+
+
+<div class="row col-sm-12" style="display:none;padding-left: 20px;" id="show_rechage_div">
+	<div class="form-group" >
+		<div class="col-sm-12">
+			<input id="reuserid" name="reuserid" placeholder="请填写用户编号"  type="text" maxlength="10" class="form-control" required="" aria-required="true">
+			<input id="reamount" name="reamount" placeholder="请填写金额" type="number" maxlength="7" class="form-control" required="" aria-required="true">
+			<input id="recode" name="recode" placeholder="请填写批准代码" type="text" maxlength="100" class="form-control" required="" aria-required="true">
+		</div>
+	</div>
+</div>
+
+<% } %>
+
+	<style>
+	.zindex{
+		z-index: 11111 !important;
+	}
+#outerbox {
+	width:100%;
+	height:100%;
+	display:none;
+	position:fixed;
+	top:0;
+	left:0;
+	background:rgba(0,0,0,0.6);
+	z-index:9;
+}
+#innerbox {
+	position:absolute;
+	z-index:99;
+}
+#innerbox #bigimg {
+	cursor:grab;
+	border:5px solid #ffffff;
+	border-radius:10px;
+}
+</style>
+ 
+
+ 
+<script type="text/javascript" src="${ctxStatic}/layer/3.1/layer.js?V0.1-12102105"></script>
+<script>
+
+// 初始化DataGrid对象
+var listArray = [] ;
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+    showCheckbox: true,    // 是否显示复选框
+
+	columnModel: [
+		{header:'${text("充值订单号")}', name:'rowid', index:'a.rowid', hidden:true, width:100, align:"left"},
+
+		{header:'${text("用户编号")}', name:'userid', index:'a.userid', width:150, align:"left", frozen:true, for1matter: function(val, obj, row, act){
+			return '<a href="${ctx}/tab/tabRechangeLog/form?rowid='+row.rowid+'" class="btnList" data-title="${text("编辑tab_rechange_log")}">'+(val||row.id)+'</a>';
+		}},
+		{header:'${text("充值金额")}', name:'hzhb', index:'a.hzhb', width:80, align:"left", formatter: function(val, obj, row, act){
+			return   val;    <!--+ "=  " + parseFloat(row.hzhb || 0).toFixed(2)+" TZS" --> // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("是否为上级充值")}', name:'orderType', index:'a.orderType', width:50, align:"left" , formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sys_yes_no')}, val, '未知', true);
+		}},
+		{header:'${text("上级充值账号")}', name:'userid1', index:'a.userid1', width:100, align:"center"},
+
+		{header:'${text("充值类型")}', name:'paytype', index:'a.paytype', width:80, align:"left",format1ter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('cztype')}, val, val, true);
+		}},
+		{header:'${text("批准编号")}', name:'pingzheng', index:'a.pingzheng', width:180, align:"center",formatter: function(val, obj, row, act){
+		    if(row.pingzheng != null){
+		    	var dd = row.pingzheng;
+				return '<a href="javascript:void(0)" onclick=\'showAddress("'+dd+'")\'>'+dd+'</a>';
+		    }else{
+		   		return '';
+		    }
+		}},
+		{header:'${text("员工账号")}', name:'ygzh2', index:'a.ygzh2', width:100, align:"center"},
+		{header:'${text("充值通道")}', name:'type', index:'a.type', width:100, align:"center"},
+		{header:'${text("充值订单号")}', name:'orderid', index:'a.orderid', hidd1en:true, width:170, align:"left"},
+
+		{header:'${text("充值状态")}', name:'status1', index:'a.status1', width:100, align:"left" , formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('czzt')}, val, '未知', true);
+		}},
+		{header:'${text("创建时间")}', name:'createtime', index:'a.createtime', width:150, align:"center"},
+		{header:'${text("更新时间")}', name:'updatetime', index:'a.updatetime', width:150, align:"center"},
+		
+		 
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		listArray   =data;
+		initData22();
+
+		var url = "${ctxPath}/yuangongGetConfig2/";
+		doAjax(url,"post",{},function(data){
+		     var  data = data.data || "" ; 
+		     if(data == "") {
+		    	 $(".hide").removeClass("hide")
+		     }else {
+		    	 var  quanxian =    (data || "").split(",");
+		    	 for(var i = 0 ;i < quanxian.length;i++){
+		    		 $("." +quanxian[i]).removeClass("hide")
+		    	 }
+		    	 
+		     }
+		})
+	}
+});
+
+function showPop() {
+		var  ll = $('#dataGrid').dataGrid('getSelectRows');
+		var aa;
+		aa = ll[0]
+		console.log(aa);
+		if(aa.length ==0){
+			js.showMessage("请选择订单!");
+			return ;
+		}
+		oid = ll
+		layer.open({
+			type: 1, //可传入的值有：0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）
+			title: ['操作'], //数组第二项可以写任意css样式；如果你不想显示标题栏，你可以title: false
+			area: '375px',
+			btn:['确定'],
+			content: $('#show_div'),
+			yes:function (index, layero) {
+				console.log($('input[name=jiaoyiid]').val());
+				console.log(aa)
+				if($('input[name=jiaoyiid]').val().length==0){
+					alert('请输入批准代码！')
+					return
+				}
+				var parame = {
+					orderId: aa,
+					rechangeId: $('input[name=jiaoyiid]').val()
+				}
+				var url = "${ctxPath}/changeDaiShouOrder1";
+				doAjax(url, "get", parame, function(data) {
+					console.log("调用接口")
+					location.reload();
+				})
+			}
+		});
+	}
+
+function showAddress(dd){
+ 	console.log(dd);
+const textarea = document.createElement('textarea');
+  textarea.readOnly = 'readonly';
+  textarea.style.position = 'absolute';
+  textarea.style.left = '-9999px';
+  textarea.value = dd;
+  document.body.appendChild(textarea);
+  textarea.select();
+  const result = document.execCommand('Copy');
+}
+
+function initData22(){
+
+		  var inputs =  $("form input,form select");
+		  console.log(inputs.length);
+		  var parame  = {
+		  }
+		  var  s = "";
+		  var array = [];
+		  for(var i = 0 ;i < inputs.length;i++ ){
+			  var $id  = $(inputs[i]).attr("id");
+			  console.log($id);
+			  parame[$id ]   =    $(inputs[i]).val();
+			  s =    $id +"=" +  $(inputs[i]).val();
+			  array.push(s);
+		  }
+		  var url= "${ctxPath}/tabRechangeLogTongJi";
+		  doAjax(url,"post",parame,function(data){
+			  var czje =    parseFloat(data.czje).toFixed(2);
+			  var  bs  =  data.bs;
+			$("#jisuan").html("充值金额:" +  "<font color='red'>" +czje+"</font>"  +";充值笔数:" +  "<font color='red'>" +bs+"</font>"   )	  
+		  })
+}
+
+function showBigImg(outerbox, innerbox, bigimg, _this) {
+    var src = _this.attr('src'); //获取当前点击图片元素的src属性
+    $(bigimg).attr('src', src); //设置#bigimg元素的src属性值
+
+    /* 获取当前点击图片的真实大小，并显示弹出层及大图 */
+    $(bigimg).attr('src', src).load(function() {
+        var windowW = $(window).width(); //获取当前窗口宽度
+        var windowH = $(window).height(); //获取当前窗口高度
+        var realW = this.width; //获取图片真实宽度
+        var realH = this.height; //获取图片真实高度
+        var imgW, imgH;
+        var scale = 0.8; //当图片的真实宽高大于窗口的宽高时要进行的缩放尺寸
+        if (realH > windowH * scale) { //判断图片高度
+            imgH = windowH * scale; //如大于窗口高度，图片高度进行缩放
+            imgW = imgH / realH * realW; //等比例缩放宽度
+            if (imgW > windowW * scale) { //如宽度仍大于窗口宽度
+                imgW = windowW * scale; //再对宽度进行缩放
+            }
+        } else if (realW > windowW * scale) { //如图片高度合适，判断图片宽度
+            imgW = windowW * scale; //图片宽度进行缩放
+            imgH = imgW / realW * realH; //等比例缩放高度
+        } else { //如图片真实宽高都符合要求，宽高不变
+            imgW = realW;
+            imgH = realH;
+        }
+        $(bigimg).css('width', imgW); //以最终的宽度对图片进行缩放
+        var w = (windowW - imgW) / 2; //计算图片与窗口的左右边距
+        var h = (windowH - imgH) / 2; //计算图片与窗口的上下边距
+        $(innerbox).css({
+            'top': h,
+            'left': w
+        });
+        $(outerbox).fadeIn('fast'); //淡入显示
+        $('body').css('overflow-y', 'hidden'); //隐藏页面滚动条防止滚动缩放图片时影响页面滚动条位置
+
+        // IE9, Chrome, Safari, Opera  -- 鼠标滚动监听
+        $('#bigimg').on("mousewheel", MouseWheelHandler);
+        // Firefox	-- 鼠标滚动监听
+        $('#bigimg').on("DOMMouseScroll", MouseWheelHandler);
+    })
+
+    $(outerbox).click(function() { //再次点击淡出消失弹窗
+        $(this).fadeOut('fast');
+
+        // 解绑 鼠标滚轮监听事件
+        $('#bigimg').off("mousewheel");
+        $('#bigimg').off("DOMMouseScroll");
+        // 重置
+        $('#bigimg').css('transform', 'scale(1)');
+        $('body').css('overflow-y', 'auto');
+    })
+}
+
+// 鼠标滚轮放大缩小
+function MouseWheelHandler(event) {
+    var type = event.type;
+    if (type == 'DOMMouseScroll' || type == 'mousewheel') {
+        event.delta = (event.originalEvent.wheelDelta) ? event.originalEvent.wheelDelta / 120 : -(event.detail || 0) / 3;
+    }
+
+    if (event.delta == 1 || event.delta > 0) { //上滚 -- 放大
+        zoomImg('#bigimg', 'add')
+    } else if (event.delta == -1 || event.delta < 0) { //下滚 -- 缩小
+        zoomImg('#bigimg', 'cut')
+    } else {
+        console.log("鼠标滚轮放大缩小状态获取失败")
+    }
+}
+// 缩放图片比例
+function zoomImg(img, type) {
+}
+
+function  gengxin(){
+	var  ll = $('#dataGrid').dataGrid('getSelectRows');
+	console.log(ll);
+	var  list =  [];
+
+	for(var i = 0 ; i < ll.length;i++ ){
+		list.push(ll[i])
+	}
+	if(list.length ==0){
+		js.showMessage("请选择订单!");
+		return ;
+	}
+ 	layer.confirm('确定设置成功吗 ？', {
+		  btn: ['确定', '取消'] //可以无限个按钮
+		  ,btn3: function(index, layero){
+		    //按钮【按钮三】的回调
+		  }
+		}, function(index, layero){ 
+			
+			var parame  = {
+				rowids: list.join(",")	
+			}
+			var url = "${ctxPath}/tabRechangeLogChangeData";
+			doAjax(url,"post",parame,function(data){
+				$("#submit").click();
+
+			})
+		}, function(index){
+		  //按钮【按钮二】的回调
+		});
+}
+
+function  shibai(){
+
+	var  ll = $('#dataGrid').dataGrid('getSelectRows');
+	console.log(ll);
+	var  list =  [];
+
+	for(var i = 0 ; i < ll.length;i++ ){
+		list.push(ll[i])
+	}
+	if(list.length ==0){
+		js.showMessage("请选择订单!");
+		return ;
+	}
+ 	layer.confirm('确定设置失败吗 ？', {
+		  btn: ['确定', '取消'] //可以无限个按钮
+		  ,btn3: function(index, layero){
+		    //按钮【按钮三】的回调
+		  }
+		}, function(index, layero){ 
+			
+			var parame  = {
+				rowids: list.join(",")	
+			}
+			var url = "${ctxPath}/tabRechangeLogChangeData2";
+			doAjax(url,"post",parame,function(data){
+				$("#submit").click();
+			})
+		}, function(index){
+		  //按钮【按钮二】的回调
+		});
+}
+var hh ="";
+var  $image;
+function showBig(el){
+ 	var  rowid= $(el).attr("rowid");
+ 	var  src= $(el).attr("src");
+
+ 	hh= rowid ;
+ 	$('#' +"imgs").attr("src",src);
+ 	$('#' +"imgs").hide();
+ 	
+ 	  $image = $('#' +"imgs");
+
+ 	$image.viewer({
+		  inline: true,
+		  fullscreen:true,
+		  viewed: function() {
+		    $image.viewer('zoomTo', 1);
+		 	  $("#viewer0").addClass("zindex");
+
+		  },
+		  closed:true
+		});
+}
+$(document).keydown(function (event) {
+    if (event.keyCode == 27) {
+        setTimeout(function(){
+ 			location.reload();
+
+ 		},300)
+    }
+});
+
+
+function showRechange() {
+		layer.open({
+			type: 1, //可传入的值有：0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）
+			title: ['操作'], //数组第二项可以写任意css样式；如果你不想显示标题栏，你可以title: false
+			area: '375px',
+			btn:['确定'],
+			content: $('#show_rechage_div'),
+			yes:function (index, layero) {
+				if($('input[name=reuserid]').val().length==0){
+					alert('请输入用户编号！')
+					return
+				}
+				if($('input[name=reamount]').val().length==0){
+					alert('请输入充值金额！')
+					return
+				}
+				if($('input[name=recode]').val().length==0){
+					alert('请输入批准代码！')
+					return
+				}
+				var parame = {
+					userid: $('input[name=reuserid]').val(),
+					amount: $('input[name=reamount]').val(),
+					code: $('input[name=recode]').val()
+				}
+				var url = "${ctxPath}/changeDaiShouOrder2";
+				doAjax(url, "get", parame, function(data) {
+					alert(data.msg);
+					location.reload();
+				})
+			}
+		});
+	}
+
+function   benzhou(){ 
+	var url = "${ctxPath}/getData53/";
+	doAjax(url,"post",{},function(data){
+	     $("#updatetime_gte").val(data.min);
+	     setTimeout(function(){
+	    	 $("#updatetime_lte").val(data.max)
+	    	  $("#submit").click();
+	     },300)
+	})
+
+}
+
+
+
+var convertDate = function(data) {
+    var date = new Date();
+    data = data || "";
+
+    if (data == "") {
+        return "请选择日期";
+    }
+    date.setTime(data);
+    return date.Format("yyyy-MM-dd")
+}
+
+Date.prototype.Format = function(fmt) { //author: meizz
+    var o = {
+        "M+": this.getMonth() + 1, //月份
+        "d+": this.getDate(), //日
+        "h+": this.getHours(), //小时
+        "m+": this.getMinutes(), //分
+        "s+": this.getSeconds(), //秒
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+        "S": this.getMilliseconds() //毫秒
+    };
+    if (/(y+)/.test(fmt))
+        fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt))
+            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
+function jinri(){
+	//获取今日
+	var url = "${ctxPath}/getData51/";
+	doAjax(url,"post",{},function(data){
+		var  date= data.date;
+
+		var day1 = new Date();
+		day1.setTime(date);
+		 var now = day1;
+	     $("#updatetime_gte").val(convertDate(now));
+	     setTimeout(function(){
+	    	 $("#updatetime_lte").val(convertDate(now))
+	    	  $("#submit").click();
+	     },300)
+	})
+
+}
+
+
+function zuori(){
+
+	var url = "${ctxPath}/getData52/";
+	doAjax(url,"post",{},function(data){
+		var  date= data.date;
+
+		var day1 = new Date();
+		day1.setTime(date);
+		 var now = day1;
+	     $("#updatetime_gte").val(convertDate(now));
+	     setTimeout(function(){
+	    	 $("#updatetime_lte").val(convertDate(now))
+	    	  $("#submit").click();
+	     },300)
+	})
+
+}
+
+function shangZhou(){
+	var url = "${ctxPath}/getData54/";
+	doAjax(url,"post",{},function(data){
+	     $("#updatetime_gte").val(data.min);
+	     setTimeout(function(){
+	    	 $("#updatetime_lte").val(data.max)
+	    	  $("#submit").click();
+	     },300)
+	})
+
+}
+
+function  benyue(){
+	 
+	var url = "${ctxPath}/getData55/";
+	doAjax(url,"post",{},function(data){
+	     $("#updatetime_gte").val(data.min);
+	     setTimeout(function(){
+	    	 $("#updatetime_lte").val(data.max)
+	    	  $("#submit").click();
+	     },300)
+	})
+}
+function shangyue(){
+	var url = "${ctxPath}/getData56/";
+	doAjax(url,"post",{},function(data){
+	     $("#updatetime_gte").val(data.min);
+	     setTimeout(function(){
+	    	 $("#updatetime_lte").val(data.max)
+	    	  $("#submit").click();
+	     },300)
+	})
+
+}
+
+
+ 
+
+</script>

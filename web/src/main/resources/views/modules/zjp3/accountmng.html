@@ -1,0 +1,89 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+    content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+<meta name="format-detection"
+    content="telephone=no,email=no,date=no,address=no">
+<title>convide amigos</title>
+<link rel="stylesheet" type="text/css"
+    href="${ctxStatic}/common/aui.css" />
+<style type="text/css">
+     
+</style>
+
+</head>
+<body>
+<header class="aui-bar aui-bar-nav" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode="" onclick="closeWin()">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title">Bank B</div>
+         
+        </a>
+    </header>
+    <ul class="aui-list aui-media-list">
+            
+            
+            <li class="aui-list-item aui-list-item-middle urls" url="${ctxPath}/banklist?type=E-Transfer">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media" st1yle="width: 3rem;">
+                        <img src="${ctxStatic}/common/etup.png" class="au nd aui-list-img-sm">
+                    </div>
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        E-Transfer Account
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item aui-list-item-middle urls" url="${ctxPath}/banklist?type=USDT" >
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media" st1yle="width: 3rem;">
+                        <img src="${ctxStatic}/common/tpupian.png" class="au nd aui-list-img-sm">
+                    </div>
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        USDT Wallet
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item aui-list-item-middle urls" url="${ctxPath}/banklist?type=Bank" >
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media" st1yle="width: 3rem;">
+                        <img src="${ctxStatic}/common/btupian.png" style="width:1.5rem" class="au nd aui-list-img-sm">
+                    </div>
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        Bank Card
+                    </div>
+                </div>
+            </li>
+        </ul>
+  </body>  
+
+<script type="text/javascript"
+    src="${ctxStatic}/jquery/jquery-1.12.4.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/common.js"></script>
+<script type="text/javascript"
+    src="${ctxStatic}/common/clipboard.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/qrcode.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/aui-actionsheet.js" ></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/doT.min.js"></script>
+
+<script type="text/javascript"
+    src="${ctxStatic}/layer/3.1/layer.js?V0.1-12102105"></script>
+
+    <script type="text/javascript">
+            $(document).ready(function(){
+                $(".urls").click(function(){
+                    var url =  $(this).attr("url") ; 
+                            location.href = url;
+
+                })
+            })
+
+    </script>
+</html>

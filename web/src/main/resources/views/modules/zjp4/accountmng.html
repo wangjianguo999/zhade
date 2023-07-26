@@ -1,0 +1,108 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+    content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+<meta name="format-detection"
+    content="telephone=no,email=no,date=no,address=no">
+<title>convide amigos</title>
+<link rel="stylesheet" type="text/css"
+    href="${ctxStatic}/common/aui.css" />
+<style type="text/css">
+     .aui-list-item-media img{
+     	width: 40px;
+     	height: 40px;
+     }
+     .aui-list .aui-list-item-media{
+     	width: auto;
+     }
+</style>
+
+</head>
+<body>
+<header class="aui-bar aui-bar-nav" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode="" onclick="closeWin()">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title">  Centre  de sécurité</div>
+         
+        </a>
+    </header>
+    <ul class="aui-list aui-media-list">
+            
+            
+            <li class="aui-list-item aui-list-item-middle urls" url="${ctxPath}/banklist?type=M-pesa">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media" st1yle="width: 3rem;">
+                        <img src="${ctxStatic}/common/w11.png" class="au nd aui-list-img-sm">
+                    </div>
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        M-pesa
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item aui-list-item-middle urls" url="${ctxPath}/banklist?type=Airtel Money" >
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media" st1yle="width: 3rem;">
+                        <img src="${ctxStatic}/common/w21.png" class="au nd aui-list-img-sm">
+                    </div>
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        Airtel Money
+
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item aui-list-item-middle urls" url="${ctxPath}/banklist?type=Orange Money" >
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media" st1yle="width: 3rem;">
+                        <img src="${ctxStatic}/common/w3.png" style="width:1.5rem" class="au nd aui-list-img-sm">
+                    </div>
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                       Orange Money
+                    </div>
+                </div>
+            </li>
+        </ul>
+  </body>  
+
+<script type="text/javascript"
+    src="${ctxStatic}/jquery/jquery-1.12.4.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/common.js"></script>
+<script type="text/javascript"
+    src="${ctxStatic}/common/clipboard.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/qrcode.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/aui-actionsheet.js" ></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/doT.min.js"></script>
+
+<script type="text/javascript"
+    src="${ctxStatic}/layer/3.1/layer.js?V0.1-12102105"></script>
+
+    <script type="text/javascript">
+        var  tt111111  =  window.localStorage.getItem("token") || "";
+
+if(tt111111==""){
+    location.href = "${ctxPath}/login";
+
+}
+            $(document).ready(function(){
+                $(".urls").click(function(){
+                    var url =  $(this).attr("url") ; 
+                            location.href = url;
+
+                })
+            })
+ window.onpopstate=function(){
+    // 获得存储在该历史记录点的json对象
+    var  json=window.history.state;// 获得的json为null时则无需刷新
+    if(json){
+        window.location.reload();
+    }
+};  
+    </script>
+</html>

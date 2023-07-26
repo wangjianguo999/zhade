@@ -1,0 +1,163 @@
+<% layout('/layouts/default.html', {title: 'tab_user_bank管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa icon-notebook"></i> ${text('tab_user_Coinw管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<% if(hasPermi('tab:tabUserBank:edit')){ %>
+					<a href="${ctx}/tab/tabUserBank/form" class="btn btn-default btnTool" title="${text('新增tab_user_bank')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+				<a href="#" class="btn btn-default" id="btnSetting" title="${text('设置')}"><i class="fa fa-navicon"></i></a>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${tabUserCoinw}" action="${ctxPath}/tofuturesapiData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+			<div class="form-group">
+				<label class="control-label">${text('用户编号')}：</label>
+				<div class="control-inline">
+					<#form:input path="rowid" maxlength="451" class="form-control width-120"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">${text('用户名称')}：</label>
+				<div class="control-inline">
+					<#form:input path="username" maxlength="451" class="form-control width-120"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">${text('盈利率')}：</label>
+				<div class="control-inline">
+					<#form:input path="profitCountrate" maxlength="451" class="form-control width-120"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">${text('总收益率')}：</label>
+				<div class="control-inline">
+					<#form:input path="totalprofitrate" maxlength="451" class="form-control width-120"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">${text('总收益')}：</label>
+				<div class="control-inline">
+					<#form:input path="profitamount" maxlength="451" class="form-control width-120"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">${text('交易天数')}：</label>
+				<div class="control-inline">
+					<#form:input path="settleintime" maxlength="451" class="form-control width-120"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">${text('交易笔数')}：</label>
+				<div class="control-inline">
+					<#form:input path="ordercount" maxlength="451" class="form-control width-120"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">${text('平均本金')}：</label>
+				<div class="control-inline">
+					<#form:input path="avgquantity" maxlength="451" class="form-control width-120"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">${text('平均收益率')}：</label>
+				<div class="control-inline">
+					<#form:input path="avgprofitrate" maxlength="451" class="form-control width-120"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">${text('平均收益')}：</label>
+				<div class="control-inline">
+					<#form:input path="avgprofit" maxlength="451" class="form-control width-120"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+				<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+			</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	emptyDataHint:true,
+	columnModel: [
+		{header:'${text("用户编号")}', name:'rowid', index:'a.rowid', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			return '<a href="${ctx}/tab/tabUserBank/form?rowid='+row.rowid+'" class="btnList" data-title="${text("编辑tab_user_bank")}">'+(val||row.id)+'</a>';
+		}},
+		{header:'${text("用户名称")}', name:'username', index:'a.username', width:150, align:"left"},
+		{header:'${text("盈利率（%）")}', name:'profitCountrate', index:'a.profitCountrate', width:100, align:"center" , formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("交易天数")}', name:'settleintime', index:'a.settleintime', width:50, align:"left"},
+		{header:'${text("交易笔数")}', name:'ordercount', index:'a.ordercount', width:80, align:"left"},
+
+		{header:'${text("平均收益率（%）")}', name:'avgprofitrate', index:'a.avgprofitrate', width:100, align:"center" , formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("最大收益率（%）")}', name:'maxgprofitrate', index:'a.maxgprofitrate', width:100, align:"center" , formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("最小收益率（%）")}', name:'mingprofitrate', index:'a.mingprofitrate', width:100, align:"center" , formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("总收益")}', name:'profitamount', index:'a.profitamount', width:100, align:"center" , formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("总收益率（%）")}', name:'totalprofitrate', index:'a.totalprofitrate', width:100, align:"center" , formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("平均持仓时间（小时）")}', name:'avgtime', index:'a.avgtime', width:100, align:"center" , formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("最大持仓时间（小时）")}', name:'maxtime', index:'a.maxtime', width:100, align:"center" , formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("最小持仓时间（小时）")}', name:'mintime', index:'a.mintime', width:100, align:"center" , formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("当前跟单人数")}', name:'followercount', index:'a.followercount', width:50, align:"left"},
+		{header:'${text("累计跟单人数")}', name:'followtotalcount', index:'a.followtotalcount', width:80, align:"left"},
+		{header:'${text("总跟单资金")}', name:'totalfollowerbalance', index:'a.totalfollowerbalance', width:100, align:"center" , formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("平均本金")}', name:'avgquantity', index:'a.avgquantity', width:100, align:"center" , formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("最大本金")}', name:'maxquantity', index:'a.maxquantity', width:100, align:"center" , formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("最小本金")}', name:'minquantity', index:'a.minquantity', width:100, align:"center" , formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("平均收益")}', name:'avgprofit', index:'a.avgprofit', width:100, align:"center" , formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("最大收益")}', name:'maxgprofit', index:'a.maxgprofit', width:100, align:"center" , formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("最小收益")}', name:'mingprofit', index:'a.mingprofit', width:100, align:"center" , formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("盈利笔数")}', name:'profitcount', index:'a.profitcount', width:150, align:"left"},
+		{header:'${text("亏损笔数")}', name:'losscount', index:'a.losscount', width:150, align:"left"},
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>

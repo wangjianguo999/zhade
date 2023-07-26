@@ -1,0 +1,344 @@
+<% layout('/layouts/default.html', {title: 'tab_user_data管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa icon-notebook"></i> ${text('用户管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSetting" title="${text('设置')}"><i class="fa fa-navicon"></i></a>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${tabUserData}" action="${ctxPath}/tabUserDataListData" method="post" class="form-inline  "
+			data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+			<div class="form-group">
+				<label class="control-label">${text('账号')}：</label>
+				<div class="control-inline">
+					<#form:input path="rowid" maxlength="45" class="form-control width-120"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">${text('ip地址')}：</label>
+				<div class="control-inline">
+					<#form:input path="lastloginip" maxlength="45" class="form-control width-120"/>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="control-label">${text('用户状态')}：</label>
+				<div class="control-inline width-120">
+					<#form:select path="status1" dictType="yhzt" blankOption="true" class="form-control width-120"/>
+
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="control-label">${text('注册时间')}：</label>
+				<div class="control-inline">
+					<#form:input path="createtime_gte" readonly="true" maxlength="20" class="form-control laydate width-datetime"
+					dataFormat="datetime" data-type="datetime" data-format="yyyy-MM-dd HH:mm" data-do1ne="createtime_lte.click()"/>
+					&nbsp;-&nbsp;
+					<#form:input path="createtime_lte" readonly="true" maxlength="20" class="form-control laydate width-datetime"
+					dataFormat="datetime" data-type="datetime" data-format="yyyy-MM-dd HH:mm"/>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="control-label">${text('最后登录时间')}：</label>
+				<div class="control-inline">
+					<#form:input path="lastlogintime_gte" readonly="true" maxlength="20" class="form-control laydate  "
+					dataFormat="date" data-type="date" data-format="yyyy-MM-dd" data-d1one="createtime_lte.click()"/>
+					&nbsp;-&nbsp;
+					<#form:input path="lastlogintime_lte" readonly="true" maxlength="20" class="form-control laydate  "
+					dataFormat="date" data-type="date" data-format="yyyy-MM-dd"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<button type="submit" id="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+				<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				<button type="button" onclick="gengxin()" id="subm2it1" class="btn btn-primary btn-sm A hide">${text('设置体验客户')}</button>
+				<!--
+                <button type="button" onclick="fengSuo()" id="subm2it1" class="btn btn-primary btn-sm B hide">${text('封锁账号')}</button>
+                <button type="button" onclick="jieSuo()" id="subm2it1" class="btn btn-primary btn-sm C hide">${text('解锁账号')}</button>
+                 -->
+
+			</div>
+		</#form:form>
+		<table id="dataGrid"></table>
+		<div id="dataGridPage"></div>
+	</div>
+</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+
+
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	 showCheckbox: true,    // 是否显示复选框
+	    shrinkToFit: false,
+	    emptyDataHint:true,
+	columnModel: [
+		{header:'${text("账号")}', name:'rowid', index:'a.rowid', width:100, align:"left", frozen:true, for1matter: function(val, obj, row, act){
+			return '<a href="${ctx}/tab/tabUserData/form?rowid='+row.rowid+'" class="btnList" data-title="${text("编辑tab_user_data")}">'+(val||row.id)+'</a>';
+		}},
+		{header:'${text("当前余额")}', name:'currentmoney', index:'a.currentmoney', width:100, align:"right", formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 0, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("邀请码")}', name:'codes', index:'a.codes', width:100, align:"left"},
+		{header:'${text("VIP等级")}', name:'vip', index:'a.vip', width:80, align:"left"},
+		{header:'${text("用户层级")}', name:'userleval', index:'a.userleval', width:80, align:"left"},
+
+		{header:'${text("下单状态")}', name:'xdzt1', index:'a.xdzt1', width:100, align:"left" , formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('xdzt')}, val, '否', true);
+		}},
+		{header:'${text("上级用户")}', name:'parentid', index:'a.parentid', width:100, align:"left"},
+		{header:'${text("体验VIP")}', name:'istiyan', index:'a.istiyan', width:80, align:"left" , formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sys_yes_no')}, val, '否', true);
+		}},
+
+		{header:'${text("用户类型")}', name:'usertype', index:'a.usertype', width:80, align:"left" , formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('yhlx')}, val, '否', true);
+		}},
+		{header:'${text("用户状态")}', name:'status1', index:'a.status1', width:80, align:"left" , formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('yhzt')}, val, '否', true);
+		}},
+		{header:'${text("注册ip")}', name:'registerip', index:'a.registerip', width:100, align:"center"},
+		{header:'${text("登录ip")}', name:'lastloginip', index:'a.lastloginip', width:100, align:"center"},
+		{header:'${text("ip状态")}', name:'status2', index:'a.status2', width:100, align:"left" , formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('yhzt')}, val, '启用', true);
+		}},
+		{header:'${text("注册时间")}', name:'createtime', index:'a.createtime', width:100, align:"center"},
+		{header:'${text("最后登录时间")}', name:'lastlogintime', index:'a.lastlogintime', width:100, align:"center"},
+
+		{header:'${text("充值金额")}', name:'czje', index:'a.czje', width:100, align:"center" , formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 0, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("转盘奖励次数")}', name:'jianglicishu', index:'a.jianglicishu', width:100, align:"center"},
+
+		{header:'${text("提现金额")}', name:'txje', index:'a.txje', width:100, align:"center" , formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 0, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("下级人数")}', name:'sumMember', index:'a.sum_member', width:100, align:"center" , for1matter: function(val, obj, row, act){
+			return (row.shangji2s || "").split(",,").length  ; // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("个人佣金")}', name:'grsy', index:'a.grsy', width:100, align:"center" , formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 0, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("团队佣金")}', name:'tdsy', index:'a.tdsy', width:100, align:"center" , formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 0, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+
+		{header:'${text("操作")}', name:'actions', width:550, formatter: function(val, obj, row, act){
+			var actions = [];
+
+
+			actions.push('<a href="${ctxPath}/tabUserDataForm?rowid='+row.rowid+'" class="btnList  D hide" data-title="${text("上分")}">上分</a>&nbsp;&nbsp;&nbsp;');
+			actions.push('<a href="${ctxPath}/tabUserDataForm2?rowid='+row.rowid+'" class="btnList E hide" data-title="${text("下分")}">下分</a>&nbsp;&nbsp;&nbsp;')
+		actions.push('<a  onclick="czhi(this)" rowid="'+row.rowid+ '" hr1ef="${ctx}/tab/tabUserData/form3?rowid='+row.rowid+'" class="F hide" data-title="${text("重置密码")}">重置密码</a>&nbsp;&nbsp;&nbsp;')
+						actions.push('<a  onclick="czhi2(this)" rowid="'+row.rowid+ '" hr1ef="${ctx}/tab/tabUserData/form3?rowid='+row.rowid+'" class="F1 hide" data-title="${text("重置密码")}">重置提现密码</a>&nbsp;&nbsp;&nbsp;')
+
+			actions.push('<a href="${ctxPath}/tabUserDataList2?rowid='+row.rowid+'" class="btnList G hide" data-title="${text("查看上级")}">查看上级</a>&nbsp;&nbsp;&nbsp;')
+			actions.push('<a href="${ctxPath}/tabUserDataList3?rowid='+row.rowid+'" class="btnList H hide" data-title="${text("查看下级")}">查看下级</a>&nbsp;&nbsp;&nbsp;')
+			actions.push('<a href="${ctxPath}/tabUserDataList4?rowid='+row.rowid+'" class="btnList H hide" data-title="${text("查看下级首冲")}">查看下级首冲</a>&nbsp;&nbsp;&nbsp;')
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		setTimeout(function(){
+
+			var url = "${ctxPath}/yuangongGetConfig2/";
+			doAjax(url,"post",{},function(data){
+			     var  data = data.data || "" ;
+			     if(data == "") {
+			    	 $(".hide").removeClass("hide")
+			     }else {
+			    	 var  quanxian =    (data || "").split(",");
+			    	 for(var i = 0 ;i < quanxian.length;i++){
+			    		 $("." +quanxian[i]).removeClass("hide")
+			    	 }
+
+
+			     }
+			})
+		},300)
+	}
+});
+
+
+
+
+
+function gengxin(){
+		var  ll = $('#dataGrid').dataGrid('getSelectRows');
+		console.log(ll);
+		var  list =  [];
+		var isSet = false
+		for(var i = 0 ; i < ll.length;i++ ){
+			list.push(ll[i])
+		}
+		if(list.length ==0){
+			js.showMessage("请选择用户!");
+			return ;
+		}
+	 	layer.confirm('确定设置体验吗 ？', {
+			  btn: ['确定', '取消'] //可以无限个按钮
+			  ,btn3: function(index, layero){
+			    //按钮【按钮三】的回调
+			  }
+			}, function(index, layero){
+				if(isSet == false){
+					isSet = true
+					var parame  = {
+						rowids: list.join(",")
+					}
+					var url = "${ctxPath}/gengxinTiYan";
+					doAjax(url,"post",parame,function(data){
+						$("#submit").click();
+					})
+				}
+
+			}, function(index){
+			  //按钮【按钮二】的回调
+			});
+}
+
+
+function  fengSuo(){
+	var  ll = $('#dataGrid').dataGrid('getSelectRows');
+	console.log(ll);
+	var  list =  [];
+
+	for(var i = 0 ; i < ll.length;i++ ){
+		list.push(ll[i])
+	}
+	if(list.length ==0){
+		js.showMessage("请选择用户!");
+		return ;
+	}
+ 	layer.confirm('确定封锁用户 ？', {
+		  btn: ['只封锁用户', '封锁全部下级用户'] //可以无限个按钮
+		  ,btn3: function(index, layero){
+		    //按钮【按钮三】的回调
+				console.log(2);
+
+		  }
+		}, function(index, layero){ 
+				console.log(1);
+				var parame  = {
+						rowids: list.join(",")	
+					}
+					var url = "${ctxPath}/fengSuoDanGe";
+					doAjax(url,"post",parame,function(data){
+						$("#submit").click();
+					})
+		}, function(index){
+		  //按钮【按钮二】的回调
+			console.log(3);
+			var parame  = {
+					rowids: list.join(",")	
+				}
+				var url = "${ctxPath}/fengSuoQuanBu";
+				doAjax(url,"post",parame,function(data){
+					$("#submit").click();
+				})
+		});
+}
+
+function  jieSuo(){
+	var  ll = $('#dataGrid').dataGrid('getSelectRows');
+	console.log(ll);
+	var  list =  [];
+
+	for(var i = 0 ; i < ll.length;i++ ){
+		list.push(ll[i])
+	}
+	if(list.length ==0){
+		js.showMessage("请选择用户!");
+		return ;
+	}
+ 	layer.confirm('确定解锁用户 ？', {
+		  btn: ['只解锁用户', '解锁全部下级用户'] //可以无限个按钮
+		  ,btn3: function(index, layero){
+		    //按钮【按钮三】的回调
+				console.log(2);
+
+		  }
+		}, function(index, layero){ 
+				console.log(1);
+				var parame  = {
+						rowids: list.join(",")	
+					}
+					var url = "${ctxPath}/jieSuoDanGe";
+					doAjax(url,"post",parame,function(data){
+						$("#submit").click();
+					})
+		}, function(index){
+		  //按钮【按钮二】的回调
+			console.log(3);
+			var parame  = {
+					rowids: list.join(",")	
+				}
+				var url = "${ctxPath}/jieSuoQuanBu";
+				doAjax(url,"post",parame,function(data){
+					$("#submit").click();
+				})
+		});
+}
+
+function czhi(el){
+	var  rowid =  $(el).attr("rowid");
+	layer.confirm('确定重置密码吗 ？', {
+		  btn: ['确定', '取消'] //可以无限个按钮
+		  ,btn3: function(index, layero){
+		    //按钮【按钮三】的回调
+		  }
+		}, function(index, layero){ 
+			
+			var parame  = {
+				rowids: rowid
+			}
+			var url = "${ctxPath}/tabUserDataUpdatePassword";
+			doAjax(url,"post",parame,function(data){
+				var  data=   data.data; 
+				layer.alert("当前用户密码为:" +data.password);
+			})
+		}, function(index){
+		  //按钮【按钮二】的回调
+		});
+}
+
+
+
+
+
+function  czhi2(el){
+	var  rowid =  $(el).attr("rowid");
+	layer.confirm('确定重置提现密码吗 ？', {
+		  btn: ['确定', '取消'] //可以无限个按钮
+		  ,btn3: function(index, layero){
+		    //按钮【按钮三】的回调
+		  }
+		}, function(index, layero){ 
+			
+			var parame  = {
+				rowids: rowid
+			}
+			var url = "${ctxPath}/updatePassword2";
+			doAjax(url,"post",parame,function(data){
+				var  data=   data.data; 
+				layer.alert("当前用户提现密码为:" +data.txpassword);
+			})
+		}, function(index){
+		  //按钮【按钮二】的回调
+		});
+}
+
+
+
+</script>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital currency transfer</title>
+</head>
+
+<body>
+    <!-- 头部 -->
+    <div class="header">
+        <div class="return" onclick="close22()">
+            <svg t="1640932453184" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                p-id="2158" width="18" height="18">
+                <path
+                    d="M724 218.3V141c0-6.7-7.7-10.4-12.9-6.3L260.3 486.8c-16.4 12.8-16.4 37.5 0 50.3l450.8 352.1c5.3 4.1 12.9 0.4 12.9-6.3v-77.3c0-4.9-2.3-9.6-6.1-12.6l-360-281 360-281.1c3.8-3 6.1-7.7 6.1-12.6z"
+                    p-id="2159" fill="#2E476E"></path>
+            </svg>
+        </div>
+        <div class="title">
+Replenishment of digital currency        </div>
+        <div class="close">
+        </div>
+    </div>
+    <!-- 身体 -->
+    <div class="body">
+        <div class="content">
+            <div class="img-wrapper">
+                <img class="img"  onclick="showBig(this)"
+                    src="${imgsrc}"
+                    alt="">
+            </div>
+            <div>
+                <div class="content-ui">
+                    <div>Sum</div>
+                    <div>${data.amont}    =  : ${data.hzhb}  </div>
+                </div>
+                <div class="content-ui">
+                    <div>Types of replenishment </div>
+                    <div>${data.paytype}</div>
+                </div>
+                <div class="content-ui">
+                    <div>Digital currency address</div>
+                    <img class="content-ui-icon" style="height: 11px; width: 11px;" id="copy"
+                        src="data:image/png;base64,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"
+                        alt="">
+                    <div>${codes}</div>
+                </div>
+            </div>
+            <div>
+                <div class="upload-title">
+                    Screenshot of replenishment
+                </div>
+                <div class="upload-add">
+                    <div onclick="upload()">
+                        <img alt=""  id="imgs" src="" style="width: 100px;height: 100px;display: none"><br>
+                        <span class="upload-title plus-title">Select photo
+                 </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="error">
+            <div class="err-conetent"> ${msg}</div>
+        </div>
+    </div>
+
+
+    <div class="footer" onclick="saveData()">
+        <div class="footer-button">
+            <span class="footer-button-title">
+              Replenishment successful
+            </span>
+        </div>
+    </div>
+    <br>
+<br>
+<br>
+<br>
+<br>
+
+</body>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    html {
+        height: 100%;
+        min-height: 600px;
+    }
+
+    body {
+        height: 90%;
+    }
+
+    .header {
+        color: #2E476E;
+        font-size: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 50px;
+        position: sticky;
+        top: 0;
+        padding: 0px 10px;
+        border-bottom: 2px solid #E6E8F3;
+        background-color: #fff;
+
+    }
+
+    .return {}
+
+    .title {}
+
+    .close {}
+
+    .body {
+        background-color: #f3f6fa;
+    }
+
+    .content {
+        padding: 0px 14px 14px 14px;
+        background-color: #fff;
+    }
+
+    .img-wrapper {
+        text-align: center;
+        padding: 10px;
+        border-bottom: 1px solid #F5F6F8;
+    }
+
+    .img {
+        width: 100px;
+        height: 100px;
+        background-color: #eee;
+    }
+
+    .content-ui {
+        position: relative;
+        font-family: PingFang SC;
+        font-size: 13px;
+        font-weight: 500;
+        color: #3B4E76;
+        padding: 0 14px 14px 14px;
+        border: 1px solid #f3f6fa;
+        margin-top: 1px;
+    }
+
+    .content-ui-icon {
+        position: absolute;
+        right: 10px;
+    }
+
+    .upload-add {
+        padding: 0 5px;
+        background-color: #F4F5F7;
+        width: 96px;
+        height: 96px;
+        border-radius: 8px;
+        position: relative;
+    }
+
+    .upload-title {
+        margin: 15px 0;
+        font-family: PingFang SC;
+        font-size: 13px;
+        font-weight: 500;
+        color: #3B4E76;
+    }
+
+    .plus-icon {
+        position: absolute;
+        left: 50%;
+        top: 40%;
+        transform: translate(-50%, -50%);
+    }
+
+    .plus-title {
+        position: absolute;
+        bottom: 0;
+    }
+
+    .error {
+        padding: 12px 22px 0 12px;
+        color: red;
+    }
+
+    .err-conetent {
+        padding: 14px;
+        background-color: #ffebeb;
+    }
+
+    .footer {
+        position: relative;
+        bottom: 0;
+        padding: 7px 14px 15px 14px;
+        height: 50px;
+        background-color: #fff;
+    }
+
+    .footer-button {
+        position: relative;
+        height: 44px;
+        color: #fff;
+        background-color: #ff393b;
+    }
+
+    .footer-button-title {
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>
+<div id="fileUpload" style="display: none"></div>
+
+<script src="${ctxStatic}/common/qrcode.min.js"></script>
+
+<script src="${ctxStatic}/common/jquery.min.js"></script>
+<script type="text/javascript"
+	src="${ctxStatic}/layer/3.1/layer.js?V0.1-12102105"></script>
+<script type=""
+	src="${ctxStatic}/common/common.js?m222?v=121222AD?v=121222A"></script>
+<script type="" src="${ctxStatic}/common/doT.min.js"></script>
+ <link rel="stylesheet" href="${ctxStatic}/common/popoPicker.css">
+           
+<script src="${ctxStatic}/common/clipboard.min.js"></script>
+    
+ <link rel="stylesheet" href="${ctxStatic}/common/upload/webuploader.css">
+            <script src="${ctxStatic}/common/upload/webuploader.min.js"></script> 
+ <script src="${ctxStatic}/common/popoPicker.min.js"></script>
+
+<script type="text/javascript">
+var  IMGS= "";
+	var btn = document.getElementById('copy');
+      var clipboard = new ClipboardJS(btn);
+
+      clipboard.on('success', function (e) {
+        console.log(e);
+        layer.msg("Скопировано");
+      });
+
+      clipboard.on('error', function (e) {
+        console.log(e);
+      });
+
+      //
+ 		var lines= "${codes}"
+ 			 $("#lines").html(lines);
+ 			 $("#copy").attr("data-clipboard-text",lines);
+  
+init2();
+ function  init2(){
+	  	var uploader = WebUploader.create({
+
+    // 选完文件后，是否自动上传。
+    auto: true,
+
+    // swf文件路径
+    swf: "${ctxStatic}/common/" + '/upload/Uploader.swf',
+
+    // 文件接收服务端。
+    server: '${ctxPath}/uploadFile',
+
+     pick: {
+                id: '#fileUpload',
+                label: ''
+            },
+
+    // 只允许选择图片文件。
+    accept: {
+        title: 'Images',
+        extensions: 'gif,jpg,jpeg,bmp,png',
+        mimeTypes: 'image/*'
+    }
+});
+	  uploader.refresh();
+
+	
+
+
+uploader.on( 'uploadSuccess', function( file,response ) {
+    console.log(file);
+    console.log(response);
+     var data =  response.data;
+     IMGS  = data ;
+     var parame = {
+     	imgs: data  
+     }
+      //imgs
+     $("#imgs").attr("src",IMGS);
+     $("#imgs").show();
+
+
+PATH2  = data ;
+}); 
+	  } 
+
+	  function  upload(){
+	  		 	$("input[type='file']").click()
+	  }
+	  
+	  function  saveData(){
+		  if(IMGS==""){
+			  layer.msg("Пожалуйста, загрузите платежный ваучер ");
+			  return ;
+		  }
+		  var rowid =  "${data.rowid}";
+		  var  parame    = {
+				  rowid :  rowid ,
+				  pz: IMGS
+		  }
+		  var url = "${ctxPath}/changePzData";
+	        doAjax(url,"POST",parame,function(data){
+	        		layer.msg("Пополнение завершено ");
+	        		setTimeout(function(){
+	        			close22();
+	        		},300)
+	        })
+		  
+	  }
+	  
+	  function close22(){
+		   layer.msg("success");
+		   setTimeout(function(){
+				location.href = "${ctxPath}/home";
+
+		   },300)
+	  }
+	 function showBig(el){
+		 var  src= $(el).attr("src");
+			var json=  {
+					  "title": "", //相册标题
+					  "id": 123, //相册id
+					  "start": 0, //初始显示的图片序号，默认0
+					  "data": [   //相册包含的图片，数组格式
+					    {
+					      "alt": "",
+					      "pid": 666, //图片id
+					      "src": src, //原图地址
+					      "thumb": src //缩略图地址
+					    }
+					  ]
+					}
+			 layer.photos({
+			    photos: json
+			    ,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+			  });
+	 }
+
+</script>
+</html>

@@ -1,0 +1,309 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  <link rel="stylesheet" href="${ctxStatic}/common/normailze.css">
+    <link rel="stylesheet" href="${ctxStatic}/common/index.css">
+    
+    <script src="${ctxStatic}/common/rem.js"></script>
+    
+<script src="${ctxStatic}/common/clipboard.min.js"></script>
+
+    <style type="text/css">
+    	.footer img{
+    		width: 21px !important;
+    		height: 21px !important;
+    	}
+    	.footer{
+    		height: 1.3rem;
+    		font-size:15px;
+    	}
+    	.header{
+    		height: 7.9rem;
+    	}
+    	
+    </style>
+</head>
+
+<body>
+
+    <div id="app">
+        <div class="content">
+            <div class="header urls" url="${ctxPath}/userdetial">
+                <h2>Personnels</h2>
+                <div class="name">
+                    <span id="userName" style="font-weight: bold;"></span>
+                    <div class="vip">
+                        <a href="javascript:;" id="vips"></a>
+                    </div>
+                </div>
+                <div class="user-id" id="copy">
+                    ID: <span id="rowid"style="margin-right: 20px;font-size:0.433rem"> </span><svg t="1649323663473" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2267" width="20" height="20"><path d="M394.666667 106.666667h448a74.666667 74.666667 0 0 1 74.666666 74.666666v448a74.666667 74.666667 0 0 1-74.666666 74.666667H394.666667a74.666667 74.666667 0 0 1-74.666667-74.666667V181.333333a74.666667 74.666667 0 0 1 74.666667-74.666666z m0 64a10.666667 10.666667 0 0 0-10.666667 10.666666v448a10.666667 10.666667 0 0 0 10.666667 10.666667h448a10.666667 10.666667 0 0 0 10.666666-10.666667V181.333333a10.666667 10.666667 0 0 0-10.666666-10.666666H394.666667z m245.333333 597.333333a32 32 0 0 1 64 0v74.666667a74.666667 74.666667 0 0 1-74.666667 74.666666H181.333333a74.666667 74.666667 0 0 1-74.666666-74.666666V394.666667a74.666667 74.666667 0 0 1 74.666666-74.666667h74.666667a32 32 0 0 1 0 64h-74.666667a10.666667 10.666667 0 0 0-10.666666 10.666667v448a10.666667 10.666667 0 0 0 10.666666 10.666666h448a10.666667 10.666667 0 0 0 10.666667-10.666666v-74.666667z" p-id="2268"></path></svg>
+                </div>
+                <div class="bg-header">
+                    <img src="https://images.caiyaoren.ltd/1509536318779494400.png" alt="" id="imgsrc">
+                </div>
+                <div class="progress">
+                    <span style="margin-left:30px" id="ppH">Nombre d'invités</span>
+                    <div class="progress-bar">
+                        <div class="bar bar-1" id="pp"></div>
+                    </div>
+                </div>
+                <div class="progress">
+                    <span style="margin-left:10px" id="pp1H">Montant de la recharge</span>
+                    <div class="progress-bar">
+                        <div class="bar">
+                            <div class="bar bar-2" id="pp1"></div>
+                        </div>
+                    </div>
+                </div>
+             <div class="h-b">
+                    <div class="h-b-left"> 
+                        <img src="${ctxStatic}/common/h1.png" alt="">
+                        <p>Experience Gold </p>
+                        <p style="color: #43849d;" id="tyj"></p>
+                        
+                    </div>
+                    <div class="h-b-center">
+                        <img src="${ctxStatic}/common/h2.png" alt="">
+                        <p>Total des actifs </p>
+                        <p style="color: #fc4349;" id="money2">0</p>
+                       
+                    </div>
+                    <div class="h-b-right">
+                        <img src="${ctxStatic}/common/h3.png" alt="">
+                        <p>Revenu total
+
+                         </p>
+                        <p style="color: #ffb305" id="shour"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="box ">
+                <div class="box1 urls"  url="${ctxPath}/recharge">
+                    Recharger
+                </div>
+                <div class="box2 urls"  url="${ctxPath}/withdraw">
+                    Retrait
+                </div>
+            </div>
+            <div class="nav">
+                <ul>
+                    <li class="urls" url="${ctxPath}/knowledge">
+                        <img src="${ctxStatic}/common/mine1.png" alt="">
+                        <span> Salle de classe </span>
+                    </li>
+                    <li class="urls" url="${ctxPath}/profithistory">
+                        <img src="${ctxStatic}/common/mine2.png" alt="">
+                        <span> Institutions coopératives  </span>
+                    </li>
+                    <li class="urls" url="${ctxPath}/oederhistory">
+                        <img src="${ctxStatic}/common/mine3.png" alt="">
+                        <span> Historique des commandes</span>
+                    </li>
+                    <li class="urls" url="${ctxPath}/accountmng">
+                        <img src="${ctxStatic}/common/mine4.png" alt="">
+                        <span> Ajouter un portefeuille </span>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="urls" url="${ctxPath}/calculator">
+                        <img src="${ctxStatic}/common/mine5.png" alt="">
+                        <span> Calculatrice</span>
+                    </li>
+                    <li class="urls" url="${ctxPath}/transmoney" style="display: none">
+                        <img src="${ctxStatic}/common/mine6.png" alt="">
+                        <span> Transfert de fonds</span>
+                    </li>
+                    <li class="urls" url="${ctxPath}/safemanage">
+                        <img src="${ctxStatic}/common/mine7.png" alt="">
+                        <span> Centre  de sécurité</span>
+                    </li>
+                    <li class="urls" url="${ctxPath}/address">
+                        <img src="${ctxStatic}/common/mine8.png" alt="">
+                        <span> Adresse</span>
+                    </li>
+                    <li class="urls" url="${ctxPath}/feedback">
+                        <img src="${ctxStatic}/common/mine9.png" alt="">
+                        <span> Retour d'information  </span>
+                    </li>
+                                    </ul>
+                        <ul>
+                    <li class="urls" url="${ctxPath}/setting">
+                        <img src="${ctxStatic}/common/mine10.png" alt="">
+                        <span> Paramètres </span>
+                    </li>
+                      <li class="urls" url="${ctxPath}/setting">
+                        <img src="${ctxStatic}/common/image_2022-04-11_19-40-28.png" alt="">
+                        <span> Télécharger </span>
+                    </li>
+                </ul>
+            </div>
+             
+        </div>
+<br>
+       
+    <div class="footer">
+            <iframe src="${ctxPath}/footer" style="border: 0px;width: 100%"></iframe>
+    </div>
+    
+    
+<script src="${ctxStatic}/common/jquery.min.js"></script>
+<script type="text/javascript"
+    src="${ctxStatic}/layer/3.1/layer.js?V0.1-12102105"></script>
+<script type=""
+    src="${ctxStatic}/common/common.js?m222?v=121222AD?v=121222A"></script>
+<script type="" src="${ctxStatic}/common/doT.min.js"></script>
+
+<script type="text/javascript">
+    var  tt111111  =  window.localStorage.getItem("token") || "";
+
+if(tt111111=="-11" || tt111111==""){
+    location.href = "${ctxPath}/login";
+
+}
+</script>
+
+    <script type="text/javascript">
+    var url = "${ctxPath}/getUserYe";
+
+	doAjax(url,"post",{},function(data){
+		var money  = data.money ||    0;
+		money= parseFloat(money).toFixed(4);
+		$("#money2").html(money);
+		
+ 
+		
+	})
+	
+	
+	
+	  var url = "${ctxPath}/getUserTyj";
+
+	doAjax(url,"post",{},function(data){
+		var money  = data.money ||    0;
+		money= parseFloat(money).toFixed(4);
+		$("#tyj").html(money || 0);
+		
+ 
+		
+	})
+	
+
+	
+	
+	//getMyDetail
+	getdeta()
+	function  getdeta(){
+
+	    var url = "${ctxPath}/getMyDetail";
+
+	doAjax(url,"post",{},function(data){
+			var  data =  data.data;
+			var  rowid =   data.rowid;
+			 $("#copy").attr("data-clipboard-text",rowid);
+
+			$("#rowid").html("" + rowid  )
+			$("#userName").html(data.username);
+ 			var ii = parseInt(data.vip) + 1;
+			$("#imgsrc").attr("src",data.imgsrc || "https://images.caiyaoren.ltd/1509536318779494400.png")
+			$("#vips").attr("style","background:url(${ctxStatic}/common/v"+ii+".png);background-size:cover")
+	})
+	}
+	 
+		var parame = {}
+		var url = "${ctxPath}/getShouru";
+		doAjax(url, "POST", parame, function(data) {
+			var shouru = data.shouru || 0;
+			shouru  =  parseFloat(shouru).toFixed(4);
+			$("#shour").html(shouru);
+
+		})
+		$(".urls").click(function(){
+	var url =  $(this).attr("url");
+	location.href = url;
+
+})
+var  tt = "1";
+getBfb();
+function   getBfb(){
+			var parame = {
+					type : tt
+
+			}
+			var url = "${ctxPath}/getVipJindu";
+			doAjax(url, "POST", parame, function(data) {
+				 var  wdye=     data.wdye;
+				 var  pt  = data.pt; 
+				 var ptrens= data.ptrens;
+				 var renshu  = data.renshu;  
+				 if(wdye >= pt  &&  renshu>=  ptrens   ){
+					 getBfb();
+					 tt= "2";
+					 getdeta();
+				 }else {
+					 
+					 
+				 }
+
+			})
+		}
+		
+var btn = document.getElementById('copy');
+var clipboard = new ClipboardJS(btn);
+
+clipboard.on('success', function (e) {
+  console.log(e);
+   
+  layer.msg("Copie réussi");
+	event.stopPropagation();
+
+});
+
+clipboard.on('error', function (e) {
+  console.log(e);
+	event.stopPropagation();
+
+});
+
+var url = "${ctxPath}/getJinDuTiao";
+
+doAjax(url,"post",{},function(data){ 
+	var curr =  data.curr;
+	 curr = parseFloat(curr).toFixed(0);
+
+	var max1=  data.max1;
+	var  pp   =   curr/1.0/max1*100.0;
+	 if(pp>=100){
+		 pp="100";
+	 }
+	 pp =   pp/100*4.41333333333333
+
+	 $("#pp").attr("style","width:" +pp +"rem");
+	 $("#ppH"). html("Nombre d'invités: " +  curr +"/" +  max1);
+	 
+	 
+	 var curr =  data.czje;
+		var max1=  data.max2;
+		var  pp   =   curr/1.0/max1*100.0;
+		 if(pp>=100){
+			 pp="100";
+		 }
+		 pp =   pp/100*4.41333333333333
+
+		 $("#pp1").attr("style","width:" +pp +"rem");
+		 curr = parseFloat(curr).toFixed(0);
+		 $("#pp1H"). html("Recharge de membre d'équipe: " +  curr +"/" +  max1);
+		 
+	 
+})
+
+    </script>
+</body>
+
+</html>

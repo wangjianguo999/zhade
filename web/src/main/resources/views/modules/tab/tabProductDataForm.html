@@ -1,0 +1,88 @@
+<% layout('/layouts/default.html', {title: 'tab_product管理', libs: ['validate','fileupload']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header with-border">
+			<div class="box-title">
+				<i class="fa icon-note"></i> ${text(tabProductData.isNewRecord ? '新增产品' : '编辑产品')}
+			</div>
+			<div class="box-tools pull-right">
+				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+			</div>
+		</div>
+		<#form:form id="inputForm" model="${tabProductData}" action="${ctx}/tab/tabProductData/save" method="post" class="form-horizontal">
+			<div class="box-body">
+				<div class="form-unit">${text('基本信息')}</div>
+				<#form:hidden path="rowid"/>
+				<div class="row">
+					 
+					
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="">
+								<span class="required hide">*</span> ${text('缩略图')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-10">
+								<#form:fileupload id="imgsrc1"    filePathInputId="imgsrc"
+    uploadType="image" class="required" readonly="false" returnPath="true" maxUploadNum="1"/>
+    <#form:hidden name="imgsrc" class="form-control"  path="imgsrc" />		
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="">
+								<span class="required hide">*</span> ${text('产品价格')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-10">
+								<#form:input path="price" class="form-control number"/>
+							</div>
+						</div>
+					</div>
+					 
+					
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="">
+								<span class="required hide">*</span> ${text('VIP等级')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-10">
+								<#form:select path="leval" dictType="vipdj"  blankOption="true"      class="form-control width-120"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="">
+								<span class="required hide">*</span> ${text('产品名称')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-10">
+								<#form:input path="name" class="form-control  "/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="box-footer">
+				<div class="row">
+					<div class="col-sm-offset-2 col-sm-10">
+						<% if (hasPermi('tab:tabProductData:edit')){ %>
+							<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> ${text('保 存')}</button>&nbsp;
+						<% } %>
+						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('关 闭')}</button>
+					</div>
+				</div>
+			</div>
+		</#form:form>
+	</div>
+</div>
+<% } %>
+<script>
+$("#inputForm").validate({
+	submitHandler: function(form){
+		js.ajaxSubmitForm($(form), function(data){
+			js.showMessage(data.message);
+			if(data.result == Global.TRUE){
+				js.closeCurrentTabPage(function(contentWindow){
+					contentWindow.page();
+				});
+			}
+		}, "json");
+    }
+});
+</script>

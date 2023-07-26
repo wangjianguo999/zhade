@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeesite.modules.tab.dao.TabUserCoinwOrderDao">
+	
+	<!-- 查询数据
+	<select id="findList" resultType="TabUserData">
+		SELECT ${sqlMap.column.toSql()}
+		FROM ${sqlMap.table.toSql()}
+		<where>
+			${sqlMap.where.toSql()}
+		</where>
+		ORDER BY ${sqlMap.order.toSql()}
+	</select> -->
+	<select id="getTongji" resultType="map">
+		SELECT
+		ifnull(max( profitRate ),0) maxprofitRate,
+		ifnull(min( profitRate ),0) minprofitRate,
+		ifnull(AVG( profitRate ),0) avgprofitRate,
+		ifnull(sum( profit ),0) profit,
+		ifnull(sum( profitRate ),0) profitRate,
+		ifnull(max( quantity ),0) maxquantity,
+		ifnull(min( quantity ),0) minquantity,
+		ifnull(avg( quantity ),0) avgquantity,
+		ifnull(max( profit ),0) maxprofit,
+		ifnull(min( profit ),0) minprofit,
+		ifnull(avg( profit ),0) avgprofit,
+		ifnull(count( 1 ),0) count,
+		ifnull(max( closeTimenumber - openTimenumber ),0) maxtime,
+		ifnull(min( closeTimenumber - openTimenumber ),0) mintime,
+		ifnull(avg( closeTimenumber - openTimenumber ),0) avgtime
+		FROM
+		tab_user_coinw_order
+		WHERE
+		userid = #{userid}
+	</select>
+
+	<select id="getProfitcount" resultType="long">
+		select count(1) from tab_user_coinw_order where userid = #{userid} and profit > 0
+	</select>
+</mapper>

@@ -1,0 +1,153 @@
+<% layout('/layouts/default.html', {title: 'tab_auto_config管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa icon-notebook"></i> ${text('tab_auto_config管理')}
+			</div>
+			<div class="box-tools pull-right">
+					<a href="${ctx}/tab/tabAutoConfig/form" class="btn btn-default btnTool" title="${text('新增tab_auto_config')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${tabAutoConfig}" action="${ctx}/tab/tabAutoConfig/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('注册奖励')}：</label>
+					<div class="control-inline">
+						<#form:input path="zhucejl" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('体验金')}：</label>
+					<div class="control-inline">
+						<#form:input path="tyj" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('天数')}：</label>
+					<div class="control-inline">
+						<#form:input path="tianshu" maxlength="2" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('首次提现限制')}：</label>
+					<div class="control-inline">
+						<#form:input path="sctx" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('首次提现汇率')}：</label>
+					<div class="control-inline">
+						<#form:input path="sctxhuilv" maxlength="13" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('提现金额限制')}：</label>
+					<div class="control-inline">
+						<#form:input path="txje" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('提现汇率')}：</label>
+					<div class="control-inline">
+						<#form:input path="txhuilv" maxlength="20" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('充值最低金额')}：</label>
+					<div class="control-inline">
+						<#form:input path="czzdje" maxlength="5" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('是否自动')}：</label>
+					<div class="control-inline">
+						<#form:input path="isauto" maxlength="1" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('是否启用')}：</label>
+					<div class="control-inline">
+						<#form:input path="isqidong" maxlength="10" class="form-control width-120"/>
+					</div>
+				</div>
+			<div class="form-group">
+				<label class="control-label">${text('转盘是否启用')}：</label>
+				<div class="control-inline">
+					<#form:input path="zpisqidong" maxlength="10" class="form-control width-120"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">${text('充值匹配交易id')}：</label>
+				<div class="control-inline">
+					<#form:input path="rechangeId" maxlength="10" class="form-control width-120"/>
+				</div>
+			</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text("注册奖励")}', name:'zhucejl', index:'a.zhucejl', width:100, align:"left", frozen:true, forma1tter: function(val, obj, row, act){
+			return '<a href="${ctx}/tab/tabAutoConfig/form?rowid='+row.rowid+'" class="btnList" data-title="${text("编辑tab_auto_config")}">'+(val||row.id)+'</a>';
+		}},
+		{header:'${text("体验金")}', name:'tyj', index:'a.tyj', width:150, align:"right", formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 0, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("天数")}', name:'tianshu', index:'a.tianshu', width:100, align:"center"},
+		{header:'${text("首次提现限制")}', name:'sctx', index:'a.sctx', width:100, align:"right", formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 0, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("首次提现汇率")}', name:'sctxhuilv', index:'a.sctxhuilv', width:100, align:"left"},
+		{header:'${text("提现金额限制")}', name:'txje', index:'a.txje', width:100, align:"right", formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 0, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("提现汇率")}', name:'txhuilv', index:'a.txhuilv', width:150, align:"left"},
+		{header:'${text("充值最低金额")}', name:'czzdje', index:'a.czzdje', width:150, align:"center"},
+		{header:'${text("是否自动")}', name:'isauto', index:'a.isauto', width:150, align:"center" , formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sys_yes_no')}, val, '未知', true);
+		}},
+		{header:'${text("是否启用")}', name:'isqidong', index:'a.isqidong', width:150, align:"left" , formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sys_yes_no')}, val, '未知', true);
+		}},
+		{header:'${text("转盘是否启用")}', name:'zpisqidong', index:'a.zpisqidong', width:150, align:"left" , formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sys_yes_no')}, val, '未知', true);
+		}},
+		{header:'${text("充值匹配交易id")}', name:'rechangeId', index:'a.rechangeId', width:150, align:"left" , formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sys_yes_no')}, val, '未知', true);
+		}},
+		{header:'${text("是否开启自动换卡")}', name:'huanka', index:'a.rechangeId', width:150, align:"left" , formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sys_yes_no')}, val, '未知', true);
+		}},
+		{header:'${text("是否开启时间轮换")}', name:'shijianlunhuan', index:'a.shijianlunhuan', width:150, align:"left" , formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sys_yes_no')}, val, '未知', true);
+		}},
+		{header:'${text("时间轮换时长（单位：分钟）")}', name:'minutes', index:'a.minutes', width:150, align:"center"},
+		{header:'${text("额度")}', name:'edu', index:'a.edu', width:150, align:"center"},
+		{header:'${text("操作")}', name:'actions', width:120, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('tab:tabAutoConfig:edit')){ %>
+				actions.push('<a href="${ctx}/tab/tabAutoConfig/form?rowid='+row.rowid+'" class="btnList" title="${text("编辑tab_auto_config")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/tab/tabAutoConfig/delete?rowid='+row.rowid+'" class="btnList" title="${text("删除tab_auto_config")}" data-confirm="${text("确认要删除该tab_auto_config吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>

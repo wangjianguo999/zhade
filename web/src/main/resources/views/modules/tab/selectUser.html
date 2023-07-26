@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>
+		E-CREATOR | Home
+	</title>
+</head>
+
+<body style="width: 100%;">
+	<div>
+		<span>用户账号：</span><input id="rowid" type="text"/>
+		<input onclick="submit1()" type="submit" value="提交" />
+	</div>
+<script src="../../../../jquery/jquery-3.5.0.min.js"></script>
+<script>
+function submit1(){
+	var rowidvalue = document.getElementById('rowid').value
+	$.ajax({
+  	  			url:"${ctx}/selectUser1",//要请求的服务器url
+  	  			data:{rowid:rowidvalue},
+  	  			async:true,
+  	  			cache:false,
+  	  			type:"POST",
+  	  			dataType:"json",
+  	  			success:function(result){
+  	  				console.log(result);
+  	  			},
+  	  			error:function(jqXHR, textStatus, errorThrown) {
+
+  	  	    	}
+			});
+
+}
+</script>
+</body>
+</html>

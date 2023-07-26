@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>AUI快速完成布局</title>
+    <link rel="stylesheet" type="text/css" href="${ctxStatic}/common/aui.css" />
+</head>
+<body style="background: #fff">
+    <div class="aui-content-padded">
+        <p>temps: <span class="aui-text-danger">${time}</span></p>
+    </div>
+    <div class="aui-content-padded">
+        <p>numéro de commande: <span class="aui-text-danger">${tabOrderData.orderid}</span></p>
+    </div>
+     <div class="aui-content aui-margin-b-15">
+        <ul class="aui-list aui-media-list">
+            
+            
+            
+            <li class="aui-list-item">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media">
+                        <img src="${tabProductData.imgsrc}">
+                    </div>
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-text">
+                            <div class="aui-list-item-title">${tabProductData.name}</div>
+                            <div class="aui-list-item-right"> </div>
+                        </div>
+                        <div class="aui-list-item-text">
+                            ${tabProductData.namedesc}
+                        </div>
+                        <div class="aui-info aui-margin-t-5 aui-text-danger" style="padding:0">
+                             $ ${tabProductData.buymoney}
+                        </div>
+                    </div>
+                </div>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="aui-content-padded">
+        <p>le prix: <span class="aui-text-danger"> $ ${tabOrderData.ordermonry}</span></p>
+    </div>
+    <div class="aui-content-padded">
+<!--        <p>commission: <span class="aui-text-danger">$ ${tabOrderData.rebatemoney}</span></p>-->
+    </div>
+    <div class="aui-content-padded">
+        <p>Revenus de la commande: <span class="aui-text-danger" id="dd" >$ ${m}</span></p>
+    </div>
+    <div  onclick="changeOrderData()" class="aui-btn aui-btn-danger aui-btn-block" style="width: 80%;margin-left:10%">Cliquez pour acheter</div>
+</body> 
+
+<script src="${ctxStatic}/common/jquery.min.js"></script>
+<script type="text/javascript"
+    src="${ctxStatic}/layer/3.1/layer.js?V0.1-12102105"></script>
+<script type=""
+    src="${ctxStatic}/common/common.js?m222?v=121222AD?v=121222A"></script>
+<script type="" src="${ctxStatic}/common/doT.min.js"></script>
+<script type="text/javascript">
+    var rowid = "${tabOrderData.rowid}";
+    var mm =   "${m}";
+    $("#dd").html("$ " + parseFloat(mm).toFixed(4))
+    var  tt="1";
+    function  changeOrderData(){
+    	if(tt=="1"){
+    		tt= "2";
+            var parame  = {
+                rowid : rowid 
+            }
+            var url = "${ctxPath}/changeOrderData";
+            doAjax(url,"post",parame,function(data){
+                var  flag   =  data.flag;
+                tt="1";
+                if(flag== "true"){
+                    layer.msg("Succèss")  ;
+                    parent.pingjia(rowid);
+                }else {
+                layer.msg(data.msg)  ;
+
+                }
+            })
+        	
+    	}
+    }
+
+</script>
+</html>

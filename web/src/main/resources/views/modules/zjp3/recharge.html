@@ -1,0 +1,334 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+<meta name="format-detection"
+	content="telephone=no,email=no,date=no,address=no">
+<title>convide amigos</title>
+<link rel="stylesheet" type="text/css"
+	href="${ctxStatic}/common/aui.css" />
+<style type="text/css">
+.aui-bar-btn.aui-bar-btn-full .aui-bar-btn-item:last-child {
+	border-right-width: 1px;
+}
+
+.aui-bar-btn-item.aui-active {
+	background-color: #ff393b
+}
+
+.aui-bar-btn-item {
+	border-color: #ff393b
+}
+
+.aui-content-padded {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+.aui-list .aui-list-item {
+	background-image: none;
+}
+
+.aui-list {
+	background-image: none;
+}
+
+.aui-grid [class*=aui-col-] {
+	padding: 0.3rem 0;
+}
+
+.aui-col-xs-4 .aui-btn {
+	width: 88%;
+	color: #fff
+}
+.aui-bar-btn.aui-bar-btn-full .aui-bar-btn-item:first-child{
+	border-left-width:1px;
+}
+</style>
+</head>
+<body>
+
+	<header class="aui-bar aui-bar-nav" id="aui-header">
+		<a class="aui-btn aui-pull-left" tapmode="" onclick="closeWin()">
+			<span class="aui-iconfont aui-icon-left"></span>
+		</a>
+		<div class="aui-title">Deposit</div>
+		<a class="aui-btn aui-pull-right" tapmode="" onclick="history2()">
+			<span class="aui-iconfont  ">History</span>
+		</a>
+	</header>
+	<section class="aui-content">
+		<div class="aui-card-list aui- -t  ">
+			<div class="aui-info aui-padded-l-15 aui-padded-r-15">
+				<div class="aui-info-item aui-font-size-12">
+					<span class="aui-margin-l-5">Deposit amount</span>
+				</div>
+			</div>
+		</div>
+
+	</section>
+	<section class="aui-content aui-content-padded">
+
+		<div class="aui-bar aui-bar-btn aui-bar-btn-full ">
+			<div class="aui-bar-btn-item aui-active" tapmode="" type="USD"    onclick="choose2(this)"
+				data-item-order="0">USD</div>
+			<div class="aui-bar-btn-item " tapmode="" data-item-order="1" type="CDF" onclick="choose2(this)" >CDF</div>
+
+		</div>
+	</section>
+	<ul class="aui-list aui-form-list" style="margin-top: 7px;">
+
+		<li class="aui-list-item">
+			<div class="aui-list-item-inner">
+
+				<div class="aui-list-item-input">
+					<input type="text" placeholder="Input deposit amount" id="m"  onchange="jisuan()"
+						style="background: #f3f6fa">
+				</div>
+			</div>
+		</li>
+
+
+
+	</ul>
+	<br>
+	<section class="aui-content">
+		<div class="aui-card-list aui- -t  ">
+			<div class="aui-info aui-padded-l-15 aui-padded-r-15">
+				<div class="aui-info-item aui-font-size-12">
+					<span class="aui-margin-l-5">充值通道</span>
+				</div>
+			</div>
+		</div>
+
+	</section>
+	
+	
+	<script id="data-usd" type="text/template">
+				{{for(var i in it){}}
+ <li class="aui-list-item">
+                <div class="aui-list-item-label">
+                    <input class="aui-radio"  onclick="doSelect(this)" type="radio" v="{{=it[i].tongdaoName}}" name="radio"  >
+                </div>
+                <div class="aui-list-item-inner">
+                    {{=it[i].tongdaoName}}
+                </div>
+            </li>
+		{{}}}
+	</script> 
+	
+	 <ul class="aui-list aui-select-list" id="usd">
+            
+            
+        </ul>
+        
+         <ul class="aui-list aui-select-list" id="cdf" style="display: none">
+            
+            
+        </ul>
+        
+        
+        
+	<br><br>
+	<div class="aui-btn aui-btn-danger aui-btn-block" id="buttons" onclick="pay2()">Recharge</div>
+</body>
+
+<script type="text/javascript"
+	src="${ctxStatic}/jquery/jquery-1.12.4.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/common.js"></script>
+<script type="text/javascript"
+	src="${ctxStatic}/common/clipboard.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/qrcode.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/aui-actionsheet.js" ></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/doT.min.js"></script>
+
+<script type="text/javascript"
+	src="${ctxStatic}/layer/3.1/layer.js?V0.1-12102105"></script>
+
+<script type="text/javascript">
+var actionsheet = new auiActionsheet();
+var payArray =   [];
+function xuanze(){
+    actionsheet.init({
+        frameBounces:true,//当前页面是否弹动，（主要针对安卓端）
+        title:"",
+        cancelTitle:'',
+        buttons:payArray
+    },function(ret){
+        if(ret){
+        		var  index= ret.buttonTitle;
+        		$("#td").val(index)
+         }
+    })
+}
+var  HUILV = 0 ;
+var  td1 = []; 
+var  td2 =  []; 
+
+$(document).ready(function(){
+
+	var url = "${ctxPath}/getHuiLvData";
+	doAjax(url, "POST", {},
+			function(data) {
+				var code = data.code;
+				if (code == 0) { 
+						var data=  data.data;
+						HUILV  =  data[0].cad;
+				} else {
+					location.href = "${ctxPath}/login";
+
+				}
+			})
+
+		var url = "${ctxPath}/listTongDao";
+		doAjax(url, "POST", {},
+				function(data) {
+					var code = data.code;
+					if (code == 0) { 
+						td1 = data.data1;
+						td2 = data.data2 ;
+						
+						var dataTpl = doT.template(document
+								.getElementById("data-usd").innerHTML);
+						// $api.html($api.byId("sider"), );
+						$("#usd").html(dataTpl(td1));
+						
+						$("#cdf").html(dataTpl(td2));
+
+						
+					} else {
+						location.href = "${ctxPath}/login";
+
+					}
+				})
+})
+			
+			function selec2(el){
+		var  text  =  $(el).text();
+		$(".aui-col-xs-4 .aui-btn-danger").removeClass("aui-btn-danger");
+		$(el).addClass("aui-btn-danger");
+		$("#m").val(text);
+		jisuan();
+	}
+	
+	
+	
+	
+	var zfPay = "USD";
+	function  choose2(el){
+		zfPay=   $(el).attr("type");
+		$(".aui-active").removeClass("aui-active");
+		$(el).addClass("aui-active");
+		jisuan();
+		tdName="";
+		if(zfPay=="USD"){
+			var dataTpl = doT.template(document
+					.getElementById("data-usd").innerHTML);
+			// $api.html($api.byId("sider"), );
+			$("#usd").html(dataTpl(td1));
+			
+ 			
+		}else {
+			var dataTpl = doT.template(document
+					.getElementById("data-usd").innerHTML);
+ 			$("#usd").html(dataTpl(td2));
+
+		}
+		
+	}
+	
+	function  jisuan(){
+		var   m =   $("#m").val() || 0 ;
+		if(zfPay=="CDF"){
+			if(m > 0 ){
+			$("#buttons").html("CDF " +  m )
+			}
+ 		}else {
+ 			var tt =  m /  HUILV; 
+ 			tt =    parseFloat(tt).toFixed(2);
+ 			if(m > 0 ){
+ 				$("#buttons").html("CDF  " +  tt )
+ 				}
+		}
+	}
+	
+	var tdName= "";
+	function  pay2(){
+
+		var parame =  {
+				zfPay :  zfPay	
+		}
+		 
+			var  td = tdName;
+			if(td == ""){
+				layer.msg("请选择通道!")
+				return ; 
+			}
+			parame.td =   td ; 
+		
+		var  m =     $("#m").val() || "";
+		if(m == ""){
+			layer.msg("请输入金额!");
+			return ; 
+		}
+		parame.m =   m ; 
+	
+		var url = "${ctxPath}/rechangeData";
+		doAjax(url,"post",parame,function(data){
+			var code =  data.code ;
+			if(code== "0"){
+				var  data =  data.data ;
+				var paytype=   data.paytype  ;
+				if(paytype=="cad"){
+					//走法币支付
+					
+				}else {
+					//走数字货币
+					var  rowid =   data.rowid; 
+					location.href = "${ctxPath}/verturlcoin?rowid=" + rowid;
+
+				}
+			}else {
+				layer.msg(data.msg);
+			}
+		})
+		
+
+		
+	}
+	
+	function history2(){
+		location.href = "${ctxPath}/rechargehistory";
+
+	}
+	
+	function  xuanze2(){
+	var payArray2= ["ERC20-USDT","TRC20-USDT"]
+	    actionsheet.init({
+	        frameBounces:true,//当前页面是否弹动，（主要针对安卓端）
+	        title:"",
+	        cancelTitle:'',
+	        buttons:payArray2
+	    },function(ret){
+	        if(ret){
+	        		var  index= ret.buttonTitle;
+	        		$("#btb").val(index)
+	         }
+	    })
+	}
+	
+	function  doSelect(el){
+		tdName = $(el).attr("v");
+		console.log(tdName);
+	}
+	
+	
+</script>
+</html>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeesite.modules.tab.dao.TabJiesuanLogDao">
+	
+	<!-- 查询数据
+	<select id="findList" resultType="TabJiesuanLog">
+		SELECT ${sqlMap.column.toSql()}
+		FROM ${sqlMap.table.toSql()}
+		<where>
+			${sqlMap.where.toSql()}
+		</where>
+		ORDER BY ${sqlMap.order.toSql()}
+	</select> -->
+	
+	
+	
+	
+	
+	<select id="getUserMoney" resultType="java.lang.Double">
+		SELECT  ifnull(sum(amont), 0 )  FROM   tab_jiesuan_log  where  userid  =    #{userid}
+	</select>
+	
+
+	
+	<select id="getShouruData" resultType="java.lang.Double">
+		SELECT  ifnull(sum(amont), 0 )  FROM   tab_jiesuan_log  where  userid  =    #{userid}
+		  and    cmd='Commission'
+	</select>
+
+
+	<delete id="deleteListByOrderId" parameterType="string">
+		delete from tab_jiesuan_log where status1 = #{orderId}
+	</delete>
+
+
+	<select id="getShouruDataTuandui" resultType="java.lang.Double">
+		SELECT  ifnull(sum(amont), 0 )  FROM   tab_jiesuan_log  where  userid  =    #{userid}
+		 <if test="_parameter.containsKey('mm')">
+	    	 AND    	    		createtime     &gt;=  #{mm}  
+
+		</if>
+		  and   ( type= 'Commission1'  or   type= 'Commission2'     or   type= 'Commission3')
+	</select>
+	
+	
+ 	
+	<select id="getShouruList" resultType="com.jeesite.modules.tab.entity.TabJiesuanLog">
+		SELECT   *   FROM   tab_jiesuan_log  where      amont &gt; 0  and   userid  =    #{userid}    order by   createtime  desc  limit  0,100
+	</select>
+	
+	
+	 
+	
+	
+	<select id="getZhiChuList" resultType="com.jeesite.modules.tab.entity.TabJiesuanLog">
+		SELECT   *   FROM   tab_jiesuan_log  where      amont &lt; 0  and   userid  =    #{userid}    order by   createtime  desc limit  0,100
+	</select>
+
+	<select id="rewardDetails" resultType="com.jeesite.modules.tab.entity.TabJiesuanLog">
+		SELECT   *   FROM   tab_jiesuan_log  where  userid  =    #{userid}    and    (msg = 'Extra rewards' or type = '转盘奖励')   order by   createtime  desc limit  0,100
+	</select>
+	
+	
+	
+	 	<update id="updateYgzh">
+				update  tab_jiesuan_log   set   ygzh  =#{ygzh}  , ygzh2  =#{ygzh2}   where  userid  =#{userid}
+			</update>	
+			
+	
+	
+	<select id="getTuandui" resultType="java.lang.Double">
+		SELECT  ifnull(sum(amont), 0 )  FROM   tab_jiesuan_log  where  userid   =      #{userid}
+		  and   ( type= 'Commission1'  or   type= 'Commission2'     or   type= 'Commission3')
+	</select>
+
+	<select id="ztReset" resultType="com.jeesite.modules.tab.entity.TabJiesuanLog">
+		select * from tab_jiesuan_log where createtime &gt;= #{date} and cmd != "Registered donations" AND zt is null;
+
+	</select>
+		
+</mapper>

@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeesite.modules.tab.dao.TabTixianLogDao">
+	
+	<!-- 查询数据
+	<select id="findList" resultType="TabTixianLog">
+		SELECT ${sqlMap.column.toSql()}
+		FROM ${sqlMap.table.toSql()}
+		<where>
+			${sqlMap.where.toSql()}
+		</where>
+		ORDER BY ${sqlMap.order.toSql()}
+	</select> -->
+	
+	
+	<select id="getSum" resultType="java.lang.Double" >  
+	    
+	    		SELECT ifnull(sum(REPLACE(money,'RS','')) ,0) from  tab_tixian_log  where   (status1 =  2 or status1 = 6 or status1 = 9)
+	    		
+	    			<if test="_parameter.containsKey('userid')">
+	  and   		userid=    #{userid}     
+
+		</if>
+	    		
+	    			<if test="_parameter.containsKey('min')">
+	    	 AND    	    		updatetime  &gt;= #{min}  
+
+		</if>
+		
+	    				<if test="_parameter.containsKey('max')">
+	    	 AND    	    		updatetime  &lt;= #{max}  
+
+		</if>
+		
+	    </select>
+	    
+	<select id="getXiaJiaData" resultType="java.lang.Double" >
+	    
+	    		SELECT ifnull(sum(money),0) from  tab_tixian_log  where   (status1 =  2 or status1 = 6 or status1 = 9)  and
+	    		userid  in    (select  rowid    from   tab_user_data  where    parentid    =     #{userId}   or   parentid1    =     #{userId}   )
+	    
+	</select>
+	<select id="getTixianRenShu" resultType="java.lang.Long">
+	    		
+	    SELECT ifnull(count(distinct userid),0) from  tab_tixian_log  where   (status1 =  2 or status1 = 6 or status1 = 9 )  and
+	    		userid  in    (select  rowid    from   tab_user_data  where     shangjilink    like     #{userId}     )
+	    	
+	    			<if test="_parameter.containsKey('times')">
+	    	 AND    	    		updatetime   &gt;= #{times}  
+
+		</if>
+			<if test="_parameter.containsKey('min')">
+	    	 AND    	    		updatetime   &gt;= #{min}  
+
+		</if>
+			<if test="_parameter.containsKey('max')">
+	    	 AND    	    		updatetime   &lt;= #{max}  
+
+		</if>
+	</select>
+	
+	
+
+	<select id="findCountData"  resultType="java.lang.Long" >
+	    		SELECT ifnull(count(distinct  userid  ),0) from  tab_tixian_log  where   (status1 =  2  or status1 = 6 or status1 = 9 )
+	    		
+		
+	    			<if test="_parameter.containsKey('min')">
+	    	 AND    	    		updatetime  &gt;= #{min}  
+
+		</if>
+		
+	    				<if test="_parameter.containsKey('max')">
+	    	 AND    	    		updatetime  &lt;= #{max}  
+
+		</if>
+		
+	    			
+	    
+	</select>	
+	
+	
+	<select id="getByOrderId"  resultType="com.jeesite.modules.tab.entity.TabTixianLog">
+		select * from tab_tixian_log where orderid = #{str}
+
+	</select>
+
+	<select id="getTixianMoney" resultType="java.lang.Double">
+	    		
+	    SELECT ifnull(sum(money),0) from  tab_tixian_log  where   (status1 =  2 or status1 = 6 or status1 = 9 )  and
+	    		userid  in    (select  rowid    from   tab_user_data  where      shangjilink    like     #{userId}   )
+	    	
+	    			<if test="_parameter.containsKey('times')">
+	    	 AND    	    		updatetime   &gt;= #{times}  
+
+		</if>
+		<if test="_parameter.containsKey('min')">
+	    	 AND    	    		updatetime   &gt;= #{min}  
+
+		</if>
+			<if test="_parameter.containsKey('max')">
+	    	 AND    	    		updatetime   &lt;= #{max}  
+
+		</if>
+	</select>
+	
+	<select id="getCzje"  resultType="java.lang.Double">
+			  SELECT ifnull(sum(dzje),0 ) from   tab_tixian_log  where   (status1 =  2   or status1 = 6 or status1 = 9 )
+			  	<if test="_parameter.containsKey('min')">
+	    	 AND    	    		updatetime   &gt;= #{min}  
+
+		</if>
+		
+		
+		
+		<if test="_parameter.containsKey('userId')">
+	    	 AND    	    		userId     =  #{userId} 
+
+		</if>
+			<if test="_parameter.containsKey('type')">
+	    	 AND    	    		type  = #{type}  
+
+		</if>
+			<if test="_parameter.containsKey('max')">
+	    	 AND    	    		updatetime   &lt;= #{max}  
+
+		</if>
+		
+		  	<if test="_parameter.containsKey('min1')">
+	    	 AND    	    		updatetime   &gt;= #{min1}  
+
+		</if>
+			<if test="_parameter.containsKey('max1')">
+	    	 AND    	    		updatetime   &lt;= #{max1}  
+
+		</if>
+		
+	    			<if test="_parameter.containsKey('userid')">
+	    	 AND    	    			userid    =      #{userid}  
+
+		</if>
+			<if test="_parameter.containsKey('shangjis')">
+	    	 AND    	    		shangjilink   like     #{shangjis}  
+
+		</if>
+	</select>
+	
+	<select id="getCzje2"  resultType="java.lang.Double">
+			  SELECT ifnull(sum(dzje),0 ) from   tab_tixian_log  where   2 =  2   
+			  	<if test="_parameter.containsKey('min')">
+	    	 AND    	    		updatetime   &gt;= #{min}  
+
+		</if>
+		
+		
+		
+		<if test="_parameter.containsKey('userId')">
+	    	 AND    	    		userId     =  #{userId} 
+
+		</if>
+			<if test="_parameter.containsKey('type')">
+	    	 AND    	    		type  = #{type}  
+
+		</if>
+			<if test="_parameter.containsKey('max')">
+	    	 AND    	    		updatetime   &lt;= #{max}  
+
+		</if>
+		
+		  	<if test="_parameter.containsKey('min1')">
+	    	 AND    	    		updatetime   &gt;= #{min1}  
+
+		</if>
+			<if test="_parameter.containsKey('max1')">
+	    	 AND    	    		updatetime   &lt;= #{max1}  
+
+		</if>
+		
+	    			<if test="_parameter.containsKey('userid')">
+	    	 AND    	    			userid    =      #{userid}  
+
+		</if>
+			<if test="_parameter.containsKey('shangjis')">
+	    	 AND    	    		shangjilink   like     #{shangjis}  
+
+		</if>
+	</select>
+	<select id="getCzbs"  resultType="java.lang.Long">
+			  SELECT ifnull(count(1),0 ) from   tab_tixian_log  where   (status1 =  2  or status1 = 6 or status1 = 9)
+			  	<if test="_parameter.containsKey('min')">
+	    	 AND    	    		updatetime   &gt;= #{min}  
+
+		</if>
+			<if test="_parameter.containsKey('max')">
+	    	 AND    	    		updatetime   &lt;= #{max}  
+
+		</if>
+		
+		
+		<if test="_parameter.containsKey('userId')">
+	    	 AND    	    		userId     =  #{userId} 
+
+		</if>
+		  	<if test="_parameter.containsKey('min1')">
+	    	 AND    	    		updatetime   &gt;= #{min1}  
+
+		</if>
+			<if test="_parameter.containsKey('max1')">
+	    	 AND    	    		updatetime   &lt;= #{max1}  
+
+		</if>
+		
+		<if test="_parameter.containsKey('type')">
+	    	 AND    	    		type  = #{type}  
+
+		</if>
+	    			<if test="_parameter.containsKey('userid')">
+	    	 AND    	    			userid    =      #{userid}  
+
+		</if>
+			<if test="_parameter.containsKey('shangjis')">
+	    	 AND    	    		shangjilink   like     #{shangjis}  
+
+		</if>
+	</select>
+	
+	
+	<select id="getTotalRenshu"  resultType="java.lang.Long">
+			  SELECT ifnull(count(distinct  userid),0 ) from   tab_tixian_log  where   (status1 =  2  or status1 = 6 or status1 = 9)
+			  	<if test="_parameter.containsKey('date1')">
+	    	 AND    	    		updatetime   &gt;= #{date1}  
+
+		</if>
+			<if test="_parameter.containsKey('date2')">
+	    	 AND    	    		updatetime   &lt;= #{date2}  
+
+		</if>
+		
+	    			<if test="_parameter.containsKey('name1')">
+	    	 AND    	    		 	shangjilink   like      #{name1}  
+
+		</if>
+			<if test="_parameter.containsKey('name2')">
+	    	 AND    	    		shangjilink   like     #{name2}  
+
+		</if>
+	</select>
+	
+	
+	<select id="getTotalMoney"  resultType="java.lang.Double">
+			  SELECT ifnull(sum(dzje),0 ) from   tab_tixian_log  where  ( status1 =  2  or status1 = 6 or status1 = 9)
+			  	<if test="_parameter.containsKey('date1')">
+	    	 AND    	    		updatetime   &gt;= #{date1}  
+
+		</if>
+			<if test="_parameter.containsKey('date2')">
+	    	 AND    	    		updatetime   &lt;= #{date2}  
+
+		</if>
+		
+	    			<if test="_parameter.containsKey('name1')">
+	    	 AND    	    			shangjilink   like     #{name1}  
+
+		</if>
+			<if test="_parameter.containsKey('name2')">
+	    	 AND    	    		shangjilink   like     #{name2}  
+
+		</if>
+	</select>
+
+
+	<select id="getTotalCount"  resultType="java.lang.Integer">
+		SELECT count(*) from  tab_tixian_log  where  ( status1 =  2  or status1 = 1 or status1 =  4  or status1 = 12  or status1 = 5  or status1 = 6 or status1 = 8  or status1 = 9) and userid = #{userid}
+	</select>
+	
+	
+	 	<update id="updateYgzh">
+				update  tab_tixian_log   set   ygzh  =#{ygzh} , ygzh2  =#{ygzh2}    where  userid  =#{userid}
+			</update>	
+
+	<select id="getTdtx" resultType="java.lang.Double">
+		SELECT ifnull(sum(money),0 ) from tab_tixian_log where status1 = 2 and (parentid1 = #{rowid} or parentid2 = #{rowid} or parentid3 = #{rowid})
+	</select>
+</mapper>
+

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeesite.modules.tab.dao.TabUserCoinwDao">
+	
+	<!-- 查询数据
+	<select id="findList" resultType="TabUserData">
+		SELECT ${sqlMap.column.toSql()}
+		FROM ${sqlMap.table.toSql()}
+		<where>
+			${sqlMap.where.toSql()}
+		</where>
+		ORDER BY ${sqlMap.order.toSql()}
+	</select> -->
+	
+	<select id="findListData" resultType="com.jeesite.modules.tab.entity.TabUserCoinw">
+		select * from tab_user_coinw a where 1=1
+			<if test="_parameter.containsKey('profitamount')">
+				AND   profitamount  &gt;= #{profitamount}
+			</if>
+		<if test="_parameter.containsKey('totalprofitrate')">
+			AND   totalprofitrate  &gt;= #{totalprofitrate}
+		</if>
+		<if test="_parameter.containsKey('settleintime')">
+			AND   settleintime  &gt;= #{settleintime}
+		</if>
+		<if test="_parameter.containsKey('avgprofitrate')">
+			AND   avgprofitrate  &gt;= #{avgprofitrate}
+		</if>
+		<if test="_parameter.containsKey('avgquantity')">
+			AND   avgquantity  &gt;= #{avgquantity}
+		</if>
+		<if test="_parameter.containsKey('avgprofit')">
+			AND   avgprofit  &gt;= #{avgprofit}
+		</if>
+		<if test="_parameter.containsKey('ordercount')">
+			AND   ordercount  &gt;= #{ordercount}
+		</if>
+		<if test="_parameter.containsKey('profitCountrate')">
+			AND   profitCountrate  &gt;= #{profitCountrate}
+		</if>
+		order by profitCountrate desc
+	</select>
+
+	<select id="findListDataCount" resultType="java.lang.Long">
+		select count(1) from tab_user_coinw a where 1=1
+		<if test="_parameter.containsKey('profitamount')">
+			AND   profitamount  &gt;= #{profitamount}
+		</if>
+		<if test="_parameter.containsKey('totalprofitrate')">
+			AND   totalprofitrate  &gt;= #{totalprofitrate}
+		</if>
+		<if test="_parameter.containsKey('settleintime')">
+			AND   settleintime  &gt;= #{settleintime}
+		</if>
+		<if test="_parameter.containsKey('avgprofitrate')">
+			AND   avgprofitrate  &gt;= #{avgprofitrate}
+		</if>
+		<if test="_parameter.containsKey('avgquantity')">
+			AND   avgquantity  &gt;= #{avgquantity}
+		</if>
+		<if test="_parameter.containsKey('avgprofit')">
+			AND   avgprofit  &gt;= #{avgprofit}
+		</if>
+		<if test="_parameter.containsKey('ordercount')">
+			AND   ordercount  &gt;= #{ordercount}
+		</if>
+		<if test="_parameter.containsKey('profitCountrate')">
+			AND   profitCountrate  &gt;= #{profitCountrate}
+		</if>
+	</select>
+</mapper>

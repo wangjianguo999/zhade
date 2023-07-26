@@ -1,0 +1,109 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+<meta name="format-detection"
+	content="telephone=no,email=no,date=no,address=no">
+<title>convide amigos</title>
+<link rel="stylesheet" type="text/css"
+	href="${ctxStatic}/common/aui.css" />
+<style type="text/css">
+	 
+</style>
+</head>
+<body>
+ 		 <header class="aui-bar aui-bar-nav" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="closeWin()">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title">Commandes
+
+</div>
+    </header>
+    
+    
+   <ul class="aui-list aui-media-list" id="list">
+            
+           
+            
+        </ul>
+    
+<script id="data-list" type="text/template">
+				{{for(var i in it){}}
+	 <li class="aui-list-item aui-list-item-middle">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        <div class="aui-list-item-text">
+                            <div class="aui-list-item-title aui-font-size-14">{{=convertStat(it[i].status1)}}</div>
+                            <div class="aui-list-item-right aui-text-danger">+{{=it[i].hzhb}}</div>
+                        </div>
+                        <div class="aui-list-item-text">
+{{=it[i].createtime}}
+                        </div>
+ <div class="aui-list-item-text">
+Numero de commande{{=it[i].orderid}}
+                        </div>
+                    </div>
+                </div>
+            </li>
+				{{}}}		
+			</script>
+    
+    
+    
+    
+</body>
+
+<script type="text/javascript"
+	src="${ctxStatic}/jquery/jquery-1.12.4.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/common.js"></script>
+<script type="text/javascript"
+	src="${ctxStatic}/common/clipboard.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/qrcode.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/aui-actionsheet.js" ></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/doT.min.js"></script>
+
+<script type="text/javascript"
+	src="${ctxStatic}/layer/3.1/layer.js?V0.1-12102105"></script>
+
+<script type="text/javascript"> 
+	var  tt111111  =  window.localStorage.getItem("token") || "";
+
+	if(tt111111=="-11" || tt111111==""){
+	    location.href = "${ctxPath}/login";
+
+	}	
+			var type = "1"
+		  function initData(){
+							  
+				var parame = {
+				}
+				var url = "${ctxPath}/listDataTabRechangeLog";
+				doAjax(url,"post",parame,function(data){
+					var  data = data.data ; 
+
+					var dataTpl = doT.template(document.getElementById("data-list").innerHTML);
+				$("#list").html(dataTpl(data));	
+				})
+		  }
+			initData();
+			
+			function  convertStat(v){
+				if(v== "1") {
+					return   "Recharge en cours"
+				}else  if(v == "2"){
+					return "Recharge réussi"
+				}else {
+					return "Échec du Recharge"
+				}
+			}
+	
+</script>
+</html>

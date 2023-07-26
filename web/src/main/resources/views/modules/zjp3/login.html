@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0, user-scalable=no">
+    <title>login</title>
+    <link rel="stylesheet" href="${ctxStatic}/common/loginCss.css">
+</head>
+<body class="login-bg">
+<div class="login-contain">
+    <div class="login-header">
+    	
+        <p style="padding-bottom: 30px"><img alt="" src="${ctxStatic}/common/text.png"> </p>
+        
+                <p style="font-size: 18px">文字内容</p>
+                                <p style="font-size: 18px">文字内容</p>
+                
+                                <p style="font-size: 18px">文字内容</p>
+                
+        
+    </div>
+    <div class="form-group">
+        <div class="form-item">
+           
+            <input id="Name" type="text" placeholder="请输入账号">
+             <label for="username">
+                <img src="${ctxStatic}/common/yhuming.png">
+            </label>
+        </div>
+        <div class="form-item">
+           
+            <input id="NamePassowrd" type="password" placeholder="请输入密码">
+             <label for="password">
+                <img src="${ctxStatic}/common/mima2.png">
+            </label>
+        </div>
+    </div>
+    <div class="button-group">
+        <button class="login-btn" onclick="login2()" id="doLogin">登录</button>
+    </div>
+
+</div>
+
+
+<script src="${ctxStatic}/common/jquery.min.js"></script>
+<script src="${ctxStatic}/common/common.js"></script>
+<script src="${ctxStatic}/zjp/amazeui.min.js"></script>
+<script src="${ctxStatic}/zjp/app.js"></script>
+<script type="text/javascript"
+	src="${ctxStatic}/layer/3.1/layer.js?V0.1-12102105"></script>
+	
+	
+	<script>
+    $(function(){
+        $(window).resize();
+    });
+    //js设置居中
+    $(window).resize(function(){
+        $(".login-contain").css({
+            position: "absolute",
+            left: ($(window).width() - $(".login-contain").outerWidth())/2,
+            top: 60
+        });
+    });
+    
+
+	  function  login2(){
+				var   phone=  $("#Name").val() || "";
+				var  password= $("#NamePassowrd").val() || "";
+				if(phone == ""  ){
+					layer.msg("phone required");
+					return ;
+				}
+
+				if(password == ""  ){
+					layer.msg("password required");
+					return ;
+				}
+
+				var parame  =  {
+					phone: phone,
+					password : password
+				}
+				var url = "${ctxPath}/loginPost";
+				doAjax(url,"post",parame,function(data){
+							var code =  data.code ;
+							if(code == 1){
+								layer.msg(data.msg); 
+							}else  if(code ==0 ){
+								var token = data.accesstoken
+								window.localStorage.setItem("token",token)   
+location.href="${ctxPath}/home";
+							}
+				})
+
+	  }
+</script>
+
+</body>
+</html>

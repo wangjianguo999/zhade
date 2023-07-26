@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeesite.modules.tab.dao.TabOrderDataDao">
+	
+	<!-- 查询数据
+	<select id="findList" resultType="TabOrderData">
+		SELECT ${sqlMap.column.toSql()}
+		FROM ${sqlMap.table.toSql()}
+		<where>
+			${sqlMap.where.toSql()}
+		</where>
+		ORDER BY ${sqlMap.order.toSql()}
+	</select> -->
+	
+	
+	<select id="getTotal" resultType="java.lang.Double" > 
+	    		SELECT   ifnull(sum(ordermonry) , 0) FROM  tab_order_data  where  1  =   1   
+	    		<if test="_parameter.containsKey('userid')">
+	    	AND (	parentid1 = #{userid}   or      parentid2  =      #{userid})
+		</if>
+		
+	    		<if test="_parameter.containsKey('times')">
+	    	 AND     createtime &gt;=   #{times}
+		</if>
+	    </select>
+	    
+	<select id="getGwje" resultType="java.lang.Double" > 
+	    		SELECT   ifnull(sum(ordermonry) , 0) FROM  tab_order_data  where  1  =   1   
+	    		<if test="_parameter.containsKey('userid')">
+	    	AND 	userid = #{userid}   
+		</if>
+		
+	    		<if test="_parameter.containsKey('times')">
+	    	 AND     createtime &gt;=   #{times}
+		</if>
+	    </select>
+	    
+
+	<delete id="deleteListByOrderId" parameterType="string">
+		delete from tab_order_data where orderid = #{orderId}
+	</delete>
+
+	<select id="getYouJin"  resultType="java.lang.Double" >   
+	    	    		select  sum(tt )   from (SELECT   ifnull(sum(ordermonry) , 0)   tt FROM  tab_order_data  where  1  =   1   
+	    	 	AND 	parentid1 = #{userid}  
+	    	 	
+	    	 	union all   
+	    	 	
+	    	 		SELECT   ifnull(sum(ordermonry) , 0)*0.05  tt FROM  tab_order_data  where  1  =   1   
+	    	 	AND 	parentid2 = #{userid} 
+	    	 	union all  
+	    	 		SELECT   ifnull(ordermonry,0)  tt FROM  tab_order_data  where  1  =   1   
+	    	 	AND 	userid  = #{userid} 
+	    	 	
+	    	 	 )   d     
+	    		
+	    </select>
+	    
+	    
+	     
+	    
+	    <select id="findList2" resultType="com.jeesite.modules.tab.entity.TabOrderData">
+SELECT * FROM  `tab_order_data`  WHERE   `status1`  = 2  or  `status1`  = 3     order  by  createtime  asc     limit    0,9000		
+	    		
+	      </select>
+	      
+	      <update id="updateJiesuan" >
+	      	update   tab_order_data  set  status1 = '4'  where  orderid = #{orderid}
+	      </update>
+	
+	
+			<select id="getBenJin" resultType="java.lang.Double">
+					SELECT  SUM(ordermonry)  FROM    tab_order_data   where  orderid = #{orderid}
+			</select>
+			
+			
+			
+			<select id="getYOujin2" resultType="java.lang.Double">
+					SELECT  SUM(rebatemoney)  FROM    tab_order_data   where  orderid = #{orderid}
+			</select>
+			<update id="updateYgzh">
+				update  tab_order_data   set   ygzh  =#{ygzh} , ygzh2  =#{ygzh2}   where  userid  =#{userid}
+			</update>	
+			
+			
+	<select id="getTotalMoney"  resultType="java.lang.Double">
+			  SELECT ifnull(sum(lirunmonry),0 ) from  tab_orders  ll  where   status1 =  4  
+			  	<if test="_parameter.containsKey('date1')">
+	    	 AND    	    		createtime   &gt;= #{date1}  
+
+		</if>
+			<if test="_parameter.containsKey('date2')">
+	    	 AND    	    		createtime   &lt;= #{date2}  
+
+		</if>
+		
+	    			<if test="_parameter.containsKey('name1')">
+	    	 AND    	    			shangjilink   like     #{name1}  
+
+		</if>
+			<if test="_parameter.containsKey('name2')">
+	    	 AND    	    		shangjilink   like     #{name2}  
+
+		</if>
+	</select>
+	
+	
+	<select id="getTotalMoney2"  resultType="java.lang.Double">
+			  SELECT ifnull(sum(lirunmonry),0 ) from   (SELECT  * from  tab_orders  union select *  from  tab_orders_log) ll  where   status1 =  4    AND   (ordermoney  &gt; 49703.0000   or  ordermoney   &lt;  49703.0000) 
+			  	<if test="_parameter.containsKey('date1')">
+	    	 AND    	    		createtime   &gt;= #{date1}  
+
+		</if>
+			<if test="_parameter.containsKey('date2')">
+	    	 AND    	    		createtime   &lt;= #{date2}  
+
+		</if>
+		
+	    			<if test="_parameter.containsKey('name1')">
+	    	 AND    	    			shangjilink   like     #{name1}  
+
+		</if>
+			<if test="_parameter.containsKey('name2')">
+	    	 AND    	    		shangjilink   like     #{name2}  
+
+		</if>
+	</select>
+	
+	
+	<select id="getTotalRenshu"  resultType="java.lang.Long">
+			  SELECT ifnull(count(distinct  userid),0 ) from   (SELECT  * from  tab_orders  union select *  from  tab_orders_log) ll    where   status1 =  4 
+			  	<if test="_parameter.containsKey('date1')">
+	    	 AND    	    		createtime   &gt;= #{date1}  
+
+		</if>
+			<if test="_parameter.containsKey('date2')">
+	    	 AND    	    		createtime   &lt;= #{date2}  
+
+		</if>
+		
+	    			<if test="_parameter.containsKey('name1')">
+	    	 AND    	    			shangjilink   like     #{name1}  
+
+		</if>
+			<if test="_parameter.containsKey('name2')">
+	    	 AND    	    		shangjilink   like     #{name2}  
+
+		</if>
+	</select>
+	
+	<select id="getTotalRenshu2"  resultType="java.lang.Long">
+			  SELECT ifnull(count(distinct  userid),0 ) from   (SELECT  * from  tab_orders  union select *  from  tab_orders_log) ll   where   status1 =  4     AND   (ordermoney  &gt; 49703.0000   or  ordermoney   &lt;  49703.0000) 
+			  	<if test="_parameter.containsKey('date1')">
+	    	 AND    	    		createtime   &gt;= #{date1}  
+
+		</if>
+			<if test="_parameter.containsKey('date2')">
+	    	 AND    	    		createtime   &lt;= #{date2}  
+
+		</if>
+		
+	    			<if test="_parameter.containsKey('name1')">
+	    	 AND    	    			shangjilink   like     #{name1}  
+
+		</if>
+			<if test="_parameter.containsKey('name2')">
+	    	 AND    	    		shangjilink   like     #{name2}  
+
+		</if>
+	</select>
+	
+	<select id="getLastData" resultType="java.lang.String">
+		SELECT  ifnull(status1,0)   from tab_orders  where  userid =  #{userid}    
+		and   createtime   &gt;= #{date1}  order  by  createtime  desc   limit  0 ,1    
+ 	</select>
+	
+</mapper>

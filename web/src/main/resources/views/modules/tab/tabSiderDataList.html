@@ -1,0 +1,63 @@
+<% layout('/layouts/default.html', {title: 'tab_sider_data管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa icon-notebook"></i> ${text('首页轮播图配置')}
+			</div>
+			<div class="box-tools pull-right">
+					<a href="${ctx}/tab/tabSiderData/form" class="btn btn-default btnTool" title="${text('新增tab_sider_data')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<a href="#" class="btn btn-default" id="btnSetting" title="${text('设置')}"><i class="fa fa-navicon"></i></a>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${tabSiderData}" action="${ctx}/tab/tabSiderData/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('标题')}：</label>
+					<div class="control-inline">
+						<#form:input path="title" maxlength="451" class="form-control width-120"/>
+					</div>
+				</div> 
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text("语言")}', name:'yuyan', index:'a.yuyan', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('yuyan')}, val, '未知', true);
+		}},
+		
+		{header:'${text("图片")}', name:'imgsrc', index:'a.imgsrc', width:150, align:"left"},
+		{header:'${text("文本内容")}', name:'content', index:'a.content', width:150, align:"left"},
+		{header:'${text("更新时间")}', name:'createtime', index:'a.createtime', width:150, align:"center"},
+		{header:'${text("是否跳转")}', name:'jump', index:'a.jump', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('jump')}, val, '未知', true);
+		}},
+		{header:'${text("跳转地址")}', name:'url', index:'a.url', width:150, align:"center"},
+		{header:'${text("操作")}', name:'actions', width:120, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('tab:tabSiderData:edit')){ %>
+				actions.push('<a href="${ctx}/tab/tabSiderData/form?rowid='+row.rowid+'" class="btnList" title="${text("编辑tab_sider_data")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/tab/tabSiderData/delete?rowid='+row.rowid+'" class="btnList" title="${text("删除tab_sider_data")}" data-confirm="${text("确认要删除该tab_sider_data吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>

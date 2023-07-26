@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeesite.modules.tab.dao.TabXiadanSuccessTongjiDao">
+	
+	<!-- 查询数据
+	<select id="findList" resultType="TabXiadanSuccessTongji">
+		SELECT ${sqlMap.column.toSql()}
+		FROM ${sqlMap.table.toSql()}
+		<where>
+			${sqlMap.where.toSql()}
+		</where>
+		ORDER BY ${sqlMap.order.toSql()}
+	</select> -->
+	
+	
+	<select id="getTotalRenshu"  resultType="java.lang.Long">
+			  SELECT ifnull(count(1),0 ) from   tab_xiadan_success_tongji  where   2 =  2   
+			  	<if test="_parameter.containsKey('date1')">
+	    	 AND    	    		createtime   &gt;= #{date1}  
+
+		</if>
+			<if test="_parameter.containsKey('date2')">
+	    	 AND    	    		createtime   &lt;= #{date2}  
+
+		</if>
+		
+	    			<if test="_parameter.containsKey('name1')">
+	    	 AND    	    		 	shangjilink   like      #{name1}  
+
+		</if>
+			<if test="_parameter.containsKey('name2')">
+	    	 AND    	    		shangjilink   like     #{name2}  
+
+		</if>
+	</select>
+	
+	
+	<select id="getTotalMoney"  resultType="java.lang.Double">
+			  SELECT ifnull(sum(money),0 ) from   tab_order_data  where   2 =  2   
+			  	<if test="_parameter.containsKey('date1')">
+	    	 AND    	    		createtime   &gt;= #{date1}  
+
+		</if>
+			<if test="_parameter.containsKey('date2')">
+	    	 AND    	    		createtime   &lt;= #{date2}  
+
+		</if>
+		
+	    			<if test="_parameter.containsKey('name1')">
+	    	 AND    	    			shangjilink   like     #{name1}  
+
+		</if>
+			<if test="_parameter.containsKey('name2')">
+	    	 AND    	    		shangjilink   like     #{name2}  
+
+		</if>
+	</select>
+</mapper>

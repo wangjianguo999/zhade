@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeesite.modules.tab.dao.TabRechangeLogDao">
+	
+	<!-- 查询数据
+	<select id="findList" resultType="TabRechangeLog">
+		SELECT ${sqlMap.column.toSql()}
+		FROM ${sqlMap.table.toSql()}
+		<where>
+			${sqlMap.where.toSql()}
+		</where>
+		ORDER BY ${sqlMap.order.toSql()}
+	</select> -->
+
+		
+	
+	<select id="getList" resultType="com.jeesite.modules.tab.entity.TabTongji" >
+		SELECT  userid  userId  FROM  tab_rechange_log  where  createtime  &gt;= '2022-08-22' and status1    = '2' and parentid1 =   #{parentid} 
+		  group by    userid   
+	</select>
+	
+	<select id="getSum" resultType="java.lang.Double" >  
+	    
+	    		SELECT ifnull(sum(hzhb ),0) from  tab_rechange_log  where  1=1  
+	    		
+	    		
+	    			<if test="_parameter.containsKey('userid')">
+	    	 AND    	    		userid=    #{userid}  
+
+		</if>
+			<if test="_parameter.containsKey('userId')">
+	    	 AND    	    		userid=    #{userId}  
+
+		</if>
+		
+	    			<if test="_parameter.containsKey('min')">
+	    	 AND    	    		updatetime  &gt;= #{min}  
+
+		</if>
+		
+	    				<if test="_parameter.containsKey('max')">
+	    	 AND    	    		updatetime  &lt;= #{max}  
+
+		</if>
+		
+	    			
+	    		   and  status1 =  2 
+	    </select>
+	    
+	<select id="getXiajiRenshu" resultType="java.lang.Long">
+	    		   SELECT ifnull(count(distinct userid),0) from   tab_rechange_log  where   status1 =  2   and  
+	    		userid  in    (select  rowid    from   tab_user_data  where     shangjilink    like     #{userId}   )
+	    	
+	    			<if test="_parameter.containsKey('times')">
+	    	 AND    	    		updatetime   &gt;= #{times}  
+
+		</if>
+	    <if test="_parameter.containsKey('min')">
+	    	 AND    	    		updatetime   &gt;= #{min}  
+
+		</if>
+		
+	    	    <if test="_parameter.containsKey('max')">
+	    	 AND    	    		updatetime   &lt;= #{max}  
+
+		</if>
+	</select>
+	
+	<select id="getXiajiJine"  resultType="java.lang.Double">
+	    
+	    
+	       SELECT ifnull(sum(hzhb),0 ) from   tab_rechange_log  where   status1 =  2   and  
+	    		userid  in    (select  rowid    from   tab_user_data  where   shangjilink    like     #{userId} )
+	    	
+	    			<if test="_parameter.containsKey('times')">
+	    	 AND    	    		updatetime   &gt;= #{times}  
+
+		</if>
+			<if test="_parameter.containsKey('min')">
+	    	 AND    	    		updatetime   &gt;= #{min}  
+
+		</if>
+		<if test="_parameter.containsKey('max')">
+	    	 AND    	    		updatetime   &lt;= #{max}  
+
+		</if>
+	</select>
+	
+	
+	
+	<select id="getCzje"  resultType="java.lang.Double">
+			  SELECT ifnull(sum(hzhb),0 ) from   tab_rechange_log  where   status1 =  2   
+			  	<if test="_parameter.containsKey('min')">
+	    	 AND    	    		createtime   &gt;= #{min}  
+
+		</if>
+			<if test="_parameter.containsKey('max')">
+	    	 AND    	    		createtime   &lt;= #{max}  
+
+		</if>
+		
+		
+			  	<if test="_parameter.containsKey('min1')">
+	    	 AND    	    		updatetime   &gt;= #{min1}  
+
+		</if>
+			<if test="_parameter.containsKey('max1')">
+	    	 AND    	    		updatetime   &lt;= #{max1}  
+
+		</if>
+		
+	    			<if test="_parameter.containsKey('userid')">
+	    	 AND    	    			userid    =      #{userid}  
+
+		</if>
+			<if test="_parameter.containsKey('shangjis')">
+	    	 AND    	    		shangjilink   like     #{shangjis}  
+
+		</if>
+	</select>
+	<select id="getCzbs"  resultType="java.lang.Long">
+			  SELECT ifnull(count(1),0 ) from   tab_rechange_log  where   status1 =  2   
+			  	<if test="_parameter.containsKey('min')">
+	    	 AND    	    		createtime   &gt;= #{min}  
+
+		</if>
+			<if test="_parameter.containsKey('max')">
+	    	 AND    	    		createtime   &lt;= #{max}  
+
+		</if>
+		
+		
+			  	<if test="_parameter.containsKey('min1')">
+	    	 AND    	    		updatetime   &gt;= #{min1}  
+
+		</if>
+			<if test="_parameter.containsKey('max1')">
+	    	 AND    	    		updatetime   &lt;= #{max1}  
+
+		</if>
+		
+	    			<if test="_parameter.containsKey('userid')">
+	    	 AND    	    			userid    =      #{userid}  
+
+		</if>
+			<if test="_parameter.containsKey('shangjis')">
+	    	 AND    	    		shangjilink   like     #{shangjis}  
+
+		</if>
+	</select>
+	
+	
+	
+	<select id="getTotalMoney"  resultType="java.lang.Double">
+			  SELECT ifnull(sum(hzhb),0 ) from   tab_rechange_log  where   status1 =  2   and (istongji != 1 or istongji is null)
+			  	<if test="_parameter.containsKey('date1')">
+	    	 AND    	    		updatetime   &gt;= #{date1}  
+
+		</if>
+			<if test="_parameter.containsKey('date2')">
+	    	 AND    	    		updatetime   &lt;= #{date2}  
+
+		</if>
+		
+		<if test="_parameter.containsKey('userId')">
+	    	 AND    	    		userId     =  #{userId} 
+
+		</if>
+		
+	    			<if test="_parameter.containsKey('name1')">
+	    	 AND    	    			shangjilink   like     #{name1}  
+
+		</if>
+			<if test="_parameter.containsKey('name2')">
+	    	 AND    	    		shangjilink   like     #{name2}  
+
+		</if>
+	</select>
+	
+	<select id="getUserRechangeLog" resultType="java.lang.Integer">
+		select count(1) from tab_rechange_log where status1 = 1 and  userid = #{userid} and createtime like #{date}
+	</select>
+
+	<select id="getTotalRenshu"  resultType="java.lang.Long">
+			  SELECT ifnull(count(distinct  userid),0 ) from   tab_rechange_log  where   status1 =  2   and (istongji != 1 or istongji is null)
+			  	<if test="_parameter.containsKey('date1')">
+	    	 AND    	    		updatetime   &gt;= #{date1}  
+
+		</if>
+			<if test="_parameter.containsKey('date2')">
+	    	 AND    	    		updatetime   &lt;= #{date2}  
+
+		</if>
+		
+		<if test="_parameter.containsKey('userId')">
+	    	 AND    	    		userId     =  #{userId} 
+
+		</if>
+		
+		<if test="_parameter.containsKey('parentId')">
+	    	 AND    	    		parentid1     =  #{parentId} 
+
+		</if>
+		
+	    			<if test="_parameter.containsKey('name1')">
+	    	 AND    	    			shangjilink   like     #{name1}  
+
+		</if>
+			<if test="_parameter.containsKey('name2')">
+	    	 AND    	    		shangjilink   like     #{name2}  
+
+		</if>
+	</select>
+	
+	 	<update id="updateYgzh">
+				update  tab_rechange_log   set   ygzh  =#{ygzh} , ygzh2  =#{ygzh2}    where  userid  =#{userid}
+			</update>	
+			
+			<select id="getXjcz"  resultType="java.lang.Double">
+								  SELECT ifnull(sum(hzhb),0 ) from   tab_rechange_log  where   status1 =  2   
+								
+								<if test="_parameter.containsKey('userid')">
+	    	 AND    	    		parentid1=    #{userid}  
+		</if>
+			<if test="_parameter.containsKey('userId')">
+	    	 AND    	    		parentid1=    #{userId}  
+
+		</if>
+			</select>
+	
+		<select id="gettdcz" resultType="java.lang.Double">
+			SELECT ifnull(sum(hzhb),0 ) from tab_rechange_log where status1 = 2 and (parentid1 = #{rowid} or parentid2 = #{rowid} or parentid3 = #{rowid})
+		</select>
+
+	<select id="getFrozen" resultType="java.lang.Double">
+		SELECT ifnull(sum(hzhb),0 ) from tab_rechange_log
+			where status1 = 2
+		and orderType = 1
+		and isrefund = 0
+		and userId = #{userid}
+	</select>
+
+
+	<select id="getTabRechangeLogList" resultType="com.jeesite.modules.tab.entity.TabRechangeLog">
+		select * from tab_rechange_log where status1 = 2
+		and orderType = 1
+		and isrefund = 0
+		and refundtime &lt;= #{time}
+	</select>
+
+	<select id="getactiveSum" resultType="java.lang.Double">
+		SELECT ifnull(sum(hzhb),0 ) from tab_rechange_log
+		where userId = #{userid}
+		and status1 = 2
+		and createtime &lt;= #{endtime}
+		and createtime &gt;= #{starttime}
+	</select>
+
+</mapper>

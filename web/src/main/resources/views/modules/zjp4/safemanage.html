@@ -1,0 +1,99 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+    content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+<meta name="format-detection"
+    content="telephone=no,email=no,date=no,address=no">
+<title>changer le mot de passe</title>
+<link rel="stylesheet" type="text/css"
+    href="${ctxStatic}/common/aui.css" />
+<style type="text/css">
+     .aui-list-item-media img{
+     	width: 40px;
+     	height: 40px;
+     }
+     .aui-list .aui-list-item-media{
+     	width: auto;
+     }
+</style>
+
+</head>
+<body>
+<header class="aui-bar aui-bar-nav" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode="" onclick="closeWin()">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title">  Centre  de sécurité</div>
+         
+        </a>
+    </header>
+    <ul class="aui-list aui-media-list">
+            
+            
+            <li class="aui-list-item aui-list-item-middle urls" url="${ctxPath}/changepass">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                       Modifier le mot de passe de connexion
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item aui-list-item-middle urls" url="${ctxPath}/changeapypass">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner aui-list-item-arrow" id="dd">
+Mot de passe de retrai                    </div>
+                </div>
+            </li>
+        </ul>
+  </body>  
+
+<script type="text/javascript"
+    src="${ctxStatic}/jquery/jquery-1.12.4.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/common.js"></script>
+<script type="text/javascript"
+    src="${ctxStatic}/common/clipboard.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/qrcode.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/aui-actionsheet.js" ></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/doT.min.js"></script>
+
+<script type="text/javascript"
+    src="${ctxStatic}/layer/3.1/layer.js?V0.1-12102105"></script>
+
+    <script type="text/javascript">
+    var rr= "";
+            $(document).ready(function(){
+                $(".urls").click(function(){
+                    var url =  $(this).attr("url") ; 
+                            location.href = url+"?rr=" + rr;
+
+                })
+            })
+ window.onpopstate=function(){
+    // 获得存储在该历史记录点的json对象
+    var  json=window.history.state;// 获得的json为null时则无需刷新
+    if(json){
+        window.location.reload();
+    }
+};  
+
+var  url= "${ctxPath}/getTiXian";
+
+doAjax(url,"post",{},function(data){
+	rr =  data.rr;
+	if(rr =="0"){
+		$("#dd").html("Mot de passe de retrait");
+	}else {
+		$("#dd").html("Mot de passe de retrait");
+
+	}
+})
+
+
+    </script>
+</html>

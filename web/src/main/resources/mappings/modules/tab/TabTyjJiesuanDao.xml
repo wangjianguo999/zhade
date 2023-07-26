@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeesite.modules.tab.dao.TabTyjJiesuanDao">
+	
+	<!-- 查询数据
+	<select id="findList" resultType="TabTyjJiesuan">
+		SELECT ${sqlMap.column.toSql()}
+		FROM ${sqlMap.table.toSql()}
+		<where>
+			${sqlMap.where.toSql()}
+		</where>
+		ORDER BY ${sqlMap.order.toSql()}
+	</select> -->
+	
+	
+	<delete id="deleteListByOrderId" parameterType="string">
+		delete from tab_tyj_jiesuan where status1 = #{orderId}
+	</delete>
+	
+	<select id="getUserMoney" resultType="java.lang.Double">
+		SELECT  ifnull(sum(amont), 0 )  FROM   tab_tyj_jiesuan  where  userid  =    #{userid}
+	</select>
+	
+	<update id="deleteYc">
+			DELETE   FROM   tab_tyj_jiesuan  where  userid  in  ( SELECT  rowid  from   tab_user_data where    istiyan= '1'   and   validate &lt;= #{date}  ) 
+	</update>	
+	
+	<update id="deleteYc2">
+			DELETE   FROM   tab_tyj_jiesuan  where  userid      =  #{userid}
+	</update>
+
+	<delete id="deleteByUserId" parameterType="string">
+		delete from tab_tyj_jiesuan where userid = #{userid}
+	</delete>
+</mapper>

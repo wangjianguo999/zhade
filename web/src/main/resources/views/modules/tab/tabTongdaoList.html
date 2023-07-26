@@ -1,0 +1,315 @@
+<% layout('/layouts/default.html', {title: '通道管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa icon-notebook"></i> ${text('通道管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<% if(hasPermi('tab:tabTongdao:edit')){ %>
+					<a href="${ctx}/tab/tabTongdao/form" class="btn btn-default btnTool" title="${text('新增通道')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+				<a href="#" class="btn btn-default" id="btnSetting" title="${text('设置')}"><i class="fa fa-navicon"></i></a>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${tabTongdao}" action="${ctx}/tab/tabTongdao/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('通道名称')}：</label>
+					<div class="control-inline">
+						<#form:input path="tongdaoName" maxlength="100" class="form-control width-120"/>
+					</div>
+				</div>
+			<div class="form-group">
+				<label class="control-label">${text('收款号码')}：</label>
+				<div class="control-inline">
+					<#form:input path="number" maxlength="100" class="form-control width-120"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">${text('手机编号')}：</label>
+				<div class="control-inline">
+					<#form:input path="idss" maxlength="100" class="form-control width-120"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">${text('额度')}：</label>
+				<div class="control-inline">
+					<#form:input path="edu" maxlength="70" class="form-control width-120"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">${text('状态')}：</label>
+				<div class="control-inline width-120">
+					<#form:select path="status1" dictType="tdzt"  blankOption="true"   class="form-control width-80"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">${text('是否开启时间轮换')}：</label>
+				<div class="control-inline width-120">
+					<#form:select path="shijianlunhuan" dictType="sys_yes_no"  blankOption="true"   class="form-control width-80"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">${text('自动轮换排序')}：</label>
+				<div class="control-inline">
+					<#form:input path="neworderindex" maxlength="11" class="form-control width-120"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">${text('排序')}：</label>
+				<div class="control-inline">
+					<#form:input path="orderindex" maxlength="11" class="form-control width-120"/>
+				</div>
+			</div>
+
+				<div class="form-group">
+					<button type="submit" id="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+					<button type="button" onclick="piliangChangeData0()" class="btn btn-success btn-sm">${text('批量队列中')}</button>
+					<button type="button" onclick="piliangChangeData2()" class="btn btn-primary btn-sm">${text('批量下架')}</button>
+					<button type="button" onclick="piliangqingchu()" class="btn btn-success btn-sm">${text('批量清除轮换排序')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	 showCheckbox: true,    // 是否显示复选框
+	columnModel: [
+		{header:'${text("通道名称")}', name:'tongdaoName', index:'a.tongdao_name', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			return '<a href="${ctx}/tab/tabTongdao/form?rowid='+row.rowid+'" class="btnList" data-title="${text("编辑通道")}">'+(val||row.id)+'</a>';
+		}},
+		{header:'${text("通道号码")}', name:'number', index:'a.number', width:150, align:"center"},
+		{header:'${text("手机编号")}', name:'idss', index:'a.idss', width:150, align:"center"},
+		{header:'${text("额度")}', name:'edu', index:'a.edu', width:150, align:"center"},
+		{header:'${text("分类")}', name:'type', index:'a.number', width:150, align:"center"},
+		{header:'${text("排序")}', name:'orderindex', index:'a.orderindex', width:100, align:"center"},
+		{header:'${text("是否开启时间轮换")}', name:'shijianlunhuan', index:'a.shijianlunhuan', width:150, align:"left" , formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sys_yes_no')}, val, '未知', true);
+		}},
+		{header:'${text("通道状态")}', name:'status1', index:'a.status1', width:100, align:"left"   ,  formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('tdzt')}, val, '关闭', true);
+		}},
+		{header:'${text("操作")}', name:'actions', width:400, formatter: function(val, obj, row, act){
+			var actions = [];
+				actions.push('<a  onclick="kaiqi2(this)" rowid="'+row.rowid+'" class=" " title="${text("编辑tab_tongdao")}"><i class="fa fa-penc1il"></i>上架中</a>&nbsp;');
+				actions.push('<a  onclick="guanbi2(this)" rowid="'+row.rowid+'" class=" " title="${text("编辑tab_tongdao")}"><i class="fa fa-penc1il"></i>已下架</a>&nbsp;');
+				actions.push('<a  onclick="duiliezhong(this)" rowid="'+row.rowid+'" class=" " title="${text("编辑tab_tongdao")}"><i class="fa fa-penc1il"></i>队列中</a>&nbsp;');
+				actions.push('<a  onclick="daeshangjia(this)" rowid="'+row.rowid+'" class=" " title="${text("编辑tab_tongdao")}"><i class="fa fa-penc1il"></i>大额上架</a>&nbsp;');
+				actions.push('<a  onclick="daeduiliezhong(this)" rowid="'+row.rowid+'" class=" " title="${text("编辑tab_tongdao")}"><i class="fa fa-penc1il"></i>大额队列</a>&nbsp;');
+			return actions.join('');
+		}},
+		{header:'${text("上架时间")}', name:'shelftime', index:'a.shelftime', width:200, align:"center"},
+		{header:'${text("下架时间")}', name:'offshelftime', index:'a.offshelftime', width:200, align:"center"},
+		{header:'${text("代收状态")}', name:'daishou', index:'a.daishou', hidden:true,width:100, align:"left"   ,  formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sfkq')}, val, '关闭', true);
+		}},
+		{header:'${text("代付状态")}', name:'daifu', index:'a.daifu', hidden:true,width:100, align:"left"   ,  formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sfkq')}, val, '关闭', true);
+		}},
+
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+
+function  duiliezhong(el){
+	  var  rowid =  $(el).attr("rowid");
+	  var parame = {
+			 rowid : rowid  ,
+			 status: "0"
+	  }
+	  var url  = "${ctx}/tab/tabTongdao/changeData2";
+	  doAjax(url,"post",parame,function(data){
+			$("#submit").click();
+
+	  })
+}
+
+function  daeduiliezhong(el){
+	  var  rowid =  $(el).attr("rowid");
+	  var parame = {
+			 rowid : rowid  ,
+			 status: "0",
+			 dae : "大额"
+	  }
+	  var url  = "${ctx}/tab/tabTongdao/changeData2";
+	  doAjax(url,"post",parame,function(data){
+			$("#submit").click();
+
+	  })
+}
+
+function  daeshangjia(el){
+	  var  rowid =  $(el).attr("rowid");
+	  var parame = {
+			 rowid : rowid  ,
+			 status: "1" ,
+			 dae : "大额"
+	  }
+	  var url  = "${ctx}/tab/tabTongdao/changeData2";
+	  doAjax(url,"post",parame,function(data){
+			$("#submit").click();
+
+	  })
+}
+
+
+function  kaiqi2(el){
+	  var  rowid =  $(el).attr("rowid");
+	  var parame = {
+			 rowid : rowid  ,
+			 status: "1"
+	  }
+	  var url  = "${ctx}/tab/tabTongdao/changeData2";
+	  doAjax(url,"post",parame,function(data){
+		$("#submit").click();  
+	  })
+}
+function  guanbi2(el){
+	  var  rowid =  $(el).attr("rowid");
+	  var parame = {
+			 rowid : rowid  ,
+			 status: "2"
+	  }
+	  var url  = "${ctx}/tab/tabTongdao/changeData2";
+	  doAjax(url,"post",parame,function(data){
+			$("#submit").click();  
+
+	  })
+}
+
+
+
+function  kaiqi1(el){
+
+	  var  rowid =  $(el).attr("rowid");
+	  var parame = {
+			 rowid : rowid  ,
+			 status: "2"
+	  }
+	  var url  = "${ctx}/tab/tabTongdao/changeData1";
+	  doAjax(url,"post",parame,function(data){
+			$("#submit").click();  
+
+	  })
+}
+
+function  guanbi1(el){
+
+	  var  rowid =  $(el).attr("rowid");
+	  var parame = {
+			 rowid : rowid  ,
+			 status: "1"
+	  }
+	  var url  = "${ctx}/tab/tabTongdao/changeData1";
+	  doAjax(url,"post",parame,function(data){
+			$("#submit").click();  
+
+	  })
+}
+
+function piliangqingchu(){
+	var  ll = $('#dataGrid').dataGrid('getSelectRows');
+	console.log(ll);
+	var  list =  [];
+
+	for(var i = 0 ; i < ll.length;i++ ){
+		list.push(ll[i])
+	}
+	if(list.length ==0){
+		js.showMessage("请选择通道!");
+		return ;
+	}
+ 	layer.confirm('确定批量清除轮换排序？', {
+		  btn: ['确定', '取消'] //可以无限个按钮
+		  ,btn3: function(index, layero){
+		    //按钮【按钮三】的回调
+		  }
+		}, function(index, layero){
+
+			var parame  = {
+				rowids: list.join(",")
+			}
+			var url = "${ctx}/tab/tabTongdao/piliangqingchu";
+			doAjax(url,"post",parame,function(data){
+				$("#submit").click();
+			})
+		}, function(index){
+		  //按钮【按钮二】的回调
+		});
+}
+
+function piliangChangeData0(){
+	var  ll = $('#dataGrid').dataGrid('getSelectRows');
+	console.log(ll);
+	var  list =  [];
+
+	for(var i = 0 ; i < ll.length;i++ ){
+		list.push(ll[i])
+	}
+	if(list.length ==0){
+		js.showMessage("请选择通道!");
+		return ;
+	}
+ 	layer.confirm('确定批量队列中？', {
+		  btn: ['确定', '取消'] //可以无限个按钮
+		  ,btn3: function(index, layero){
+		    //按钮【按钮三】的回调
+		  }
+		}, function(index, layero){
+
+			var parame  = {
+				rowids: list.join(",")
+			}
+			var url = "${ctx}/tab/tabTongdao/piliangChangeData0";
+			doAjax(url,"post",parame,function(data){
+				$("#submit").click();
+			})
+		}, function(index){
+		  //按钮【按钮二】的回调
+		});
+}
+
+function piliangChangeData2(){
+	var  ll = $('#dataGrid').dataGrid('getSelectRows');
+	console.log(ll);
+	var  list =  [];
+
+	for(var i = 0 ; i < ll.length;i++ ){
+		list.push(ll[i])
+	}
+	if(list.length ==0){
+		js.showMessage("请选择通道!");
+		return ;
+	}
+ 	layer.confirm('确定批量下架？', {
+		  btn: ['确定', '取消'] //可以无限个按钮
+		  ,btn3: function(index, layero){
+		    //按钮【按钮三】的回调
+		  }
+		}, function(index, layero){
+
+			var parame  = {
+				rowids: list.join(",")
+			}
+			var url = "${ctx}/tab/tabTongdao/piliangChangeData2";
+			doAjax(url,"post",parame,function(data){
+				$("#submit").click();
+			})
+		}, function(index){
+		  //按钮【按钮二】的回调
+		});
+}
+</script>

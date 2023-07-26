@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeesite.modules.tab.dao.TabUserDataDao">
+	
+	<!-- 查询数据
+	<select id="findList" resultType="TabUserData">
+		SELECT ${sqlMap.column.toSql()}
+		FROM ${sqlMap.table.toSql()}
+		<where>
+			${sqlMap.where.toSql()}
+		</where>
+		ORDER BY ${sqlMap.order.toSql()}
+	</select> -->
+	
+		<select id="findSumData" resultType="java.lang.Long">
+				select ifnull(count(1) ,0) from  tab_user_data where   parentid =     #{userid}  OR  parentid1 =   #{userid}   OR parenti3 =   #{userid} 
+		  </select>  	
+
+	<select id="getRenShu"  resultType="java.lang.Long">
+			  SELECT ifnull(count(*),0 ) from   tab_user_data  where   2=2  
+			  	<if test="_parameter.containsKey('date1')">
+	    	 AND    	    		createtime   &gt;= #{date1}  
+
+		</if>
+			<if test="_parameter.containsKey('date2')">
+	    	 AND    	    		createtime   &lt;= #{date2}  
+
+		</if>
+		
+		<if test="_parameter.containsKey('userId')">
+	    	 AND    	    		rowid     =  #{userId} 
+
+		</if>
+	    			<if test="_parameter.containsKey('name1')">
+	    	 AND    	    		 shangjilink      like     #{name1}  
+
+		</if>
+			<if test="_parameter.containsKey('name2')">
+	    	 AND    	    		shangjilink   like     #{name2}  
+
+		</if>
+	</select>
+	
+	
+	<update id="clearTyhy" >
+		UPDATE   tab_user_data   SET   VIP =  0  , istiyan =  '0' ,  currentmoney = 0    where    istiyan= '1'   and   validate &lt;= #{date}    
+	</update>
+	
+	
+	<select id="getDaYu" resultType="java.lang.Long">
+ 		select  count(1)   from  (			
+			
+select    userid  ,sum(amont)  cc   from   tab_jiesuan_log       where  shangjilink    like    #{userid}          group by userid
+ having   cc  &gt;= #{yue}  )   d  
+	</select>
+
+	<select id="getVipLevelCount" resultType="java.lang.Long">
+		select  count(1)   from  tab_user_data WHERE vip &gt;= #{yue} and parentid = #{userid} and istiyan = '0'
+	</select>
+	
+	<select id="findList2" resultType="com.jeesite.modules.tab.entity.TabUserData">
+					SELECT  *  from    tab_user_data   where      (parentid = #{userid}  or  parentid1=  #{userid} or  parenti3 = #{userid})
+		
+	</select>
+
+	<select id="getisNotVip" resultType="com.jeesite.modules.tab.entity.TabUserData">
+		select * from tab_user_data where rowid not in (select userid from tab_rechange_log where status1 = 2
+		) and usertype = 3
+	</select>
+
+
+	<update id="updateXiaJi"> 
+		UPDATE  tab_user_data  set  status1 = 3  where   ( <foreach collection="array" item="item" index="index"
+			separator="OR">
+			   rowid=#{item}
+		</foreach>  )
+	 </update>
+	 
+	 <update id="updateListByValidate">
+		 update tab_user_data set istiyan = 0 ,vip = "0" , tyj = 0 where istiyan = "1" AND validate &lt;= #{str}
+	 </update>
+	 
+	<select id="getListByValidate" resultType="com.jeesite.modules.tab.entity.TabUserData">
+		select * from tab_user_data where istiyan = "1" AND validate &lt;= #{str}
+	</select>
+
+
+	<update id="save22" parameterType="java.util.Map"> 
+		UPDATE  tab_user_data  set  huilv=#{m}   where  rowid=#{userid}
+ 		
+	 </update>
+	 
+	<update id="updateXiaJi2"> 
+		UPDATE  tab_user_data  set  status1 = 2  where   ( <foreach collection="array" item="item" index="index"
+			separator="OR">
+			   rowid=#{item}
+
+		</foreach>  
+		)
+	 </update>
+	 
+	 <select id="getVipCount" resultType="java.lang.Long">
+	 		SELECT  count(1)   from  tab_user_data  where parentid = #{userId}  and  vip &gt; 0   and  istiyan='0'
+	 </select>
+	 
+	 <select id="findListYg" resultType="com.jeesite.modules.tab.entity.TabUserData"  >  
+	 
+	 	SELECT  *  from    tab_user_data   where  ygzh  is NULL    order  by  createtime desc 
+	 </select>
+
+	<select id="getByUserId" resultType="com.jeesite.modules.tab.entity.TabUserData">
+		select * from tab_user_data where rowid = #{userid}
+
+	</select>
+
+	<update id="updateVip">
+		update tab_user_data set vip = #{vip} where rowid = #{rowid}
+	</update>
+
+	<update id="updateUserDatamoney">
+		update tab_user_data set currentmoney = currentmoney + #{money} , vip = #{vip} where rowid = #{rowid}
+
+	</update>
+
+
+	<select id="getXzzd" resultType="java.lang.Long">
+		select count(1) from tab_user_data where xdzt1 = 3
+
+		<if test="_parameter.containsKey('day')">
+			AND     createtime &gt;= #{day}
+		</if>
+		<if test="_parameter.containsKey('shangjia1')">
+			AND   shangjilink  like #{shangjia1}
+		</if>
+		<if test="_parameter.containsKey('shangjia2')">
+			AND     shangjilink like #{shangjia2}
+		</if>
+
+	</select>
+
+	<update id="clearOrderStatus">
+		update tab_user_data set xdzt1 = 0 where xdzt1 != 0
+	</update>
+
+	<update id="clearOrderStatus1">
+		update  tab_user_data SET xdzt1 = 3 where rowid in (select userid from tab_orders where createtime > "2023-03-10" and status1 = "4")
+	</update>
+
+	<select id="getShangJiLinkCount" resultType="java.lang.Long">
+		select count(1) from tab_user_data where shangjilink like #{link}
+	</select>
+
+	<select id="getVipRenshu" resultType="java.lang.Long">
+		select count(1) from tab_user_data where istiyan = "0"
+		<if test="_parameter.containsKey('vip')">
+			AND     vip = #{vip}
+		</if>
+		<if test="_parameter.containsKey('rowid')">
+			AND  ( parentid = #{rowid} or parentid1 = #{rowid} or parenti3 = #{rowid})
+		</if>
+	</select>
+
+	<select id="getshouchonglist" resultType="com.jeesite.modules.tab.entity.TabUserData">
+		select * from tab_user_data where rowid in
+		(select userid from view_shouchong where userid in
+		(select rowid from tab_user_data where (parentid = #{userid} or parentid1 = #{userid} or parenti3 = #{userid}))
+		<if test="_parameter.containsKey('updatetime1')">
+			AND     updatetime &gt;= #{updatetime1}
+		</if>
+		<if test="_parameter.containsKey('updatetime2')">
+			AND     updatetime &lt;= #{updatetime2}
+		</if>
+		)
+		ORDER BY createtime desc limit ${pageNo},${pageSize}
+
+	</select>
+
+	<select id="getshouchonglistCount" resultType="java.lang.Long">
+		select count(1) from tab_user_data where rowid in
+		(select userid from view_shouchong where userid in
+		(select rowid from tab_user_data where (parentid = #{userid} or parentid1 = #{userid} or parenti3 = #{userid}))
+		<if test="_parameter.containsKey('updatetime1')">
+			AND     updatetime &gt;= #{updatetime1}
+		</if>
+		<if test="_parameter.containsKey('updatetime2')">
+			AND     updatetime &lt;= #{updatetime2}
+		</if>
+		)
+	</select>
+
+	<select id="getshouchonglistyuecount" resultType="java.lang.Long">
+		select count(1) from tab_user_data where rowid in
+		(select userid from view_shouchong where userid in
+		(select rowid from tab_user_data where (parentid = #{userid} or parentid1 = #{userid} or parenti3 = #{userid}))
+		<if test="_parameter.containsKey('updatetime1')">
+			AND     updatetime &gt;= #{updatetime1}
+		</if>
+		<if test="_parameter.containsKey('updatetime2')">
+			AND     updatetime &lt;= #{updatetime2}
+		</if>
+		)
+		<if test="_parameter.containsKey('dayu')">
+			AND     currentmoney &gt;= 15
+		</if>
+		<if test="_parameter.containsKey('xiaoyu')">
+			AND     currentmoney &lt; 15
+		</if>
+
+	</select>
+</mapper>

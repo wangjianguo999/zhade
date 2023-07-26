@@ -1,0 +1,76 @@
+<% layout('/layouts/default.html', {title: 'tab_fenxiao_config管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa icon-notebook"></i> ${text('tab_fenxiao_config管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<% if(hasPermi('tab:tabFenxiaoConfig:edit')){ %>
+					<a href="${ctx}/tab/tabFenxiaoConfig/form" class="btn btn-default btnTool" title="${text('新增tab_fenxiao_config')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+				<a href="#" class="btn btn-default" id="btnSetting" title="${text('设置')}"><i class="fa fa-navicon"></i></a>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${tabFenxiaoConfig}" action="${ctx}/tab/tabFenxiaoConfig/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('rowid')}：</label>
+					<div class="control-inline">
+						<#form:input path="rowid" maxlength="100" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('一级利润')}：</label>
+					<div class="control-inline">
+						<#form:input path="leval1" maxlength="3" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('二级利润')}：</label>
+					<div class="control-inline">
+						<#form:input path="leval2" maxlength="3" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('三级利润')}：</label>
+					<div class="control-inline">
+						<#form:input path="leval3" maxlength="3" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text("一级利润")}', name:'leval1', index:'a.leval1', width:150, align:"center"},
+		{header:'${text("二级利润")}', name:'leval2', index:'a.leval2', width:150, align:"center"},
+		{header:'${text("三级利润")}', name:'leval3', index:'a.leval3', width:150, align:"center"},
+		{header:'${text("操作")}', name:'actions', width:120, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('tab:tabFenxiaoConfig:edit')){ %>
+				actions.push('<a href="${ctx}/tab/tabFenxiaoConfig/form?rowid='+row.rowid+'" class="btnList" title="${text("编辑tab_fenxiao_config")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/tab/tabFenxiaoConfig/delete?rowid='+row.rowid+'" class="btnList" title="${text("删除tab_fenxiao_config")}" data-confirm="${text("确认要删除该tab_fenxiao_config吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>

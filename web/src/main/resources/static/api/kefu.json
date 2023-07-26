@@ -1,0 +1,40 @@
+{ "homeInfo": {
+  "title": "用户管理",
+  "href": "/api/api/tabUserDataListKefu"
+},
+  "logoInfo": {
+    "title": "钱包管理",
+    "image": "/api/api/kefu",
+    "href": ""
+  },
+  "menuInfo": [
+    {
+      "title": "基础数据管理",
+      "icon": "fa fa-address-book",
+      "href": "",
+      "target": "_self",
+      "child": [
+
+
+        {
+          "title": "用户管理",
+          "href": "/api/api/tabUserDataListKefu",
+          "icon": "fa fa-window-maximize",
+          "target": "_self"
+        },
+        {
+          "title": "钱包管理",
+          "href": "/api/api/tabUserBankListKefu",
+          "icon": "fa fa-window-maximize",
+          "target": "_self"
+        },
+        {
+          "title": "在线客服",
+          "href": "/api/customer",
+          "icon": "fa fa-window-maximize",
+          "target": "_self"
+        }
+      ]
+    }
+  ]
+}

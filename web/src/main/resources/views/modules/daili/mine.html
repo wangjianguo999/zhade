@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="${ctxStatic}/common/normailze.css">
+    <link rel="stylesheet" href="${ctxStatic}/common/index.css">
+    <script src="${ctxStatic}/common/rem.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="content">
+            <div class="header urls" url="${ctxPath}/userdetial">
+                <h2>Personal center</h2>
+                <div class="name">
+                    <span>Buffett</span>
+                    <span id="rowid">ID:</span>
+                </div>
+                <div class="bg-header">
+                    <img src="${ctxStatic}/common/text.png" alt="" id="imgsrc">
+                </div>
+                <div class="progress">
+                    <span style="margin-left:30px" id="pp2H">Numéro d'équipe</span>
+                    <div class="progress-bar" >
+                        <div class="bar bar-1" id="pp2"></div>
+                    </div>
+                </div>
+                <div class="progress">
+                    <span style="margin-left:10px" id="ppH"></span>
+                    <div class="progress-bar" id1="pp2">
+                        <div class="bar">
+                            <div class="bar bar-2"  id="pp"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="h-b">
+                    <div class="h-b-left">
+                        <p style="color: #fc4349;" id="money2"></p>
+                        <p>Total balance </p>
+                    </div>
+                    <div class="h-b-right">
+                        <p style="color: #ffb305" id="shour"></p>
+                        <p>Total income </p>
+                    </div>
+                </div>
+            </div>
+            <div class="box">
+                <div class="box1 urls" url="${ctxPath}/recharge"> 
+                    Deposit
+                </div>
+                <div class="box2 urls" url="${ctxPath}/withdraw">
+                    Withdraw
+                </div>
+            </div>
+            <div class="nav">
+                <ul>
+                    <li class="urls" url="${ctxPath}/knowledge">
+                        <img src="${ctxStatic}/common/mine1.png" alt="">
+                        <span>Classroom</span>
+                    </li>
+                    <li class="urls" url="${ctxPath}/profithistory">
+                        <img src="${ctxStatic}/common/mine2.png" alt="">
+                        <span>Fund details</span>
+                    </li>
+                    <li class="urls" url="${ctxPath}/oederhistory">
+                        <img src="${ctxStatic}/common/mine3.png" alt="">
+                        <span>Order history</span>
+                    </li>
+                    <li class="urls" url="${ctxPath}/accountmng">
+                        <img src="${ctxStatic}/common/mine4.png" alt="">
+                        <span>Bind account </span>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="urls" url="${ctxPath}/calculator">
+                        <img src="${ctxStatic}/common/mine5.png" alt="">
+                        <span>Calculator</span>
+                    </li>
+                    <li class="urls" url="${ctxPath}/transmoney">
+                        <img src="${ctxStatic}/common/mine6.png" alt="">
+                        <span>Fund transfer</span>
+                    </li>
+                    <li class="urls" url="${ctxPath}/safemanage">
+                        <img src="${ctxStatic}/common/mine7.png" alt="">
+                        <span>Security</span>
+                    </li>
+                    <li class="urls" url="${ctxPath}/address">
+                        <img src="${ctxStatic}/common/mine8.png" alt="">
+                        <span>Address</span>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="urls" url="${ctxPath}/feedback">
+                        <img src="${ctxStatic}/common/mine9.png" alt="">
+                        <span>Feedback</span>
+                    </li>
+                    <li class="urls" url="${ctxPath}/setting">
+                        <img src="${ctxStatic}/common/mine10.png" alt="">
+                        <span>Setting</span>
+                    </li>
+                </ul>
+            </div>
+            <p class="cus-s">
+                <img src="${ctxStatic}/common/ss.png" alt="" width="30px">
+                Customer service</p>
+        </div>
+
+
+    <div class="footer">
+            <div class="tab tab-home urls" url="${ctxPath}/home">
+                <img src="${ctxStatic}/common/tab-1.png" alt="">
+                <span>Home</span>
+            </div>
+            <div class="tab tab-service urls" url="${ctxPath}/active">
+                <img src="${ctxStatic}/common/tab-2.png" alt="">
+                <span>Service</span>
+            </div>
+            <div class="tab tab-team urls" url="${ctxPath}/team">
+                <img src="${ctxStatic}/common/tab-3.png" alt="">
+                <span>Team</span>
+            </div>
+            <div class="tab tab-mine urls" url="${ctxPath}/mine">
+                <img src="${ctxStatic}/common/tab-4.png" alt="">
+                <span>Mine</span>
+            </div>
+        </div>    </div>
+    
+<script src="${ctxStatic}/common/jquery.min.js"></script>
+<script type="text/javascript"
+    src="${ctxStatic}/layer/3.1/layer.js?V0.1-12102105"></script>
+<script type=""
+    src="${ctxStatic}/common/common.js?m222?v=121222AD?v=121222A"></script>
+<script type="" src="${ctxStatic}/common/doT.min.js"></script>
+
+
+    <script type="text/javascript">
+    var url = "${ctxPath}/getUserYe";
+
+	doAjax(url,"post",{},function(data){
+		var money  = data.money;
+		money= parseFloat(money).toFixed(2);
+		$("#money2").html(money);
+	})
+	
+	//getMyDetail
+	getdeta()
+	function  getdeta(){
+
+	    var url = "${ctxPath}/getMyDetail";
+
+	doAjax(url,"post",{},function(data){
+			var  data =  data.data;
+			var  rowid =   data.rowid;
+			
+			$("#rowid").html("ID:" + rowid + ";<font style='color:red'>VIP " + data.vip +"</font>")
+			$("#imgsrc").attr("src",data.imgsrc || "${ctxStatic}/common/text.png")
+	})
+	}
+	 
+		var parame = {}
+		var url = "${ctxPath}/getShouru";
+		doAjax(url, "POST", parame, function(data) {
+			var shouru = data.shouru;
+			shouru  =  parseFloat(shouru).toFixed(2);
+			$("#shour").html(shouru);
+
+		})
+		$(".urls").click(function(){
+	var url =  $(this).attr("url");
+	location.href = url;
+
+})
+
+getBfb();
+function   getBfb(){
+			var parame = {}
+			var url = "${ctxPath}/getVipJindu";
+			doAjax(url, "POST", parame, function(data) {
+				 var  wdye=     data.wdye;
+				 var  pt  = data.pt; 
+				 var ptrens= data.ptrens;
+				 var renshu  = data.renshu;  
+				 if(wdye >= pt  &&  renshu>=  ptrens   ){
+					 getBfb();
+					 getdeta();
+				 }else {
+					 var  pp   =   wdye/1.0/pt*100.0;
+					 if(pp>=100){
+						 pp="100";
+					 }
+					 pp =   pp/100*4.41333333333333
+
+					 $("#pp").attr("style","width:" +pp +"rem");
+					 $("#ppH"). html("montant total des achats:" +  parseFloat(wdye).toFixed(2)+"/" +  pt);
+
+					 var pp2  =  renshu/1.0/ptrens*100.0;
+					 if(pp2>=100){
+						 pp2="100";
+					 }
+					 pp2 =   pp2/100*4.41333333333333
+					 $("#pp2").attr("style","width:" +pp2 +"rem")
+					$("#pp2H").html("Numéro d'équipe:" +  renshu+"/" +  ptrens);
+					 
+					 
+					 
+					 
+				 }
+
+			})
+		}
+
+    </script>
+</body>
+
+</html>

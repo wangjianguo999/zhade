@@ -1,0 +1,75 @@
+<% layout('/layouts/default.html', {title: 'tab_product_data管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa icon-notebook"></i> ${text('产品管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<% if(hasPermi('tab:tabProductData:edit')){ %>
+				<a href="${ctx}/tab/tabProductData/form" class="btn btn-default btnTool" title="${text('新增tab_product_data')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+				<a href="#" class="btn btn-default" id="btnSetting" title="${text('设置')}"><i class="fa fa-navicon"></i></a>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${tabProductData}" action="${ctx}/tab/tabProductData/listData" method="post" class="form-inline  "
+			data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+			<div class="form-group ">
+				<label class="control-label">${text('产品Vip')}：</label>
+				<div class="control-inline width-120">
+					<#form:select path="leval" dictType="vips" blankOption="true"     class="form-control width-120"/>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="control-label">${text('产品名称')}：</label>
+				<div class="control-inline">
+					<#form:input path="name" class="form-control width-120"/>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+				<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+			</div>
+		</#form:form>
+		<table id="dataGrid"></table>
+		<div id="dataGridPage"></div>
+	</div>
+</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text("产品名称")}', name:'name', index:'a.name', width:150, align:"center"},
+
+		{header:'${text("产品价格")}', name:'buymoney', index:'a.buymoney', width:150, align:"right", formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 0, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("商品图片")}', name:'actions1', width:120, formatter: function(val, obj, row, act){
+			var actions1 = [];
+			actions1.push('<img src="'+row.imgsrc+'">');
+
+			return actions1.join('');
+		}},
+
+
+		{header:'${text("操作")}', name:'actions', width:120, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('tab:tabProductData:edit')){ %>
+				actions.push('<a href="${ctx}/tab/tabProductData/form?rowid='+row.rowid+'" class="btnList" title="${text("编辑tab_product_data")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/tab/tabProductData/delete?rowid='+row.rowid+'" class="btnList" title="${text("删除tab_product_data")}" data-confirm="${text("确认要删除该tab_product_data吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>

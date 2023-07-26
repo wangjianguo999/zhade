@@ -1,0 +1,271 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+    content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+<meta name="format-detection"
+    content="telephone=no,email=no,date=no,address=no">
+<title>convide amigos</title>
+<link rel="stylesheet" type="text/css"
+    href="${ctxStatic}/common/aui.css" />
+<style type="text/css">
+    .aui-list .aui-list-header{
+        background-color: #fff;
+    }     
+</style>
+
+</head>
+<body>
+<header class="aui-bar aui-bar-nav" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode="" onclick="closeWin()">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title">WithDraw</div>
+         
+        <a class="aui-btn aui-pull-right" tapmode="" onclick="his22()">
+            <span class="aui-iconfont aui-icon-">History</span>
+        </a>
+    </header> 
+    <div class="aui-info aui-margin-t-10 aui-padded-l-10 aui-padded-r-10">
+            <div class="aui-info-item">
+                <span class="aui-margin-l-5">Withdrawal amount</span>                <span class="aui-margin-l-5" id="money"> </span>
+                
+                </div>
+         </div>
+         
+         <ul class="aui-list aui-form-list">
+            
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    
+                    <div class="aui-list-item-input">
+                        <input type="text" placeholder="Minimum withdrawal C$200" id="m">
+                    </div>
+                </div>
+            </li>
+            
+            
+            
+            
+            
+        </ul>
+        
+        <div class="aui-info aui-margin-t-10 aui-padded-l-10 aui-padded-r-10">
+            <div class="aui-info-item">
+                <img src="${ctxStatic}/common/etup.png" sty1le="width:1.5rem" class=" "><span class="aui-margin-l-5">
+                        E-Transfer Account
+                    </span>
+                </div>
+            <div class="aui-info-item"><input class="aui-radio" type="radio" name="radio" vtype="E-Transfer" value="1" onclick="showData(this)"></div>
+            
+        </div>
+        	
+        
+        <ul class="aui-list aui-select-list" id="list1">
+        </ul>
+        
+        
+        <div class="aui-info aui-margin-t-10 aui-padded-l-10 aui-padded-r-10">
+            <div class="aui-info-item">
+                <img src="${ctxStatic}/common/tpupian.png" sty1le="width:1.5rem" class=" "><span class="aui-margin-l-5">
+Digital
+    Currency(Bound)                    </span>
+                </div>
+            <div class="aui-info-item"><input class="aui-radio"  vtype="USDT" type="radio" name="radio"value="2" onclick="showData(this)" ></div>
+            
+        </div>
+        	
+        
+        <ul class="aui-list aui-select-list" id="list2">
+            
+            
+        </ul>
+        
+        
+        <div class="aui-info aui-margin-t-10 aui-padded-l-10 aui-padded-r-10">
+            <div class="aui-info-item">
+                <img src="${ctxStatic}/common/btupian.png" sty1le="width:1.5rem" class=" "><span class="aui-margin-l-5">
+                        Bank
+                    </span>
+                </div>
+            <div class="aui-info-item"><input class="aui-radio" type="radio" vtype="Bank" name="radio" value="3" onclick="showData(this)" ></div>
+            
+        </div>
+        	
+        
+        <ul class="aui-list aui-select-list" id="list3">
+            
+        </ul>
+
+<section class="aui-content-padded">
+        <div class="aui-card-list">
+            
+            <div class="aui-card-list-content-padded">
+                提现内容
+            </div>
+            
+        </div>
+    </section>
+
+
+    <script id="data-vips" type="text/template">
+                {{for(var i in it){}}
+                      
+            <li class="aui-list-item">
+                
+                <div class="aui-list-item-inner" style="margin-left: 3rem">
+                    {{=it[i].firstname}}/{{=it[i].lastname}}
+                </div>
+                <div class="aui-list-item-label">
+                    <input  rowid="{{=it[i].rowid}}"   onclick="chooseTongdao(this)"  class="aui-radio" type="radio" name="tongdao" value="{{=it[i].rowid}}"  >
+                </div>
+            </li>   
+                {{}}}       
+            </script>
+        
+        <div class="aui-btn aui-btn-danger aui-btn-block" id="buttons" onclick="pay2()">Withdraw</div>
+<script type="text/javascript"
+    src="${ctxStatic}/jquery/jquery-1.12.4.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/common.js"></script>
+<script type="text/javascript"
+    src="${ctxStatic}/common/clipboard.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/qrcode.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/aui-actionsheet.js" ></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/doT.min.js"></script>
+
+<script type="text/javascript"
+    src="${ctxStatic}/layer/3.1/layer.js?V0.1-12102105"></script>
+
+    <script type="text/javascript">
+            var  data1=  [];
+            var  data2=[];
+            var  data3=[];
+            var   type= "";
+            var  tongdao= "";
+
+            $(document).ready(function(){
+                initData();
+            })
+
+            function initData(){
+                //获取我的 卡号信息
+                var parame = {
+
+                }
+                var url = "${ctxPath}/getAllBack";
+                doAjax(url,"post",parame,function(data){
+                          data1=  data.data1;
+                          data2=  data.data2;
+                          data3=  data.data3
+                })
+            }
+            function showData(el){
+                type  =  $(el).attr("vtype"); 
+                tongdao= "";
+                    $("#list1").html("");
+                    $("#list2").html("");
+                    $("#list3").html("");
+                    
+                        var dataTpl = doT.template(document
+                                .getElementById("data-vips").innerHTML);
+                       var v = $(el).attr("value");
+                       if(v==1) {
+                    $("#list" + v).html(dataTpl(data1));
+                }else       if(v==2) {
+                    $("#list" + 2).html(dataTpl(data2));
+                }else        if(v==3) {
+                    $("#list" + 3).html(dataTpl(data3));
+                }
+
+                        
+
+            }
+
+            $(document).ready(function(data){
+                var parame = {
+
+                }
+                var url= "${ctxPath}/getUserYe";    
+                doAjax(url,"post",parame,function(data){
+                    var money  =  data.money;
+                    $("#money").html(money);
+                })
+            })
+               var  click1= "1";
+
+            function pay2(){
+                if(click1== "1") {
+click1= "2";
+                var m =  $("#m").val() || "";
+                if(m == "") {
+                    layer.msg("请输入金额");
+                    click1= "1";
+                    return ;
+                }
+
+                if(type==""){
+                    click1= "1";
+                    layer.msg("请选择类型");
+                    return ; 
+                }
+
+
+                if(tongdao==""){
+                     click1= "1";
+                    layer.msg("请输入通道");
+                    return ; 
+                }
+
+                var mm =  $("#money").html();
+                   if(parseFloat(mm) <  parseFloat(m)){
+                        layer.msg("余额不足!");
+                        click1="1";
+                        return ; 
+
+                   }
+
+
+var  parame  = {
+        type:type,
+        cardType: tongdao, 
+        money : m
+    }
+    var url = "${ctxPath}/tixianPostData";
+    doAjax(url,"POST" ,parame,function(data){
+        var code=  data.code ;
+        click1 = "1";
+
+        if(code == 1){
+
+        } else {
+            var flag =  data.flag ; 
+            if(flag== "true"){
+                layer.msg("success");
+                history.back();
+            }else {
+                layer.msg(data.msg)
+            }
+        }
+    })
+
+
+                 }
+
+            }
+
+            function  chooseTongdao(el){
+                     tongdao = $(el).attr("rowid") ;
+
+            }
+            function his22(){
+                        location.href = "${ctxPath}/withdrawhistory";
+
+            }
+    </script>
+  </body>  
+</html>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeesite.modules.tab.dao.TabValidCodeDao">
+	
+	<!-- 查询数据
+	<select id="findList" resultType="TabValidCode">
+		SELECT ${sqlMap.column.toSql()}
+		FROM ${sqlMap.table.toSql()}
+		<where>
+			${sqlMap.where.toSql()}
+		</where>
+		ORDER BY ${sqlMap.order.toSql()}
+	</select> -->
+	
+  <select id="checkValidCode" parameterType="java.util.Map" resultType="com.jeesite.modules.tab.entity.TabValidCode">
+			
+				SELECT * FROM tab_valid_code WHERE
+		code=${code} AND
+		validate_time = (SELECT MAX(s.validate_time) FROM
+		tab_valid_code s WHERE
+		s.phone=${phone} AND s.flag='1' )
+		AND
+		validate_time &gt;=SYSDATE()       
+			
+			
+	</select>
+</mapper>

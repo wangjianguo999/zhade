@@ -1,0 +1,58 @@
+<% layout('/layouts/default.html', {title: 'tab_active_imgs管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa icon-notebook"></i> ${text('tab_active_imgs管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<% if(hasPermi('tab:tabActiveImgs:edit')){ %>
+					<a href="${ctx}/tab/tabActiveImgs/form" class="btn btn-default btnTool" title="${text('新增tab_active_imgs')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+				<a href="#" class="btn btn-default" id="btnSetting" title="${text('设置')}"><i class="fa fa-navicon"></i></a>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${tabActiveImgs}" action="${ctx}/tab/tabActiveImgs/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				   
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text("图片")}', name:'imgsrc', index:'a.imgsrc', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			return '<a href="${ctx}/tab/tabActiveImgs/form?rowid='+row.rowid+'" class="btnList" data-title="${text("编辑tab_active_imgs")}">'+(val||row.id)+'</a>';
+		}},
+		{header:'${text("排序")}', name:'orderindex', index:'a.orderindex', width:150, align:"center"},
+		{header:'${text("开始时间")}', name:'starttime', index:'a.starttime', width:150, align:"center"},
+		{header:'${text("结束时间")}', name:'endtime', index:'a.endtime', width:150, align:"center"},
+		{header:'${text("自动赠送充值奖励是否开启")}', name:'isrechange', index:'a.isrechange', width:150, align:"left" , formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sys_yes_no')}, val, '未知', true);
+		}},
+		{header:'${text("充值区间，以-与&隔开")}', name:'rechangestr', index:'a.rechangestr', width:150, align:"center"},
+		{header:'${text("充值奖励金额，以&隔开")}', name:'rechangereward', index:'a.rechangereward', width:150, align:"center"},
+		{header:'${text("充值奖励金额，单位（%）")}', name:'rechangerewardscale', index:'a.rechangerewardscale', width:150, align:"center"},
+		{header:'${text("操作")}', name:'actions', width:120, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('tab:tabActiveImgs:edit')){ %>
+				actions.push('<a href="${ctx}/tab/tabActiveImgs/form?rowid='+row.rowid+'" class="btnList" title="${text("编辑tab_active_imgs")}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/tab/tabActiveImgs/delete?rowid='+row.rowid+'" class="btnList" title="${text("删除tab_active_imgs")}" data-confirm="${text("确认要删除该tab_active_imgs吗？")}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>

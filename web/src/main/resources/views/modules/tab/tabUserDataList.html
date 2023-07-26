@@ -1,0 +1,655 @@
+<% layout('/layouts/default.html', {title: 'tab_user_data管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa icon-notebook"></i> ${text('用户管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSetting" title="${text('设置')}"><i class="fa fa-navicon"></i></a>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${tabUserData}" action="${ctx}/tab/tabUserData/listData" method="post" class="form-inline  "
+			data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+
+			<div class="form-group">
+				<label class="control-label">${text('账号')}：</label>
+				<div class="control-inline">
+					<#form:input path="rowid" maxlength="45" name="rowid" id="rowid" class="form-control width-120"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">${text('邀请码')}：</label>
+				<div class="control-inline">
+					<#form:input path="codes" maxlength="45" class="form-control width-120"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">${text('ip地址')}：</label>
+				<div class="control-inline">
+					<#form:input path="lastloginip" maxlength="45" class="form-control width-120"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">${text('用户状态')}：</label>
+				<div class="control-inline width-120">
+					<#form:select path="status1" dictType="yhzt" blankOption="true" class="form-control width-120"/>
+
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">${text('注册时间')}：</label>
+				<div class="control-inline">
+					<#form:input path="createtime_gte" readonly="true" maxlength="20" class="form-control laydate width-datetime"
+					dataFormat="datetime" data-type="datetime" data-format="yyyy-MM-dd HH:mm" data-do1ne="createtime_lte.click()"/>
+					&nbsp;-&nbsp;
+					<#form:input path="createtime_lte" readonly="true" maxlength="20" class="form-control laydate width-datetime"
+					dataFormat="datetime" data-type="datetime" data-format="yyyy-MM-dd HH:mm"/>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="control-label">${text('最后登录时间')}：</label>
+				<div class="control-inline">
+					<#form:input path="lastlogintime_gte" readonly="true" maxlength="20" class="form-control laydate  "
+					dataFormat="date" data-type="date" data-format="yyyy-MM-dd" data-d1one="createtime_lte.click()"/>
+					&nbsp;-&nbsp;
+					<#form:input path="lastlogintime_lte" readonly="true" maxlength="20" class="form-control laydate  "
+					dataFormat="date" data-type="date" data-format="yyyy-MM-dd"/>
+				</div>
+			</div>
+
+
+
+			<div class="form-group">
+				<button type="submit" id="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+				<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				<button type="button" onclick="gengxin()" id="subm2it1" class="btn btn-primary btn-sm A hide">${text('设置体验客户')}</button>
+				<!--<button type="button" onclick="quxiaoVip()" id="subm2it1" class="btn btn-primary btn-sm  hide">${text('取消体验客户')}</button>-->
+				<!--<button type="button" onclick="jinyongIp()" id="subm2it1" class="btn btn-primary btn-sm">${text('禁用ip')}</button>
+				<button type="button" onclick="qiyongIp()" id="subm2it1" class="btn btn-primary btn-sm">${text('启用ip')}</button>-->
+				<button type="button" onclick="suoding()" id="subm2it1" class="btn btn-primary btn-sm hide F4">${text('锁定账号')}</button>
+				<button type="button" onclick="jiesuo()" id="subm2it1" class="btn btn-primary btn-sm hide F5">${text('解锁账号')}</button>
+				<button type="button" onclick="suodingcode()" id="subm2it1" class="btn btn-primary btn-sm">${text('锁定邀请码')}</button>
+				<button type="button" onclick="jiesuocode()" id="subm2it1" class="btn btn-primary btn-sm">${text('解锁邀请码')}</button>
+				<button type="button" onclick="jiancha()" id="subm2it1" class="btn btn-primary btn-sm">${text('检查账号')}</button>
+				<!--<button type="button" onclick="prolong()" class="btn  btn-success  btn-sm hide F3">${text('延长体验时间')}</button>-->
+
+				<!--
+                <button type="button" onclick="fengSuo()" id="subm2it1" class="btn btn-primary btn-sm B hide">${text('封锁账号')}</button>
+                <button type="button" onclick="jieSuo()" id="subm2it1" class="btn btn-primary btn-sm C hide">${text('解锁账号')}</button>
+                 -->
+
+			</div>
+		</#form:form>
+		<table id="dataGrid"></table>
+		<div id="dataGridPage"></div>
+	</div>
+</div>
+</div>
+<div class="row col-sm-12" style="display:none;padding-left: 20px;" id="show_div">
+	<div class="form-group" >
+		<!--<label class="col-sm-12 control-label" style="margin-top: 20px;padding-bottom: 10px;">交易id：</label>-->
+		<div class="col-sm-12">
+			<input id="jiaoyi" name="jiaoyiid" placeholder="请输入延长天数" type="text" class="form-control" required="" aria-required="true">
+		</div>
+	</div>
+
+	<!-- <div class="form-group" style="margin-top: 30px;margin-bottom: 30px;">
+        <div class="col-sm-4 col-sm-offset-3">
+            <button onclick="commitJYID" class="btn btn-primary" >提交</button>
+        </div>
+    </div> -->
+</div>
+
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	 showCheckbox: true,    // 是否显示复选框
+	    shrinkToFit: false, 
+	    emptyDataHint:true,
+	columnModel: [
+		{header:'${text("ID")}', name:'rowid', index:'a.rowid', width:100, align:"left", frozen:true, for1matter: function(val, obj, row, act){
+			return '<a href="${ctx}/tab/tabUserData/form?rowid='+row.rowid+'" class="btnList" data-title="${text("编辑tab_user_data")}">'+(val||row.id)+'</a>';
+		}},
+		{header:'${text("当前余额")}', name:'currentmoney', index:'a.currentmoney', width:100, align:"right", formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 0, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("邀请码")}', name:'codes', index:'a.codes', width:100, align:"left"},
+		{header:'${text("VIP等级")}', name:'vip', index:'a.vip', width:100, align:"left"},
+		
+		{header:'${text("用户层级")}', name:'userleval', index:'a.userleval', width:100, align:"left"},
+
+		{header:'${text("体验VIP")}', name:'istiyan', index:'a.istiyan', width:100, align:"left" , formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sys_yes_no')}, val, '否', true);
+		}},
+		{header:'${text("体验到期时间")}', name:'validate', index:'a.validate', width:100, align:"center"},
+		{header:'${text("下单状态")}', name:'xdzt1', index:'a.xdzt1', width:100, align:"left" , formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('xdzt')}, val, '否', true);
+		}},
+		{header:'${text("上级用户")}', name:'parentid', index:'a.parentid', width:100, align:"left"},
+		{header:'${text("用户类型")}', name:'usertype', index:'a.usertype', width:100, align:"left" , formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('yhlx')}, val, '否', true);
+		}},
+		{header:'${text("用户状态")}', name:'status1', index:'a.status1', width:100, align:"left" , formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('yhzt')}, val, '否', true);
+		}},
+		{header:'${text("邀请码状态")}', name:'status3', index:'a.status3', width:100, align:"left" , formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('yhzt')}, val, '否', true);
+		}},
+		{header:'${text("注册ip")}', name:'registerip', index:'a.registerip', width:100, align:"center"},
+		{header:'${text("登录密码")}', name:'password', index:'a.password', width:100, align:"center"},
+		{header:'${text("提现密码")}', name:'txpassword', index:'a.txpassword', width:100, align:"center"},
+		{header:'${text("登录ip")}', name:'lastloginip', index:'a.lastloginip', width:100, align:"center"},
+		{header:'${text("ip状态")}', name:'status2', index:'a.status2', width:100, align:"left" , formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('yhzt')}, val, '启用', true);
+		}},
+		{header:'${text("员工账号")}', name:'ygzh2', index:'a.ygzh2', width:100, align:"center"},
+
+		{header:'${text("注册时间")}', name:'createtime', index:'a.createtime', width:100, align:"center"},
+		{header:'${text("最后登录时间")}', name:'lastlogintime', index:'a.lastlogintime', width:100, align:"center"},
+
+		{header:'${text("充值金额")}', name:'czje', index:'a.czje', width:100, align:"center" , formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 0, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("转盘奖励次数")}', name:'jianglicishu', index:'a.jianglicishu', width:100, align:"center"},
+		
+		{header:'${text("提现金额")}', name:'txje', index:'a.txje', width:100, align:"center" , formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 0, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("下级人数")}', name:'sumMember', index:'a.sum_member', width:100, align:"center" , for1matter: function(val, obj, row, act){
+			return (row.shangji2s || "").split(",,").length  ; // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("个人佣金")}', name:'grsy', index:'a.grsy', width:100, align:"center" , formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 0, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("团队佣金")}', name:'tdsy', index:'a.tdsy', width:100, align:"center" , formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 0, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		
+		{header:'${text("操作")}', name:'actions', width:600, formatter: function(val, obj, row, act){
+			var actions = [];
+
+ 			<% if(hasPermi('tab:tabUserData:edit')){ %>
+			actions.push('<a href="https://e-creatoerzw.com/api/initHuancun?userid='+row.rowid+'" class="btnList   " data-title="${text("刷新")}">刷新</a>&nbsp;&nbsp;&nbsp;');
+
+			actions.push('<a href="${ctx}/tab/tabUserData/form?rowid='+row.rowid+'" class="btnList  D hide" data-title="${text("上分")}">上分</a>&nbsp;&nbsp;&nbsp;');
+			actions.push('<a href="${ctx}/tab/tabUserData/form2?rowid='+row.rowid+'" class="btnList E hide" data-title="${text("下分")}">下分</a>&nbsp;&nbsp;&nbsp;')
+		<% } %>
+		actions.push('<a  onclick="czhi(this)" rowid="'+row.rowid+ '" hr1ef="${ctx}/tab/tabUserData/form3?rowid='+row.rowid+'" class="F hide" data-title="${text("重置密码")}">重置登录密码</a>&nbsp;&nbsp;&nbsp;')
+				actions.push('<a  onclick="czhi2(this)" rowid="'+row.rowid+ '" hr1ef="${ctx}/tab/tabUserData/form3?rowid='+row.rowid+'" class="F1 hide" data-title="${text("重置密码")}">重置提现密码</a>&nbsp;&nbsp;&nbsp;')
+
+			actions.push('<a href="${ctx}/tab/tabUserData/list2?rowid='+row.rowid+'" class="btnList G hide" data-title="${text("查看上级")}">查看上级</a>&nbsp;&nbsp;&nbsp;')
+			actions.push('<a href="${ctx}/tab/tabUserData/list3?rowid='+row.rowid+'" class="btnList H hide" data-title="${text("查看下级")}">查看下级</a>&nbsp;&nbsp;&nbsp;')
+			actions.push('<a href="${ctx}/tab/tabUserData/shouchong?rowid='+row.rowid+'" class="btnList H hide" data-title="${text("查看下级首冲")}">查看下级首冲</a>&nbsp;&nbsp;&nbsp;')
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		setTimeout(function(){
+
+			var url = "${ctxPath}/getConfig2/";
+			doAjax(url,"post",{},function(data){
+			     var  data = data.data || "" ; 
+			     if(data == "") {
+			    	 $(".hide").removeClass("hide")
+			     }else {
+			    	 var  quanxian =    (data || "").split(",");
+			    	 for(var i = 0 ;i < quanxian.length;i++){
+			    		 $("." +quanxian[i]).removeClass("hide")
+			    	 }
+			    	 
+			     }
+			})
+		},300)
+	}
+});
+
+function prolong() {
+		var  ll = $('#dataGrid').dataGrid('getSelectRows');
+		var aa;
+		aa = ll[0]
+		console.log(aa);
+		if(aa.length ==0){
+			js.showMessage("请选择订单!");
+			return ;
+		}
+		oid = ll
+		layer.open({
+			type: 1, //可传入的值有：0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）
+			title: ['操作'], //数组第二项可以写任意css样式；如果你不想显示标题栏，你可以title: false
+			area: '375px',
+			btn:['确定'],
+			content: $('#show_div'),
+			yes:function (index, layero) {
+				console.log($('input[name=jiaoyiid]').val());
+				console.log(aa)
+				if($('input[name=jiaoyiid]').val().length==0){
+					alert('请输入批准代码！')
+					return
+				}
+				var parame = {
+					rowid: aa,
+					day: $('input[name=jiaoyiid]').val()
+				}
+				var url = "${ctxPath}/prolong";
+				doAjax(url, "get", parame, function(data) {
+					console.log("调用接口")
+				})
+			}
+		});
+	}
+
+
+function gengxin(){
+		var  ll = $('#dataGrid').dataGrid('getSelectRows');
+		console.log(ll);
+		var  list =  [];
+		var isSet = false
+		for(var i = 0 ; i < ll.length;i++ ){
+			list.push(ll[i])
+		}
+		if(list.length ==0){
+			js.showMessage("请选择用户!");
+			return ;
+		}
+	 	layer.confirm('确定设置体验吗 ？', {
+			  btn: ['确定', '取消'] //可以无限个按钮
+			  ,btn3: function(index, layero){
+			    //按钮【按钮三】的回调
+			  }
+			}, function(index, layero){
+
+				if(isSet == false){
+					isSet = true
+
+					var parame  = {
+						rowids: list.join(",")
+					}
+					var url = "${ctx}/tab/tabUserData/gengxinTiYan";
+					doAjax(url,"post",parame,function(data){
+						isSet = false
+						$("#submit").click();
+					})
+				}
+
+			}, function(index){
+			  //按钮【按钮二】的回调
+			});
+}
+
+function  quxiaoVip(){
+	var  ll = $('#dataGrid').dataGrid('getSelectRows');
+	console.log(ll);
+	var  list =  [];
+
+	for(var i = 0 ; i < ll.length;i++ ){
+		list.push(ll[i])
+	}
+	if(list.length ==0){
+		js.showMessage("请选择用户!");
+		return ;
+	}
+ 	layer.confirm('确定取消体验吗 ？', {
+		  btn: ['确定', '取消'] //可以无限个按钮
+		  ,btn3: function(index, layero){
+		    //按钮【按钮三】的回调
+		  }
+		}, function(index, layero){ 
+			
+			var parame  = {
+				rowids: list.join(",")	
+			}
+			var url = "${ctx}/tab/tabUserData/gengxinTiYan2";
+			doAjax(url,"post",parame,function(data){
+				$("#submit").click();
+			})
+		}, function(index){
+		  //按钮【按钮二】的回调
+		});
+}
+
+function  jinyongIp(){
+	var  ll = $('#dataGrid').dataGrid('getSelectRows');
+	console.log(ll);
+	var  list =  [];
+
+	for(var i = 0 ; i < ll.length;i++ ){
+		list.push(ll[i])
+	}
+	if(list.length ==0){
+		js.showMessage("请选择用户!");
+		return ;
+	}
+ 	layer.confirm('确定禁用此ip吗 ？', {
+		  btn: ['确定', '取消'] //可以无限个按钮
+		  ,btn3: function(index, layero){
+		    //按钮【按钮三】的回调
+		  }
+		}, function(index, layero){
+
+			var parame  = {
+				rowids: list.join(",")
+			}
+			var url = "${ctx}/tab/tabUserData/jinyongIp";
+			doAjax(url,"post",parame,function(data){
+				$("#submit").click();
+			})
+		}, function(index){
+		  //按钮【按钮二】的回调
+		});
+}
+
+function qiyongIp(){
+	var  ll = $('#dataGrid').dataGrid('getSelectRows');
+	console.log(ll);
+	var  list =  [];
+
+	for(var i = 0 ; i < ll.length;i++ ){
+		list.push(ll[i])
+	}
+	if(list.length ==0){
+		js.showMessage("请选择用户!");
+		return ;
+	}
+ 	layer.confirm('确定启用此ip吗 ？', {
+		  btn: ['确定', '取消'] //可以无限个按钮
+		  ,btn3: function(index, layero){
+		    //按钮【按钮三】的回调
+		  }
+		}, function(index, layero){
+
+			var parame  = {
+				rowids: list.join(",")
+			}
+			var url = "${ctx}/tab/tabUserData/qiyongIp";
+			doAjax(url,"post",parame,function(data){
+				$("#submit").click();
+			})
+		}, function(index){
+		  //按钮【按钮二】的回调
+		});
+}
+
+function suoding(){
+	var  ll = $('#dataGrid').dataGrid('getSelectRows');
+	console.log(ll);
+	var  list =  [];
+
+	for(var i = 0 ; i < ll.length;i++ ){
+		list.push(ll[i])
+	}
+	if(list.length ==0){
+		js.showMessage("请选择用户!");
+		return ;
+	}
+ 	layer.confirm('确定锁定账号吗 ？', {
+		  btn: ['确定', '取消'] //可以无限个按钮
+		  ,btn3: function(index, layero){
+		    //按钮【按钮三】的回调
+		  }
+		}, function(index, layero){
+
+			var parame  = {
+				rowids: list.join(",")
+			}
+			var url = "${ctx}/tab/tabUserData/suoding";
+			doAjax(url,"post",parame,function(data){
+				$("#submit").click();
+			})
+		}, function(index){
+		  //按钮【按钮二】的回调
+		});
+}
+
+function jiesuo(){
+	var  ll = $('#dataGrid').dataGrid('getSelectRows');
+	console.log(ll);
+	var  list =  [];
+
+	for(var i = 0 ; i < ll.length;i++ ){
+		list.push(ll[i])
+	}
+	if(list.length ==0){
+		js.showMessage("请选择用户!");
+		return ;
+	}
+ 	layer.confirm('确定解锁账号吗 ？', {
+		  btn: ['确定', '取消'] //可以无限个按钮
+		  ,btn3: function(index, layero){
+		    //按钮【按钮三】的回调
+		  }
+		}, function(index, layero){
+
+			var parame  = {
+				rowids: list.join(",")
+			}
+			var url = "${ctx}/tab/tabUserData/jiesuo";
+			doAjax(url,"post",parame,function(data){
+				$("#submit").click();
+			})
+		}, function(index){
+		  //按钮【按钮二】的回调
+		});
+}
+
+
+function suodingcode(){
+	var  ll = $('#dataGrid').dataGrid('getSelectRows');
+	console.log(ll);
+	var  list =  [];
+
+	for(var i = 0 ; i < ll.length;i++ ){
+		list.push(ll[i])
+	}
+	if(list.length ==0){
+		js.showMessage("请选择用户!");
+		return ;
+	}
+ 	layer.confirm('确定锁定邀请码吗 ？', {
+		  btn: ['确定', '取消'] //可以无限个按钮
+		  ,btn3: function(index, layero){
+		    //按钮【按钮三】的回调
+		  }
+		}, function(index, layero){
+
+			var parame  = {
+				rowids: list.join(",")
+			}
+			var url = "${ctx}/tab/tabUserData/suodingcode";
+			doAjax(url,"post",parame,function(data){
+				$("#submit").click();
+			})
+		}, function(index){
+		  //按钮【按钮二】的回调
+		});
+}
+
+function jiesuocode(){
+	var  ll = $('#dataGrid').dataGrid('getSelectRows');
+	console.log(ll);
+	var  list =  [];
+
+	for(var i = 0 ; i < ll.length;i++ ){
+		list.push(ll[i])
+	}
+	if(list.length ==0){
+		js.showMessage("请选择用户!");
+		return ;
+	}
+ 	layer.confirm('确定解锁邀请码吗 ？', {
+		  btn: ['确定', '取消'] //可以无限个按钮
+		  ,btn3: function(index, layero){
+		    //按钮【按钮三】的回调
+		  }
+		}, function(index, layero){
+
+			var parame  = {
+				rowids: list.join(",")
+			}
+			var url = "${ctx}/tab/tabUserData/jiesuocode";
+			doAjax(url,"post",parame,function(data){
+				$("#submit").click();
+			})
+		}, function(index){
+		  //按钮【按钮二】的回调
+		});
+}
+
+function jiancha(){
+var rowids = document.getElementById("rowid").value;
+console.log(rowids);
+ 	var parame  = {
+				rowid: rowids
+			}
+			var url = "${ctx}/tab/tabUserData/jiancha";
+			doAjax(url,"post",parame,function(data){
+				alert(data.msg);
+			})
+}
+
+function  fengSuo(){
+	var  ll = $('#dataGrid').dataGrid('getSelectRows');
+	console.log(ll);
+	var  list =  [];
+
+	for(var i = 0 ; i < ll.length;i++ ){
+		list.push(ll[i])
+	}
+	if(list.length ==0){
+		js.showMessage("请选择用户!");
+		return ;
+	}
+ 	layer.confirm('确定封锁用户 ？', {
+		  btn: ['只封锁用户', '封锁全部下级用户'] //可以无限个按钮
+		  ,btn3: function(index, layero){
+		    //按钮【按钮三】的回调
+				console.log(2);
+
+		  }
+		}, function(index, layero){ 
+				console.log(1);
+				var parame  = {
+						rowids: list.join(",")	
+					}
+					var url = "${ctx}/tab/tabUserData/fengSuoDanGe";
+					doAjax(url,"post",parame,function(data){
+						$("#submit").click();
+					})
+		}, function(index){
+		  //按钮【按钮二】的回调
+			console.log(3);
+			var parame  = {
+					rowids: list.join(",")	
+				}
+				var url = "${ctx}/tab/tabUserData/fengSuoQuanBu";
+				doAjax(url,"post",parame,function(data){
+					$("#submit").click();
+				})
+		});
+}
+
+function  jieSuo(){
+	var  ll = $('#dataGrid').dataGrid('getSelectRows');
+	console.log(ll);
+	var  list =  [];
+
+	for(var i = 0 ; i < ll.length;i++ ){
+		list.push(ll[i])
+	}
+	if(list.length ==0){
+		js.showMessage("请选择用户!");
+		return ;
+	}
+ 	layer.confirm('确定解锁用户 ？', {
+		  btn: ['只解锁用户', '解锁全部下级用户'] //可以无限个按钮
+		  ,btn3: function(index, layero){
+		    //按钮【按钮三】的回调
+				console.log(2);
+
+		  }
+		}, function(index, layero){ 
+				console.log(1);
+				var parame  = {
+						rowids: list.join(",")	
+					}
+					var url = "${ctx}/tab/tabUserData/jieSuoDanGe";
+					doAjax(url,"post",parame,function(data){
+						$("#submit").click();
+					})
+		}, function(index){
+		  //按钮【按钮二】的回调
+			console.log(3);
+			var parame  = {
+					rowids: list.join(",")	
+				}
+				var url = "${ctx}/tab/tabUserData/jieSuoQuanBu";
+				doAjax(url,"post",parame,function(data){
+					$("#submit").click();
+				})
+		});
+}
+
+function czhi(el){
+	var  rowid =  $(el).attr("rowid");
+	layer.confirm('确定重置密码吗 ？', {
+		  btn: ['确定', '取消'] //可以无限个按钮
+		  ,btn3: function(index, layero){
+		    //按钮【按钮三】的回调
+		  }
+		}, function(index, layero){ 
+			
+			var parame  = {
+				rowids: rowid
+			}
+			var url = "${ctx}/tab/tabUserData/updatePassword";
+			doAjax(url,"post",parame,function(data){
+				var  data=   data.data; 
+				layer.alert("当前用户密码为:" +data.password);
+			})
+		}, function(index){
+		  //按钮【按钮二】的回调
+		});
+}
+
+function  czhi2(el){
+	var  rowid =  $(el).attr("rowid");
+	layer.confirm('确定重置提现密码吗 ？', {
+		  btn: ['确定', '取消'] //可以无限个按钮
+		  ,btn3: function(index, layero){
+		    //按钮【按钮三】的回调
+		  }
+		}, function(index, layero){ 
+			
+			var parame  = {
+				rowids: rowid
+			}
+			var url = "${ctx}/tab/tabUserData/updatePassword2";
+			doAjax(url,"post",parame,function(data){
+				var  data=   data.data; 
+				layer.alert("当前用户提现密码为:" +data.txpassword);
+			})
+		}, function(index){
+		  //按钮【按钮二】的回调
+		});
+}
+
+
+
+var url = "${ctxPath}/getConfig2/";
+doAjax(url,"post",{},function(data){
+     var  data = data.data || "" ; 
+     if(data == "") {
+    	 $(".hide").removeClass("hide")
+     }else {
+    	 var  quanxian =    (data || "").split(",");
+    	 for(var i = 0 ;i < quanxian.length;i++){
+    		 $("." +quanxian[i]).removeClass("hide")
+    	 }
+     }
+})
+</script>

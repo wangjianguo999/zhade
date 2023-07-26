@@ -1,0 +1,468 @@
+<% layout('/layouts/default.html', {title: 'tab_tixian_log管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa icon-notebook"></i> ${text('tab_tixian_log管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<a href="#" class="btn btn-default" id="btnSetting" title="${text('设置')}"><i class="fa fa-navicon"></i></a>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${tabTixianLog}" action="${ctxPath}/tabTixianLogListData" method="post" class="form-inline  "
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('用户编号')}：</label>
+					<div class="control-inline">
+						<#form:input path="userid" maxlength="45" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('订单号')}：</label>
+					<div class="control-inline">
+						<#form:input path="orderid" maxlength="45" class="form-control width-120"/>
+					</div>
+				</div>
+				 <div class="form-group">
+					<label class="control-label">${text('提现状态')}：</label>
+					<div class="control-inline width-120" >
+ 					 <#form:select path="status1" dictType="txzt" blankOption="true" class="form-control width-120"/>
+						
+					</div>
+				</div>
+
+				  <div class="form-group">
+					<label class="control-label">${text('提现类型')}：</label>
+					<div class="control-inline width-120" >
+ 					 <#form:select path="type" dictType="txlx" blankOption="true" class="form-control width-120"/>
+						
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('代付通道')}：</label>
+					<div class="control-inline width-120">
+ 						<#form:select path="zftd" items="${tongdaos}" blankOption="true" itemLabel="tongdaoName" itemValue="tongdaoName" class="form-control required" />
+ 						
+						
+					</div>
+				</div>
+				 	<div class="form-group">
+					<label class="control-label">${text('申请时间')}：</label>
+					<div class="control-inline">
+						<#form:input path="createtime_gte" readonly="true" maxlength="20" class="form-control laydate width-date"
+							dataFormat="date" data-type="date" data-format="yyyy-MM-dd" data-d1one="updatetime_lte.click()"/>
+						&nbsp;-&nbsp;
+						<#form:input path="createtime_lte" readonly="true" maxlength="20" class="form-control laydate width-date"
+							dataFormat="date" data-type="date" data-format="yyyy-MM-dd"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('更新时间')}：</label>
+					<div class="control-inline">
+						<#form:input path="updatetime_gte" readonly="true" maxlength="20" class="form-control laydate width-date"
+							dataFormat="date" data-type="date" data-format="yyyy-MM-dd" data-d1one="updatetime_lte.click()"/>
+						&nbsp;-&nbsp;
+						<#form:input path="updatetime_lte" readonly="true" maxlength="20" class="form-control laydate width-date"
+							dataFormat="date" data-type="date" data-format="yyyy-MM-dd"/>
+					</div>
+				</div>
+				  <div class="form-group">
+					<label class="control-label" id="jisuan"> </label>
+				</div>
+				<div class="form-group">
+				<button type="button"   class="btn btn-primary btn-sm" onclick="jinri()" >今日</button>
+										<button type="button"   class="btn btn-primary btn-sm" onclick="zuori()" >昨日</button>
+					
+					<button type="button"   class="btn btn-primary btn-sm" onclick="benzhou()" >本周</button>
+										<button type="button"   class="btn btn-primary btn-sm" onclick="shangZhou()" >上周</button>
+										<button type="button"   class="btn btn-primary btn-sm" onclick="benyue()" >本月</button>
+										<button type="button"   class="btn btn-primary btn-sm" onclick="shangyue()" >上月</button>
+										
+										
+					<button type="submit" id="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+
+					<button type="button" id="cc1" onclick="shenheCg()" class="btn   btn-success btn-sm hide K2" sty11le="display: none">批量审核通过</button>
+					<button type="button" id="cc2" onclick="shibai()" class="btn btn-default btn-sm hide L">${text('设置提现失败')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+    showCheckbox: true,    // 是否显示复选框
+
+	columnModel: [
+		{header:'${text("用户编号")}', name:'userid', index:'a.userid', width:150, align:"left", frozen:true, form1atter: function(val, obj, row, act){
+			return '<a href="${ctx}/tab/tabTixianLog/form?rowid='+row.rowid+'" class="btnList" data-title="${text("编辑tab_tixian_log")}">'+(val||row.id)+'</a>';
+		}},
+		
+		{header:'${text("提现金额")}', name:'money', index:'a.money', width:150, align:"right", formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 0, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("到账金额")}', name:'dzje', index:'a.dzje', width:150, align:"right", formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 0, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("下单状态")}', name:'xdzt1', index:'a.xdzt1', width:100, align:"left" , formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('xdzt')}, val, '否', true);
+		}},
+		{header:'${text("员工账号")}', name:'ygzh2', index:'a.ygzh2', width:100, align:"center"},
+
+		{header:'${text("提现类型")}', name:'type', index:'a.type', width:150, align:"right", form1atter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('txlx')}, val, '未知', true);
+		}},
+		{header:'${text("提现账号")}', name:'cardtype', index:'a.cardtype', width:150, align:"right", form1atter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('txlx')}, val, '未知', true);
+		}},
+		{header:'${text("提现状态")}', name:'status1', index:'a.status1', width:150, align:"left" ,formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('txzt')}, val, '未知', true);
+		}},		
+		{header:'${text("申请时间")}', name:'createtime', index:'a.createtime', width:150, align:"center"},
+		{header:'${text("更新时间")}', name:'updatetime', index:'a.updatetime', width:150, align:"center"},
+		{header:'${text("支付凭证")}', name:'code', index:'a.code', width:150, align:"left",formatter: function(val, obj, row, act){
+		    if(row.code != null){
+		    	var dd = row.code;
+				return '<a href="javascript:void(0)" onclick=\'showAddress1("'+dd+'")\'>'+dd+'</a>';
+		    }else{
+		   		return '';
+		    }
+		 }},
+		{header:'${text("代付通道")}', name:'zftd', index:'a.zftd', width:150, align:"left"},
+		
+		{header:'${text("订单号")}', name:'orderid', index:'a.orderid', width:150, align:"right", for1matter: function(val, obj, row, act){
+			return js.formatNumber(val, 0, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("详情")}', name:'username', index:'a.username', width:100, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			var ll =  []   ;
+			<% if(hasPermi('tab:tabTixianLog:edit')){ %>
+		
+			var  status1= row.status1;
+			if(row.type == "2" ||  row.type== "3"){
+					ll.push('<a   data="'+row.useraddress+'" rowid="'+row.rowid+'" onclick="showAddress(this)" status1="'+row.status1+'"  hre1f="${ctx}/tab/tabUserData/form?rowid='+row.rowid+'" class=" " data-title="${text("提现地址")}">提现地址</a>')
+
+
+			}else {
+				if(status1== 1   || status1==  "12"  ){
+				ll.push('<a   data="'+row.useraddress+'" onclick="doClick2(this)"  rowid="'+row.rowid+'"  hre1f="${ctx}/tab/tabUserData/form?rowid='+row.rowid+'" class=" M  hide" data-title="${text("审核通过")}">审核通过</a>')
+				}
+
+			}
+			<% } %>
+		return ll.join(",");
+	}},
+		 
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		initData22();
+
+		var url = "${ctxPath}/yuangongGetConfig2/";
+		doAjax(url,"post",{},function(data){
+		     var  data = data.data || "" ; 
+		     if(data == "") {
+		    	 $(".hide").removeClass("hide")
+		     }else {
+		    	 var  quanxian =    (data || "").split(",");
+		    	 for(var i = 0 ;i < quanxian.length;i++){
+		    		 $("." +quanxian[i]).removeClass("hide")
+		    	 }
+ 		    	 
+		     }
+		})
+	}
+});
+
+function showAddress1(dd){
+ 	console.log(dd);
+const textarea = document.createElement('textarea');
+  textarea.readOnly = 'readonly';
+  textarea.style.position = 'absolute';
+  textarea.style.left = '-9999px';
+  textarea.value = dd;
+  document.body.appendChild(textarea);
+  textarea.select();
+  const result = document.execCommand('Copy');
+}
+
+function initData22(){
+
+		  var inputs =  $("form input,form select");
+		  console.log(inputs.length);
+		  var parame  = {
+		  }
+		  var  s = "";
+		  var array = [];
+		  for(var i = 0 ;i < inputs.length;i++ ){
+			  var $id  = $(inputs[i]).attr("id");
+			  console.log($id);
+			  parame[$id ]   =    $(inputs[i]).val();
+			  s =    $id +"=" +  $(inputs[i]).val();
+			  array.push(s);
+		  }
+		  var url= "${ctxPath}/tabTixianLogTongJi";
+		  doAjax(url,"post",parame,function(data){
+			  var czje =    parseFloat(data.czje).toFixed(2);
+			  var  bs  =  data.bs;
+			$("#jisuan").html("提现金额:" +  "<font color='red'>" +czje+"</font>"  +";提现笔数:" +  "<font color='red'>" +bs+"</font>"   )	  
+		  })
+}
+
+
+
+function  doClick2(el){
+	var  rowid=   $(el).attr("rowid");
+
+
+ 	layer.confirm('确定设置通过吗 ？', {
+		  btn: ['确定', '取消'] //可以无限个按钮
+		  ,btn3: function(index, layero){
+		    //按钮【按钮三】的回调
+		  }
+		}, function(index, layero){ 
+			
+			var parame  = {
+				rowids: rowid
+			}
+			var url = "${ctxPath}/tabTixianLogChangeData9";
+			doAjax(url,"post",parame,function(data){
+				$("#submit").click();
+
+			})
+		}, function(index){
+		  //按钮【按钮二】的回调
+		});
+}
+
+
+function showAddress(el){
+	var  dd    =   $(el).attr("data");
+	var  status1 =  $(el).attr("status1");
+	var  rowid=   $(el).attr("rowid");
+		
+	layer.alert(dd)
+}
+
+
+
+function  gengxin(){
+	var  ll = $('#dataGrid').dataGrid('getSelectRows');
+	console.log(ll);
+	var  list =  [];
+
+	for(var i = 0 ; i < ll.length;i++ ){
+		list.push(ll[i])
+	}
+	if(list.length ==0){
+		js.showMessage("请选择订单!");
+		return ;
+	}
+ 	layer.confirm('确定设置通过吗 ？', {
+		  btn: ['确定', '取消'] //可以无限个按钮
+		  ,btn3: function(index, layero){
+		    //按钮【按钮三】的回调
+		  }
+		}, function(index, layero){ 
+			
+			var parame  = {
+				rowids: list.join(",")	
+			}
+			var url = "${ctxPath}/tabTixianLogChangeData";
+			doAjax(url,"post",parame,function(data){
+				$("#submit").click();
+
+			})
+		}, function(index){
+		  //按钮【按钮二】的回调
+		});
+}
+
+
+function  shibai(){
+
+	var  ll = $('#dataGrid').dataGrid('getSelectRows');
+	console.log(ll);
+	var  list =  [];
+
+	for(var i = 0 ; i < ll.length;i++ ){
+		list.push(ll[i])
+	}
+	if(list.length ==0){
+		js.showMessage("请选择订单!");
+		return ;
+	}
+ 	layer.confirm('确定设置失败吗 ？', {
+		  btn: ['确定', '取消'] //可以无限个按钮
+		  ,btn3: function(index, layero){
+		    //按钮【按钮三】的回调
+		  }
+		}, function(index, layero){ 
+			
+			var parame  = {
+				rowids: list.join(",")	
+			}
+			var url = "${ctxPath}/tabTixianLogChangeData2";
+			doAjax(url,"post",parame,function(data){
+				$("#submit").click();
+			})
+		}, function(index){
+		  //按钮【按钮二】的回调
+		});
+}
+
+
+
+function   benzhou(){ 
+	var url = "${ctxPath}/getData53/";
+	doAjax(url,"post",{},function(data){
+	     $("#updatetime_gte").val(data.min);
+	     setTimeout(function(){
+	    	 $("#updatetime_lte").val(data.max)
+	    	  $("#submit").click();
+	     },300)
+	})
+
+}
+
+function  shenheCg(){
+
+	var  ll = $('#dataGrid').dataGrid('getSelectRows');
+	console.log(ll);
+	var  list =  [];
+
+	for(var i = 0 ; i < ll.length;i++ ){
+		list.push(ll[i])
+	}
+	if(list.length ==0){
+		js.showMessage("请选择订单!");
+		return ;
+	}
+ 	layer.confirm('确定设置通过吗 ？', {
+		  btn: ['确定', '取消'] //可以无限个按钮
+		  ,btn3: function(index, layero){
+		    //按钮【按钮三】的回调
+		  }
+		}, function(index, layero){
+
+			var parame  = {
+				rowids: list.join(",")
+			}
+			var url = "${ctxPath}/changeData9";
+			doAjax(url,"post",parame,function(data){
+				$("#submit").click();
+
+			})
+		}, function(index){
+		  //按钮【按钮二】的回调
+		});
+}
+
+var convertDate = function(data) {
+    var date = new Date();
+    data = data || "";
+
+    if (data == "") {
+        return "请选择日期";
+    }
+    date.setTime(data);
+    return date.Format("yyyy-MM-dd")
+}
+
+Date.prototype.Format = function(fmt) { //author: meizz
+    var o = {
+        "M+": this.getMonth() + 1, //月份
+        "d+": this.getDate(), //日
+        "h+": this.getHours(), //小时
+        "m+": this.getMinutes(), //分
+        "s+": this.getSeconds(), //秒
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+        "S": this.getMilliseconds() //毫秒
+    };
+    if (/(y+)/.test(fmt))
+        fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt))
+            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
+function jinri(){
+	//获取今日
+	var url = "${ctxPath}/getData51/";
+	doAjax(url,"post",{},function(data){
+		var  date= data.date;
+
+		var day1 = new Date();
+		day1.setTime(date);
+		 var now = day1;
+	     $("#updatetime_gte").val(convertDate(now));
+	     setTimeout(function(){
+	    	 $("#updatetime_lte").val(convertDate(now))
+	    	  $("#submit").click();
+	     },300)
+	})
+
+}
+
+
+function zuori(){
+
+	var url = "${ctxPath}/getData52/";
+	doAjax(url,"post",{},function(data){
+		var  date= data.date;
+
+		var day1 = new Date();
+		day1.setTime(date);
+		 var now = day1;
+	     $("#updatetime_gte").val(convertDate(now));
+	     setTimeout(function(){
+	    	 $("#updatetime_lte").val(convertDate(now))
+	    	  $("#submit").click();
+	     },300)
+	})
+
+}
+
+function shangZhou(){
+	var url = "${ctxPath}/getData54/";
+	doAjax(url,"post",{},function(data){
+	     $("#updatetime_gte").val(data.min);
+	     setTimeout(function(){
+	    	 $("#updatetime_lte").val(data.max)
+	    	  $("#submit").click();
+	     },300)
+	})
+
+}
+
+function  benyue(){
+	 
+	var url = "${ctxPath}/getData55/";
+	doAjax(url,"post",{},function(data){
+	     $("#updatetime_gte").val(data.min);
+	     setTimeout(function(){
+	    	 $("#updatetime_lte").val(data.max)
+	    	  $("#submit").click();
+	     },300)
+	})
+}
+function shangyue(){
+	var url = "${ctxPath}/getData56/";
+	doAjax(url,"post",{},function(data){
+	     $("#updatetime_gte").val(data.min);
+	     setTimeout(function(){
+	    	 $("#updatetime_lte").val(data.max)
+	    	  $("#submit").click();
+	     },300)
+	})
+}
+
+
+
+</script>

@@ -1,0 +1,133 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+    content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+<meta name="format-detection"
+    content="telephone=no,email=no,date=no,address=no">
+<title>convide amigos</title>
+<link rel="stylesheet" type="text/css"
+    href="${ctxStatic}/common/aui.css" />
+<style type="text/css">
+    .aui-list .aui-list-header{
+        background-color: #fff;
+    }     
+</style>
+
+</head>
+<body>
+<header class="aui-bar aui-bar-nav" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode="" onclick="closeWin()">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title">${type}</div>
+         
+        </a>
+    </header>
+     <ul class="aui-list aui-form-list">
+            <li class="aui-list-header">Saisissez le nom</li>
+            
+             <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    
+                    <div class="aui-list-item-input">
+                        <input type="text" maxlength="10"  id="name" value="${data.firstname}" placeholder="Saisissez le numéro du portefeuille">
+                    </div>
+                </div>
+            </li>
+        </ul>
+
+         <ul class="aui-list aui-form-list">
+            <li class="aui-list-header">nom</li>
+            
+             <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                     
+                    <div class="aui-list-item-input">
+                        <input type="text"  id="phone"  value="${data.lastname}" placeholder="Numero de portefeuille">
+                    </div>
+                </div>
+            </li>
+        </ul>
+
+        <br>
+
+ <br>
+            <div onclick="saveData()" class="aui-btn aui-btn-danger aui-btn-block">Lier le portefeuille</div>
+
+<script type="text/javascript"
+    src="${ctxStatic}/jquery/jquery-1.12.4.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/common.js"></script>
+<script type="text/javascript"
+    src="${ctxStatic}/common/clipboard.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/qrcode.min.js"></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/aui-actionsheet.js" ></script>
+
+<script type="text/javascript" src="${ctxStatic}/common/doT.min.js"></script>
+
+<script type="text/javascript"
+    src="${ctxStatic}/layer/3.1/layer.js?V0.1-12102105"></script>
+    <script type="text/javascript">
+            var  tt111111  =  window.localStorage.getItem("token") || "";
+
+            if(tt111111=="-11" || tt111111==""){
+                location.href = "${ctxPath}/login";
+
+            }
+            var rowid = "${rowid}";
+            var   type =  "${type}";
+            if( rowid &&rowid!="") {
+
+            }
+            function   saveData(){
+                var  name =   $("#name").val() || "";
+                var  phone =  $("#phone").val()|| "";
+                
+                if(name.indexOf("0") != 0 ){
+      			  layer.msg("Le premier chiffre doit être 0 ");
+
+                	return 
+                }
+                
+      		  if(parseInt(name) !=  name  ||  name.length !=10){
+    			  layer.msg("Veuillez saisir 10 Chiffres ");
+
+    			  return ;
+    		  }
+
+                if(name == "") {
+                    layer.msg("Saisissez le numéro du portefeuille");
+                    return ; 
+                }
+                if(phone == "") {
+                    layer.msg("Numero de portefeuille");
+                    return ; 
+                }
+
+                var parame =  {
+                    name : name ,
+                    phone : phone,
+                    rowid : rowid ,
+                    type :  type 
+                }
+                var url = "${ctxPath}/saveBankData";    
+                doAjax(url,"post",parame,function(data){
+                	var   flag =  data.flag; 
+                	if(flag=="true"){ 
+                	window.history.go(-2)
+                	}else {
+                		layer.msg(data.msg)
+                	}
+                    
+                })
+
+
+
+            }
+    </script>
+  </body>  
+</html>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeesite.modules.tab.dao.TabYaoqingJiangliHuodongLogDao">
+	
+	<!-- 查询数据
+	<select id="findList" resultType="TabYaoqingJiangliHuodongLog">
+		SELECT ${sqlMap.column.toSql()}
+		FROM ${sqlMap.table.toSql()}
+		<where>
+			${sqlMap.where.toSql()}
+		</where>
+		ORDER BY ${sqlMap.order.toSql()}
+	</select> -->
+	<select id="findList22" resultType="com.jeesite.modules.tab.entity.TabYaoqingJiangliHuodongLog">
+		SELECT  *  FROM tab_yaoqing_jiangli_huodong_log  order by  createtime  DESC  limit  0 ,20 
+	</select>	
+</mapper>

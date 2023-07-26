@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeesite.modules.tab.dao.TabTongjiDaysDao">
+	
+	<!-- 查询数据
+	<select id="findList" resultType="TabTongjiDays">
+		SELECT ${sqlMap.column.toSql()}
+		FROM ${sqlMap.table.toSql()}
+		<where>
+			${sqlMap.where.toSql()}
+		</where>
+		ORDER BY ${sqlMap.order.toSql()}
+	</select> -->
+	
+	<select id="getTongji" resultType="TabTongjiDays">
+								SELECT       max(rowid)  rowid   , days, sum(zcrs) zcrs  , sum(zdrs) zdrs , sum(czje) czje, sum(czrs ) czrs , sum(scje) scje   , sum(scrs ) scrs , sum(txrs) txrs  , sum(txje ) txje , sum(cqc) cqc , max(userid) userid, max(ygbh) ygbh, max(ygbh2) ygbh2   , max(parentid1 ) parentid1 , max(parentid2 ) parentid2, max(parentid3) parentid3, max(shangjilink)    shangjilink
+                    from tab_tongji_days    
+                    where  1 = 1  
+                    
+                    	<if test="_parameter.containsKey('min')">
+	    	 AND    	    		days  &gt;= #{min}  
+
+		</if>
+		
+	    				<if test="_parameter.containsKey('max')">
+	    	 AND    	    		days  &lt;= #{max}  
+
+		</if>
+		
+			<if test="_parameter.containsKey('userId')">
+	    	 AND    	    		shangjilink    like   #{shangjilink}   
+
+		</if>
+                        group by   days     order by  days  desc   
+	</select>
+</mapper>

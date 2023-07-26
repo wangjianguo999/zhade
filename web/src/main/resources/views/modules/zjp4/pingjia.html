@@ -1,0 +1,160 @@
+<html><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>AUI快速完成布局</title>
+    <link rel="stylesheet" type="text/css" href="${ctxStatic}/common/aui.css">
+    <style type="text/css">
+        .user-info {
+            background-color: #ffffff;
+            padding: 0.75rem 0;
+        }
+        img.avatar {
+            display: block;
+            margin: 0 auto;
+            width: 20%;
+        }
+        .aui-list .aui-list-header {
+            background-color: #ffffff;
+            line-height: 1.2rem;
+        }
+        .aui-list .aui-list-item {
+            background-color: #f8f6ef;
+        }
+        .aui-col-xs-4, .aui-col-xs-5,.aui-col-xs-7, .aui-col-xs-3{
+    width: 33.33333333%;
+    border: 1px solid #cacaca;
+}
+
+.aui-grid [class*=aui-col-] {
+    display: table-cell;
+    position: relative;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0.2rem 0;
+    /* padding-top: 0.1rem; */
+    margin:0.3rem 0;
+}
+    </style>
+</head>
+<body style="background-color: #ffffff">
+    <section class="aui-content user-info aui-text-center aui-margin-b-15">
+        <img src="${ctxStatic}/common/usr.98e1e839.png" class="avatar aui-img-round">
+        <h2 class="aui-margin-t-15" style="color:#aab3bd">------&nbsp;&nbsp;&nbsp;niveau de service&nbsp;&nbsp;&nbsp;------</h2>
+          <h2 class="aui-margin-t-15 aui-text-danger" styl1e="color:#aab3bd"><img class="imgs" index="1" onclick="select2(this)" src="${ctxStatic}/common/start1.png" style="
+    margin-left: 30%;
+"><img index="2" class="imgs" onclick="select2(this)" src="${ctxStatic}/common/start1.png"><img index="3" onclick="select2(this)" class="imgs" src="${ctxStatic}/common/start1.png"><img index="4" onclick="select2(this)" class="imgs" src="${ctxStatic}/common/start1.png"><img index="5" onclick="select2(this)" class="imgs" src="${ctxStatic}/common/start1.png">
+ </h2>
+    </section> 
+    <section class="aui-grid aui-margin-b-15">
+        <div class="aui-row">
+            <div class="aui-col-xs-5" t="good service" style="margin-left:9%">
+               <p> bon service
+               </p>  <i class="aui-iconfont aui-icon-laud"></i>
+            </div>
+             <div class="aui-col-xs-2">
+                  
+            </div>
+             <div class="aui-col-xs-5" t="good quality">
+                <p> Bonne qualité
+                </p>  <i class="aui-iconfont aui-icon-laud"></i>
+            </div>
+        </div>
+        <div class="aui-row">
+            <div class="aui-col-xs-5" t="good experience" style="margin-left:9%">
+               <p> envoie rapide
+               </p>  <i class="aui-iconfont aui-icon-laud"></i>
+            </div>
+             <div class="aui-col-xs-2">
+                  
+            </div>
+             <div  t="fast speed" class="aui-col-xs-5">
+                <p> bonne <br>expérience</p>  <i class="aui-iconfont aui-icon-laud"></i>
+            </div>
+        </div>
+    </section>
+        <section class="aui-grid aui-margin-b-15">
+<textarea id="pingjia" placeholder="évalue "  ></textarea>
+                    </section>
+<div class="aui-btn aui-btn-danger aui-btn-block"  onclick="pingjia()" style="width: 80%;margin-left:10%">OK</div>
+
+<style type="text/css">
+
+    .aui-text-danger img {
+        float: left;
+        margin-left:10px;
+    }
+    textarea{
+        width: 83%;
+        margin-left:9%;
+        height: 90px;
+        background-color: #f2f5fb;
+    }
+</style>
+
+
+<script src="${ctxStatic}/common/jquery.min.js"></script>
+<script type="text/javascript"
+    src="${ctxStatic}/layer/3.1/layer.js?V0.1-12102105"></script>
+<script type=""
+    src="${ctxStatic}/common/common.js?m222?v=121222AD?v=121222A"></script>
+<script type="" src="${ctxStatic}/common/doT.min.js"></script>
+
+<script type="text/javascript">
+    var  index=   0 ;  
+    function  select2(el){
+              index=   $(el).attr("index");
+            $(".imgs").attr("src","${ctxStatic}/common/start1.png");
+            // $(".imgs")
+            var domAll =  $(".imgs");
+            for(var i = 0 ;i <index ;i++ ){
+                $(domAll[i]).attr("src","${ctxStatic}/common/start2.png")
+            }
+    }
+    $(".aui-col-xs-5").click(function(){
+        $(this).toggleClass("aui-text-danger")
+        $(this).children("p").toggleClass("aui-text-danger");
+
+    });
+    var rowid  = "${rowid}";
+
+    var  t1= "1";
+    
+    function  pingjia(){
+    	if(t1=="1"){
+    		t1="2";
+            var  pjia=   $("#pingjia").val();
+            var  domAll  =  $(".aui-col-xs-5");
+            var array  = [];
+            for(var i  = 0 ; i < domAll.length;i++ ){
+                var hh = $(domAll[i]).hasClass("aui-text-danger") ;
+                if(hh) {
+                    var  t =  $(domAll[i]).attr("t");
+                    array.push(t) ;
+                }
+            }
+
+            var parame = {
+                pjia: pjia ,
+                rowid : rowid  ,
+                index: index ,
+                array: array.join(",")
+            }
+
+            var url = "${ctxPath}/savePingJiaData";
+        doAjax(url,"POST",parame,function(data){
+        	
+                layer.msg("The evaluation is successful, the order amount has been rebated");
+                setTimeout(function(){
+                	t1="1";
+                    parent.jobAuto();
+                },1000)
+        });
+
+    	}
+
+    }
+
+</script>
+  
+</body></html>

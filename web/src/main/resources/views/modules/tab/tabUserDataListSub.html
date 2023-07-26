@@ -1,0 +1,240 @@
+<% layout('/layouts/default.html', {title: 'tab_user_data管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa icon-notebook"></i> ${text('用户信息管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<a href="#" class="btn btn-default" id="btnSetting" title="${text('设置')}"><i class="fa fa-navicon"></i></a>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${tabUserData}" action="${ctx}/tab/tabUserData/listData" method="post" class="form-inline  hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+						<div class="form-group">
+					<label class="control-label">${text('用户账号')}：</label>
+					<div class="control-inline">
+						<#form:input path="rowid" maxlength="451" class="form-control width-120"/>
+					</div>
+				</div>
+				  <!-- 
+				<div class="form-group">
+					<label class="control-label">${text('邀请码')}：</label>
+					<div class="control-inline">
+						<#form:input path="codes" maxlength="451" class="form-control width-120"/>
+					</div>
+				</div>
+				 
+				<div class="form-group">
+					<label class="control-label">${text('第一级')}：</label>
+					<div class="control-inline">
+						<#form:input path="parentid" maxlength="45" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('第二级')}：</label>
+					<div class="control-inline">
+						<#form:input path="parentid1" maxlength="45" class="form-control width-120"/>
+					</div>
+				</div>
+			 
+				<div class="form-group">
+					<label class="control-label">${text('vip')}：</label>
+					<div class="control-inline">
+						<#form:input path="vip" maxlength="11" class="form-control width-120"/>
+					</div>
+				</div>
+				 -->
+				<div class="form-group">
+					<button type="submit" id="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+	  					<button type="button" onclick="gengxin()" id="subm2it1" class="btn btn-primary btn-sm">${text('设置体验客户')}</button>
+
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+    showCheckbox: true,    // 是否显示复选框
+
+    
+	columnModel: [
+
+		{header:'${text("用户手机号")}', name:'rowid', index:'a.rowid', width:120, align:"left"},
+
+		{header:'${text("抢单次数")}', name:'qdcs', index:'a.qdcs', width:100,hi1dden:true, align:"left"},
+		{header:'${text("当前余额")}', name:'currentmoney', index:'a.currentmoney', width:100, align:"right", formatter: function(val, obj, row, act){
+			return js.formatNumber(val, 0, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
+		}},
+		{header:'${text("用户层级")}', name:'userleval', index:'a.userleval', width:100, align:"left"},
+
+		{header:'${text("总下级数")}', name:'sumMember', index:'a.sum_Member', width:110, align:"left"},
+		{header:'${text("员工账号")}', name:'ygzh2', index:'a.ygzh2', width:100, align:"center"},
+
+ 		{header:'${text("创建时间")}', name:'createtime', index:'a.createtime', width:200, align:"center"},
+		{header:'${text("用户层级")}', name:'userleval', index:'a.userleval', width:120, align:"left"},
+		
+ 		{header:'${text("佣金余额")}', name:'bzj', index:'a.bzj', width:100, align:"center"},
+
+		{header:'${text("详情")}', name:'username', index:'a.username', width:390, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			var  actions= [];
+			actions.push('<a  href="${ctx}/tab/tabUserData/form4?rowid='+row.rowid+'" class="btnList" data-title="${text("增加抢单次数")}">增加抢单次数</a>&nbsp;&nbsp;&nbsp;');
+			actions.push('<a href="${ctx}/tab/tabUserData/form?rowid='+row.rowid+'" class="btnList" data-title="${text("上分")}">上分</a>&nbsp;&nbsp;&nbsp;');
+			actions.push('<a href="${ctx}/tab/tabUserData/form2?rowid='+row.rowid+'" class="btnList" data-title="${text("下分")}">下分</a>&nbsp;&nbsp;&nbsp;')
+			actions.push('<a onclick="paiDan(this)"  rowid ="'+row.rowid+'"  class="" title="${text("派单")}">派自定义单<i class="fa encil"></i></a>&nbsp;');
+			actions.push('<a onclick="paiDan2(this)"  rowid ="'+row.rowid+'"   class=" " title="${text("杀单")}">派杀单<i class="fa encil"></i></a>&nbsp;');
+			actions.push('<a onclick="paiDan3(this)"  rowid ="'+row.rowid+'"   class=" " title="${text("杀提现单")}">派提现单<i class="fa encil"></i></a>&nbsp;');
+			actions.push('<a href="${ctx}/tab/tabUserData/formDetail?rowid='+row.rowid+'" class="btnList" data-title="${text("详情")}">详情</a>&nbsp;&nbsp;&nbsp;')
+ 			actions.push('<a href="${ctx}/tab/tabUserData/list31?rowid='+row.rowid+'" class="btnList" data-title="${text("下级")}">下级</a>&nbsp;&nbsp;&nbsp;')
+
+			return    actions.join('');  ;
+		}},
+		
+		
+		
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+
+function gengxin(){
+
+
+		var  ll = $('#dataGrid').dataGrid('getSelectRows');
+		console.log(ll);
+		var  list =  [];
+
+		for(var i = 0 ; i < ll.length;i++ ){
+			list.push(ll[i])
+		}
+		if(list.length ==0){
+			js.showMessage("请选择订单!");
+			return ;
+		}
+	 	layer.confirm('确定设置体验吗 ？', {
+			  btn: ['确定', '取消'] //可以无限个按钮
+			  ,btn3: function(index, layero){
+			    //按钮【按钮三】的回调
+			  }
+			}, function(index, layero){ 
+				
+				var parame  = {
+					rowids: list.join(",")	
+				}
+				var url = "${ctx}/tab/tabUserData/gengxinTiYan";
+				doAjax(url,"post",parame,function(data){
+					$("#submit").click();
+				})
+			}, function(index){
+			  //按钮【按钮二】的回调
+			});
+}
+
+
+var   dd   ;
+var   tt = "";
+var  type = "";
+function  paiDan(el){
+	type= "自定义单";
+	tt=  $(el).attr("rowid");
+	dd = js.layer.open({
+		  title : "自定义订单",
+		  type: 2,
+		  area: ['800px', '400px'],
+		  fixed: false, //不固定
+		  maxmin: true,
+		  content: '/qiangDan/a/tab/tabProduct/list31#产品管理'   
+		});	
+}
+
+
+function  paiDan2(el){
+	tt=  $(el).attr("rowid");
+	type= "派杀单";
+
+	dd = js.layer.open({
+		  title : "派杀单",
+		  type: 2,
+		  area: ['800px', '400px'],
+		  fixed: false, //不固定
+		  maxmin: true,
+		  content: '/qiangDan/a/tab/tabShangdanData/list2#派杀单'   
+		});	
+}
+
+function  paiDan3(el){
+	tt=  $(el).attr("rowid");
+	type= "提现单";
+
+	dd = js.layer.open({
+		  title : "提现单",
+		  type: 2,
+		  area: ['800px', '400px'],
+		  fixed: false, //不固定
+		  maxmin: true,
+		  content: '/qiangDan/a/tab/tabTixianDingdan/list2#提现单'   
+		});	
+}
+
+
+
+function chooseProduct(v){	
+	var parame = {
+		v : v	,
+		tt :  tt ,
+		type: type
+	}		
+	$("#cpList2").val(v)
+
+		var url = "${ctxPath}/chooseZdyDanUser";
+	doAjax(url,"post",parame,function(data){
+			$("#submit").click();
+	})
+	js.layer.close(dd);
+}
+
+
+
+
+function chooseProduct2(v){	
+	var parame = {
+		v : v	,
+		tt :  tt ,
+		type: type
+	}		
+	$("#cpList2").val(v)
+
+		var url = "${ctxPath}/chooseZdyDan2User";
+	doAjax(url,"post",parame,function(data){
+		$("#submit").click();
+	})
+	js.layer.close(dd);
+}
+
+function chooseProduct3(v){	
+	var parame = {
+		v : v	,
+		tt :  tt ,
+		type: type
+
+	}		
+	$("#cpList2").val(v)
+
+		var url = "${ctxPath}/chooseZdyDan2User";
+	doAjax(url,"post",parame,function(data){
+		$("#submit").click();	
+	})
+	js.layer.close(dd);
+}
+</script>

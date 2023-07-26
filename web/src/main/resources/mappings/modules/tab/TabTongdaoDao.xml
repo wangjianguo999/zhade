@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeesite.modules.tab.dao.TabTongdaoDao">
+	
+	<!-- 查询数据
+	<select id="findList" resultType="TabTongdao">
+		SELECT ${sqlMap.column.toSql()}
+		FROM ${sqlMap.table.toSql()}
+		<where>
+			${sqlMap.where.toSql()}
+		</where>
+		ORDER BY ${sqlMap.order.toSql()}
+	</select> -->
+	<select id="getList" resultType="com.jeesite.modules.tab.entity.TabTongdao">
+		select * from tab_tongdao where status1 = 0
+		 AND  edu = '小额' ANd  shijianlunhuan = "0"
+		order by orderindex asc
+	</select>
+
+	<select id="getEduList" resultType="com.jeesite.modules.tab.entity.TabTongdao">
+		select * from tab_tongdao where status1 = 0
+		AND  edu = '大额'  ANd  shijianlunhuan = "0"
+		order by orderindex asc
+	</select>
+
+	<select id="getShijianlunhuan" resultType="com.jeesite.modules.tab.entity.TabTongdao">
+		select * from tab_tongdao where shijianlunhuan = "1" and type = #{type} ORDER BY orderindex asc
+	</select>
+</mapper>
